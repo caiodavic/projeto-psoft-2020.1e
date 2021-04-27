@@ -1,3 +1,4 @@
+
 package com.projeto.grupo10.vacineja.model.usuario;
 
 import javax.persistence.Entity;
@@ -20,5 +21,4 @@ public class FuncionarioGoverno {
         this.cpf = cpf;
         this.cargo = cargo;
         this.localTrabalho = localTrabalho;
-    }
-}
+  }

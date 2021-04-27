@@ -65,4 +65,6 @@ public class Cidadao {
         return this.tipoUsuario == null;
     }
 
+
 }
+
