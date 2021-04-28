@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import java.net.http.HttpResponse;
 import java.util.Optional;
 
 @Service
@@ -41,31 +42,27 @@ public class CidadaoServiceImpl implements CidadaoService{
         return result;
     }
 
+    public boolean validaLoginComoFuncionario (CidadaoLoginDTO cidadaoLogin){
+        return cidadaoLogin.getTipoLogin().equals("Funcionario") && !this.isFuncionario(cidadaoLogin.getCpfLogin());
+    }
+
+    public boolean validaLoginComoAdministrador (CidadaoLoginDTO cidadaoLogin){
+        return cidadaoLogin.getTipoLogin().equals("Administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
+    }
+
     private boolean isAdmin(String id){
         return id.equals("00000000000");
     }
 
     private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("administrador");}
 
-    private boolean ehFuncionario(String id){
+    private boolean isFuncionario(String id){
         boolean result = false;
 
         Optional<Cidadao> cidadao = this.getCidadaoById(id);
 
         if (cidadao.isPresent()){
             result = cidadao.get().isFuncionario();
-        }
-
-        return result;
-    }
-
-    private boolean ehCidadao(String id){
-        boolean result = false;
-
-        Optional<Cidadao> cidadao = this.getCidadaoById(id);
-
-        if (cidadao.isPresent()){
-            result = cidadao.get().isCidadao();
         }
 
         return result;

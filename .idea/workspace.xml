@@ -5,10 +5,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/util/ErroLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_2_3_11_BUILD_SNAPSHOT2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_devtools_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_devtools_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_actuator_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_actuator_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/Adiministrador.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/TipoUsuario.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/Usuario.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/controllers/LoginControllerAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/controllers/LoginControllerAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/UsuarioService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/UsuarioServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/VacinejaApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/VacinejaApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/config/SwaggerConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/config/SwaggerConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/LoginControllerAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/LoginControllerAPI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/filtros/TokenFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/filtros/TokenFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/Cidadao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/Cidadao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/vacina/Vacina.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/vacina/Vacina.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/repository/CidadaoRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/repository/CidadaoRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/JWTService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/JWTService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/projeto/grupo10/vacineja/VacinejaApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/projeto/grupo10/vacineja/VacinejaApplicationTests.class" afterDir="false" />
     </list>
     <list id="7e898eeb-7daf-4bba-9e93-b0d7b843618d" name="Changes by caetano" comment="" />
     <list id="58308698-5e0f-456a-85eb-c157ef175d0c" name="Changes by ferna" comment="" />
@@ -22,8 +60,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="AnnotationType" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -48,7 +86,12 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -57,6 +100,17 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="VacinejaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="vacineja" />
       <extension name="coverage">
@@ -91,10 +145,22 @@
       <workItem from="1619552205196" duration="538000" />
       <workItem from="1619552765329" duration="628000" />
       <workItem from="1619553412347" duration="12954000" />
+      <workItem from="1619575181085" duration="7781000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

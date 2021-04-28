@@ -16,10 +16,12 @@ public class FuncionarioGoverno {
 
     String localTrabalho;
 
-    public FuncionarioGoverno(){}
+    public FuncionarioGoverno() {
+    }
 
     public FuncionarioGoverno(String cpf, String cargo, String localTrabalho) {
         this.cpf = cpf;
         this.cargo = cargo;
         this.localTrabalho = localTrabalho;
-  }
+    }
+}
