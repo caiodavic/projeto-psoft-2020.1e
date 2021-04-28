@@ -5,77 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_schema_2_6_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_swagger2_2_6_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_13_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_13_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_13_32.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_checkerframework_checker_qual_3_5_02.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_4_1_Final.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mapstruct_mapstruct_1_0_0_Final2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_5_0_42.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_actuator_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_3_11_BUILD_SNAPSHOT2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_plugin_spring_plugin_core_1_2_0_RELEASE2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_plugin_spring_plugin_metadata_1_2_0_RELEASE2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jdbc_5_2_14_RELEASE.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_web_5_2_14_RELEASE2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_26.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_11_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_springfox_springfox_swagger_common_2_6_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_core_1_2_3.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_checkerframework_checker_qual_3_5_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_transaction_jakarta_transaction_api_1_3_3.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_jandex_2_2_3_Final.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_jandex_2_2_3_Final2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_mapstruct_mapstruct_1_0_0_Final.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mapstruct_mapstruct_1_0_0_Final.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_devtools_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_devtools_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_3_11_BUILD_SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/config/SwaggerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/config/SwaggerConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/config/SwaggerConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/controllers/TestControllerAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/vacina/Vacina.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/model/vacina/Vacina.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/CidadaoServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/JWTService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/projeto/grupo10/vacineja/service/JWTService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/data.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vacineja.iml" beforeDir="false" afterPath="$PROJECT_DIR$/vacineja.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/Adiministrador.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/TipoUsuario.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/Usuario.java" beforeDir="false" />
     </list>
-    <list id="7e898eeb-7daf-4bba-9e93-b0d7b843618d" name="Changes by caetano" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/CidadaoLoginDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java" afterDir="false" />
-    </list>
-    <list id="58308698-5e0f-456a-85eb-c157ef175d0c" name="Changes by ferna" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/usuario/FuncionarioGoverno.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/vacina/Vacina.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/model/vacina/Vacina.java" afterDir="false" />
-    </list>
+    <list id="7e898eeb-7daf-4bba-9e93-b0d7b843618d" name="Changes by caetano" comment="" />
+    <list id="58308698-5e0f-456a-85eb-c157ef175d0c" name="Changes by ferna" comment="" />
     <list id="e42842f5-aa0e-4215-b7ff-77fcad8ea58f" name="Changes by hiarly" comment="" />
-    <list id="70f9a7c8-3dab-474a-8ae6-0e6672f56e29" name="Changes by holliver" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -92,22 +29,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/src/main/java/com/projeto/grupo10/vacineja/service/JWTService.java">
-      <ranges>
-        <range start1="5" end1="5" start2="5" end2="6" changelist="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" />
-        <range start1="13" end1="13" start2="14" end2="16" changelist="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" />
-        <range start1="24" end1="24" start2="27" end2="28" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-        <range start1="25" end1="26" start2="29" end2="30" changelist="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" />
-        <range start1="27" end1="28" start2="31" end2="31" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-        <range start1="30" end1="32" start2="33" end2="41" changelist="d2d16573-f975-420b-a3cb-fdfdc9bf88d5" />
-        <range start1="36" end1="39" start2="45" end2="56" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-        <range start1="40" end1="40" start2="57" end2="62" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-        <range start1="46" end1="47" start2="68" end2="70" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-        <range start1="52" end1="52" start2="75" end2="81" changelist="7e898eeb-7daf-4bba-9e93-b0d7b843618d" />
-      </ranges>
-    </file>
   </component>
   <component name="ProjectId" id="1riRjqiLcfzBoIj4t2jjBbrz08b" />
   <component name="ProjectViewState">
@@ -169,7 +90,7 @@
       <workItem from="1619551721812" duration="466000" />
       <workItem from="1619552205196" duration="538000" />
       <workItem from="1619552765329" duration="628000" />
-      <workItem from="1619553412347" duration="12255000" />
+      <workItem from="1619553412347" duration="12954000" />
     </task>
     <servers />
   </component>
