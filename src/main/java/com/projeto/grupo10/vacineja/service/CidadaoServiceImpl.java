@@ -45,6 +45,8 @@ public class CidadaoServiceImpl implements CidadaoService{
         return id.equals("00000000000");
     }
 
+    private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("administrador");}
+
     private boolean ehFuncionario(String id){
         boolean result = false;
 
@@ -71,7 +73,10 @@ public class CidadaoServiceImpl implements CidadaoService{
 
     public String teste(String authorizationHeader) throws ServletException {
         String id = jwtService.getCidadaoDoToken(authorizationHeader);
-        if(!isAdmin(id))
+        String tipoLogin = jwtService.getTipoLogin(authorizationHeader);
+
+
+        if(!isAdmin(id) || !loginAsAdmin(tipoLogin))
             throw new ServletException("Usuario não é admin");
 
         return "Oie deu certo";

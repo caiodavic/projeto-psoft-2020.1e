@@ -4,6 +4,7 @@ public class CidadaoLoginDTO {
 
     private String cpfLogin;
     private String senhaLogin;
+    private String tipoLogin;
 
     public String getCpfLogin(){
         return this.cpfLogin;
@@ -11,5 +12,9 @@ public class CidadaoLoginDTO {
 
     public String getSenhaLogin(){
         return this.senhaLogin;
+    }
+
+    public String getTipoLogin(){
+        return this.tipoLogin;
     }
 }
