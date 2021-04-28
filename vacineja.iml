@@ -16,7 +16,6 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="entityManagerFactory" />
-          <factory-entry name="vacineja" value="cc32267a-013d-4f88-8b7b-18c548fa5dd2" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>

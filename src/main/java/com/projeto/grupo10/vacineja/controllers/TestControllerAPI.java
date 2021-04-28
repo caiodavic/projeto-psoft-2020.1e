@@ -3,8 +3,6 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +18,8 @@ public class TestControllerAPI {
     @Autowired
     CidadaoService cidadaoService;
 
-
-    @GetMapping(value = "/teste")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    @RequestMapping(value = "/teste",method = RequestMethod.GET)
     public ResponseEntity<String> teste(@RequestHeader("Authorization") String header){
-
         try{
             return new ResponseEntity<String>(cidadaoService.teste(header),HttpStatus.OK);
         }

@@ -14,19 +14,11 @@ public class Vacina {
 
     private ChronoUnit diasEntreDoses;
 
-    private int qtdDoses;
-
     public Vacina(){}
     public Vacina(String nomeFabricante, int numDosesNecessarias, ChronoUnit numDiasEntredoses){
-        // TO-DO verificar se o fabricante existe (?)
-        // TO-DO ver como transformar de int ChronoUnit (ou se há alguma forma melhor de fazer isso)
+        // TO-DO verificar se o fabricante existe
         this.nomeFabricante = nomeFabricante;
         this.numDosesNecessarias = numDosesNecessarias;
         this.diasEntreDoses = numDiasEntredoses;
-        this.qtdDoses = 0;
-    }
-
-    public void addDoses(int numDoses){
-        this.qtdDoses += numDoses;
     }
 }

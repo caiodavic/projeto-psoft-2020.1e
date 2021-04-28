@@ -13,8 +13,7 @@ public class FuncionarioGoverno {
     private String cpf;
 
     private String cargo;
-
-    String localTrabalho;
+    private String localTrabalho;
 
     public FuncionarioGoverno(){}
 
