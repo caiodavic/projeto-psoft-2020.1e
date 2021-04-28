@@ -23,7 +23,7 @@ public class LoginControllerAPI {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     ResponseEntity<String> autentica(@RequestBody CidadaoLoginDTO login) throws ServletException {
-        return new ResponseEntity<String>(jwtService.autentica(login), HttpStatus.OK);
+        return jwtService.autentica(login);
     }
 
 }

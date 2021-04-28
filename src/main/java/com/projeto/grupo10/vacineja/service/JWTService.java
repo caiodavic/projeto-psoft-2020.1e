@@ -3,11 +3,14 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.filtros.TokenFilter;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
+import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -21,14 +24,19 @@ public class JWTService {
     private CidadaoService cidadaoService;
     private final String TOKEN_KEY = "login correto";
 
-    public String autentica(CidadaoLoginDTO cidadaoLogin){
+    public ResponseEntity<String> autentica(CidadaoLoginDTO cidadaoLogin){
         if(!cidadaoService.validaCidadaoSenha(cidadaoLogin)){
-            return "Usuário ou senha incorretos";
+            return ErroLogin.erroLoginSenhaUsuarioErrado();
         }
-      //  if(cidadaoLogin.getTipoLogin().equals("Funcionario") && !cidadaoService.)
+        if(cidadaoService.validaLoginComoFuncionario(cidadaoLogin)){
+            return ErroLogin.erroLoginNaoAutorizadoFuncionario();
+        }
+        if(cidadaoService.validaLoginComoAdministrador(cidadaoLogin)){
+            return ErroLogin.erroLoginNaoAutorizadoAdministrador();
+        }
 
         String token = geraToken(cidadaoLogin.getCpfLogin(), geraTipoLogin(cidadaoLogin));
-        return token;
+        return new ResponseEntity<String>(token, HttpStatus.OK);
     }
 
     private Map<String,Object> geraTipoLogin(CidadaoLoginDTO cidadaoLoginDTO){

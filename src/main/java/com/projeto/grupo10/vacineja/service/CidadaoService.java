@@ -10,6 +10,8 @@ public interface CidadaoService {
     public Optional<Cidadao> getCidadaoById(String cpf);
     public void setFuncionarioGoverno (String cargo, String localTrabalho);
     public boolean validaCidadaoSenha (CidadaoLoginDTO cidadaoLogin);
+    public boolean validaLoginComoFuncionario (CidadaoLoginDTO cidadaoLogin);
+    public boolean validaLoginComoAdministrador (CidadaoLoginDTO cidadaoLogin);
     public String teste(String id) throws ServletException;
 
 }
