@@ -53,18 +53,26 @@ public class Cidadao {
         return this.cpf;
     }
 
-    public void setFuncionarioGoverno (String cargo, String localTrabalho){
-        this.tipoUsuario = new FuncionarioGoverno(this.cpf, cargo, localTrabalho);
+    public void setFuncionarioGoverno (FuncionarioGoverno funcionarioGoverno){
+        this.tipoUsuario = funcionarioGoverno;
     }
 
     public boolean isFuncionario (){
-        return this.tipoUsuario != null;
+        return this.tipoUsuario != null && this.tipoUsuario.isAprovado();
     }
 
     public boolean isCidadao (){
         return this.tipoUsuario == null;
     }
 
+
+    public boolean aguardandoAutorizacaoFuncionario() {
+        return this.tipoUsuario != null && !this.tipoUsuario.isAprovado();
+    }
+
+    public void autorizaCadastroFuncionario(){
+        this.tipoUsuario.aprovaCadastro();
+    }
 
 }
 
