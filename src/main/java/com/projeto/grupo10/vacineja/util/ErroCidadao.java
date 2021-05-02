@@ -9,7 +9,7 @@ public class ErroCidadao {
     static final String USUARIO_SEM_PERMISSAO_ADMINISTRADOR = "O usuário não tem permissão para realizar operações " +
             "como administrador";
     static final String USUARIO_NAO_ENCONTRADO = "O usuário não foi encontrado";
-
+    static final String CIDADAO_CADASTRADO = "Cidadão com cpf %s já está cadastrado";
 
     public static ResponseEntity<String> erroSemPermissaoFuncionario(String usuario) {
         return new ResponseEntity<String>(String.format(ErroCidadao.USUARIO_SEM_PERMISSAO_FUNCIONARIO, usuario),
@@ -24,4 +24,9 @@ public class ErroCidadao {
     public static ResponseEntity<String> erroUsuarioNaoEncontrado() {
         return new ResponseEntity<String>(ErroCidadao.USUARIO_NAO_ENCONTRADO, HttpStatus.NOT_FOUND);
     }
+    public static ResponseEntity<String> erroCidadaoCadastrado(String cpf) {
+		return new ResponseEntity<String>(
+				String.format(ErroCidadao.CIDADAO_CADASTRADO, cpf), 
+				HttpStatus.NOT_ACCEPTABLE);
+	}
 }
