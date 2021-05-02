@@ -14,7 +14,9 @@ public class FuncionarioGoverno {
 
     private String cargo;
 
-    String localTrabalho;
+    private String localTrabalho;
+
+    private boolean aprovado;
 
     public FuncionarioGoverno() {
     }
@@ -23,5 +25,15 @@ public class FuncionarioGoverno {
         this.cpf = cpf;
         this.cargo = cargo;
         this.localTrabalho = localTrabalho;
+        this.aprovado = false;
     }
+
+    public boolean isAprovado(){
+        return aprovado;
+    }
+
+    public void aprovaCadastro(){
+        this.aprovado = true;
+    }
+
 }
