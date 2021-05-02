@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
+import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioGoverno;
@@ -151,5 +152,14 @@ public class CidadaoServiceImpl implements CidadaoService{
 
         return "Oie deu certo";
     }
-
+    public Cidadao criaCidadao(CidadaoDTO cidadaoDTO) {
+    	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
+    			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
+    			cidadaoDTO.getProfissoes(),cidadaoDTO.getComorbidades(), cidadaoDTO.getSenha());
+    	return cidadao;
+    	
+    }
+    public Optional<Cidadao> getCidadaoByCpf(String cpf){
+    	return cidadaoRepository.findById(cpf);
+    }
 }
