@@ -33,7 +33,7 @@ public class Cidadao {
     }
 
     public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email, String data_nascimento,
-                   String telefone, HashSet<String> profissoes, HashSet<String> comorbidades) {
+                   String telefone, Set<String> profissoes, Set<String> comorbidades, String senha) {
 
         this.cpf = cpf;
         this.nome = nome;
@@ -45,6 +45,7 @@ public class Cidadao {
         this.profissoes = profissoes;
         this.comorbidades = comorbidades;
         this.tipoUsuario = null;
+        this.senha = senha;
     }
     public String getSenha(){
         return this.senha;

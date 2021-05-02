@@ -1,5 +1,7 @@
 package com.projeto.grupo10.vacineja.controllers;
 
+import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
+import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +26,18 @@ public class CidadaoControllerAPI {
     @Autowired
     CidadaoService cidadaoService;
 
-
+    @RequestMapping(value = "/cidadao", method = RequestMethod.POST)
+	 public ResponseEntity<?> criarCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+		 	Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
+		 	if(cidadaos.isPresent()) {
+		 		return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
+		 	}
+		 	
+	        Cidadao cidadao = cidadaoService.criaCidadao(cidadaoDTO);
+	        cidadaoService.salvarCidadao(cidadao);
+	        
+	        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.CREATED);
+	 }
     @RequestMapping(value = "/usuario/cadastrarFuncionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
