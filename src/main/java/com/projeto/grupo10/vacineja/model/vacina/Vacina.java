@@ -14,28 +14,24 @@ public class Vacina {
 
     private int diasEntreDoses;
 
-    @Column
-    private int qtdDoses;
-
     public Vacina(){}
     public Vacina(String nomeFabricante, int numDosesNecessarias, int numDiasEntredoses, int qtdDoses){
         // TO-DO verificar se o fabricante existe (?)
-        // TO-DO ver como transformar de int ChronoUnit (ou se há alguma forma melhor de fazer isso)
         this.nomeFabricante = nomeFabricante;
         this.numDosesNecessarias = numDosesNecessarias;
         this.diasEntreDoses = numDiasEntredoses;
-        this.qtdDoses = qtdDoses;
     }
 
-    public void addDoses(int qtdDoses){
-        this.qtdDoses += qtdDoses;
+    public String getNomeFabricante() {
+        return nomeFabricante;
     }
 
-    public void removeDoses(int qtdDoses){
-        this.qtdDoses -= qtdDoses;
+    public int getNumDosesNecessarias() {
+        return numDosesNecessarias;
     }
 
-    public int getQtdDoses() {
-        return qtdDoses;
+    public int getDiasEntreDoses() {
+        return diasEntreDoses;
     }
+
 }
