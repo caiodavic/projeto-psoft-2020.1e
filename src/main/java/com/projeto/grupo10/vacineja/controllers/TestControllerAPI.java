@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
+import com.projeto.grupo10.vacineja.service.EmailService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,14 @@ public class TestControllerAPI {
         } catch (ServletException e){
             return new ResponseEntity<String>("Sem autorização", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/teste/testeEmail", method = RequestMethod.POST)
+    public ResponseEntity<String> testeEmail(@RequestHeader String email){
+        EmailService.enviarAlertaVacinacao("Atualização do Vacine Já",
+                "Você esta habilitado para receber a primeira dose da vacina," +
+                        " acesse o Vacine já e agende sua vacinação", email);
+
+        return new ResponseEntity<String>("email enviado", HttpStatus.OK);
     }
 }
