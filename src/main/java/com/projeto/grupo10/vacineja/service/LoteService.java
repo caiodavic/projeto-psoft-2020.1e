@@ -10,5 +10,4 @@ public interface LoteService {
     public List<Lote> listaLotes();
     public void salvaLote(Lote loteVacina);
     public void removeDoseLotes(String nomeFabricante);
-    public boolean verificaQtdDoseLotes(String nomeFabricante, int qtdDoses);
 }

@@ -13,13 +13,11 @@ import java.util.Optional;
 
 
 @Service
-public class VacinacaoServiceImpl implements VacinacaoService {
+public class VacinaServiceImpl implements VacinaService {
 
     @Autowired
     private VacinaRepository vacinaRepository;
 
-    @Autowired
-    private LoteService loteService;
 
     //TO-DO verificar se/como usar o JWTService no service de Vacina
 
@@ -67,33 +65,13 @@ public class VacinacaoServiceImpl implements VacinacaoService {
 
 
     /**
-     * Remove qtdDoses de Vacina disponivel em Lotes
+     * Remove uma dose de Vacina disponivel em Lote
      * @param nomeFabricante eh o nome do fabricante da Vacina
      */
     @Override
-    public void removeDosesVacina(String nomeFabricante, int qtdDoses){
+    public void removeDosesVacina(String nomeFabricante){
         Vacina vacina = fetchVacina(nomeFabricante);
-
-        if(!verificaEstoque(nomeFabricante,qtdDoses)){
-            //TO-DO Ver se existe outra exceção mais adequada a "não ha doses suficiente de vacina"
-            throw new ArrayIndexOutOfBoundsException("Não ha doses suficiente de vacina!");
-        }
-
-        for(int i =0; i< qtdDoses; i++) {
-            loteService.removeDoseLotes(nomeFabricante);
-        }
-
-    }
-
-    /**
-     * Vê se existem qtdDoses suficentes de Vacina suficientes guardade em Lotes
-     * @param nomeFabricante eh o nome do fabricante da Vacina
-     * @param qtdDoses eh o num de de doses buscadas
-     * @return booleano que informa se há ou não doses suficientes
-     */
-    @Override
-    public boolean verificaEstoque(String nomeFabricante, int qtdDoses) {
-        return loteService.verificaQtdDoseLotes(nomeFabricante, qtdDoses);
+       // loteService.removeDoseLotes(nomeFabricante);
     }
 
     /**
@@ -104,7 +82,7 @@ public class VacinacaoServiceImpl implements VacinacaoService {
     @Override
     public Lote criaLote(LoteDTO loteDTO){
         Vacina vacina = fetchVacina(loteDTO.getNomeFabricanteVacina());
-        return loteService.criaLote(loteDTO, vacina);
+       // return loteService.criaLote(loteDTO, vacina);
     }
 
 
@@ -126,7 +104,7 @@ public class VacinacaoServiceImpl implements VacinacaoService {
     }
 
     private void validaNumDoses(int numDosesNecessarias){
-        if(numDosesNecessarias > 2 || numDosesNecessarias < 0){
+        if(numDosesNecessarias > 2 || numDosesNecessarias <= 0){
             throw new IllegalArgumentException("Número de doses inválido");
         }
     }

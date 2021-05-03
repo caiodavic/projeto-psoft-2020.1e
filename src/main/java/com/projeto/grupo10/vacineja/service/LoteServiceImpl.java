@@ -41,10 +41,6 @@ public class LoteServiceImpl implements LoteService {
         loteRepository.save(loteVacina);
     }
 
-    public boolean verificaQtdDoseLotes(String nomeFabricante, int qtdDoses){
-        return qtdDoses < loteRepository.countByQtdDosesAndAndNomeFabricanteVacina(nomeFabricante);
-    }
-
     @Override
     public void removeDoseLotes(String nomeFabricante) {
         Lote lote = loteRepository.findByNomeFabricanteVacinaAndQtdDosesGreaterThan(nomeFabricante,0);
@@ -66,7 +62,8 @@ public class LoteServiceImpl implements LoteService {
 
     private void verificaDataValidade(Lote lote) {
         if (!lote.getDataDeValidade().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Lote com data de validade vencida! Remova-o para continuar");
+            loteRepository.delete(lote);
+            throw new IllegalArgumentException("Lote com data de validade vencida! Lote removido. Adicione novo lote para continuar vacinação");
         }
     }
 }

@@ -2,38 +2,37 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
-import com.projeto.grupo10.vacineja.service.VacinacaoService;
-import com.projeto.grupo10.vacineja.service.VacinacaoServiceImpl;
+import com.projeto.grupo10.vacineja.service.VacinaService;
 import com.projeto.grupo10.vacineja.util.ErroVacina;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+// É necessário realizar uma verificação toda vez que uma ação com vacinação for feita, não faço ideia como fazer sem ficar tudo uma bagunça
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
-public class VacinacaoControllerAPI {
+public class VacinaControllerAPI {
     @Autowired
-    VacinacaoService vacinacaoService;
+    VacinaService vacinaService;
 
     // TO-DO exception handling
-    @PostMapping("/vacinacao")
+    @PostMapping("/vacina")
     public ResponseEntity<?> criaVacina(@RequestBody VacinaDTO vacinaDTO){
 
         if(vacinaDTO.getNumDosesNecessarias() > 2) return ErroVacina.numMaxDoses();
 
-        Vacina vacina = vacinacaoService.criaVacina(vacinaDTO);
+        Vacina vacina = vacinaService.criaVacina(vacinaDTO);
         return new ResponseEntity<>(vacina, HttpStatus.CREATED);
     }
 
     // TO-DO exception handling
-    @GetMapping("/vacinacao/")
+    @GetMapping("/vacina")
     public ResponseEntity<?> listaVacinas(){
-        List<Vacina> vacinasList = vacinacaoService.listarVacinas();
+        List<Vacina> vacinasList = vacinaService.listarVacinas();
 
         if(vacinasList.isEmpty()){
             return  ErroVacina.semVacinasCadastradas();
@@ -42,9 +41,9 @@ public class VacinacaoControllerAPI {
     }
 
     // TO-DO exception handling
-    @GetMapping("/vacinacao/{nome_fabricante}")
-    public ResponseEntity<?> getVacinaPorFabricante(@PathVariable ("nome_fabricante") String nomeFabricante){
-        Vacina vacina = vacinacaoService.fetchVacina(nomeFabricante);
+    @GetMapping("/vacina/{nome_fabricante}/lotes")
+    public ResponseEntity<?> getLotesPorFabricante(@PathVariable ("nome_fabricante") String nomeFabricante){
+        Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
 
         return new ResponseEntity<>(vacina,HttpStatus.OK);
     }
