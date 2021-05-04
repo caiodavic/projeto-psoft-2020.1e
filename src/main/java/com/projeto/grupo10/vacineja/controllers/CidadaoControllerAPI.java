@@ -1,9 +1,6 @@
 package com.projeto.grupo10.vacineja.controllers;
 
-import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
+import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
@@ -61,6 +58,18 @@ public class CidadaoControllerAPI {
 
         return new ResponseEntity<String>("Cidadão definido como funcionario, aguardando aprovação do administrador.",
                 HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateCidadao(@RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
+        Optional<Cidadao> cidadao = cidadaoService.getCidadaoById(cidadaoUpdateDTO.getCpf());
+        if(!(cidadao.isPresent())) {
+            return ErroCidadao.erroCidadaoNaoCadastrado(cidadaoUpdateDTO.getCpf());
+        }
+
+        cidadaoService.updateCidadao(cidadaoUpdateDTO, cidadao.get());
+        cidadaoService.salvarCidadao(cidadao.get());
+        return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
     }
 
 

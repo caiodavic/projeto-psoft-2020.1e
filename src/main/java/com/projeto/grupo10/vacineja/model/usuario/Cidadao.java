@@ -75,5 +75,85 @@ public class Cidadao {
         this.tipoUsuario.aprovaCadastro();
     }
 
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getCartaoSus() {
+        return cartaoSus;
+    }
+
+    public void setCartaoSus(String cartaoSus) {
+        this.cartaoSus = cartaoSus;
+    }
+
+    public String getData_nascimento() {
+        return data_nascimento;
+    }
+
+    public void setData_nascimento(String data_nascimento) {
+        this.data_nascimento = data_nascimento;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public Set<String> getProfissoes() {
+        return profissoes;
+    }
+
+    public void setProfissoes(Set<String> profissoes) {
+        this.profissoes = profissoes;
+    }
+
+    public Set<String> getComorbidades() {
+        return comorbidades;
+    }
+
+    public void setComorbidades(Set<String> comorbidades) {
+        this.comorbidades = comorbidades;
+    }
+
+    public FuncionarioGoverno getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(FuncionarioGoverno tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
 }
 
