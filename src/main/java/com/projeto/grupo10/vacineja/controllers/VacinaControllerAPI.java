@@ -4,17 +4,20 @@ import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.model.lote.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
+import com.projeto.grupo10.vacineja.service.JWTService;
 import com.projeto.grupo10.vacineja.service.LoteService;
 import com.projeto.grupo10.vacineja.service.VacinaService;
+import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLote;
 import com.projeto.grupo10.vacineja.util.ErroVacina;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +33,10 @@ public class VacinaControllerAPI {
     LoteService loteService;
 
 
-    // TO-DO exception handling
-    @PostMapping("/vacina")
-    public ResponseEntity<?> criaVacina(@RequestBody VacinaDTO vacinaDTO){
 
-        if(vacinaDTO.getNumDosesNecessarias() > 2) return ErroVacina.numMaxDoses();
+    @PostMapping("/vacina")
+    public ResponseEntity<?> criaVacina(@RequestHeader("Authorization") String headerToken, @RequestBody VacinaDTO vacinaDTO){
+
 
         try {
             Vacina vacina = vacinaService.criaVacina(vacinaDTO);
@@ -107,23 +109,5 @@ public class VacinaControllerAPI {
     }
 
 
-    // TO-DO Isso é um esboço, pra ver se tá sendo removido corretamente de lotes. Provavelmente
-    // a forma de aplicar a dose será em outro endpoint (?)
-    @GetMapping("/vacina/{nome_fabricante}/{num_lote}")
-    public ResponseEntity<?> removeVacina(@PathVariable("nome_fabricante") String nomeFabricante, @PathVariable ("num_Lote") long numLote, @RequestBody int numVacinas){
-        try{
-            Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-            List<Lote> loteList = new ArrayList<Lote>();
-
-            for(int i = 0; i< numVacinas ; i++){
-                loteList.add(loteService.removeDoseLotes(nomeFabricante));
-            }
-
-            return new ResponseEntity<>(loteList,HttpStatus.ACCEPTED);
-        } catch (NullPointerException e){
-            return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
-
-        }
-    }
 
 }

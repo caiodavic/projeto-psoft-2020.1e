@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Implemetação de VacinaService, realizando funções de cadastro, verificação, listagem  e busca de Vacinas Individuais
+ * no sistema.
+ */
 @Service
 public class VacinaServiceImpl implements VacinaService {
 
     @Autowired
     private VacinaRepository vacinaRepository;
 
-
-    //TO-DO verificar se/como usar o JWTService no service de Vacina
 
     /**
      * Cria uma nova Vacina. Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
@@ -34,10 +35,17 @@ public class VacinaServiceImpl implements VacinaService {
             throw new IllegalArgumentException("Já existe vacina desse fabricante cadastrada!");
         }
 
-        validaDiasEntreDoses(vacinaDTO.getDiasEntreDoses());
         validaNumDoses(vacinaDTO.getNumDosesNecessarias());
 
-        Vacina vacina = new Vacina(vacinaDTO.getNomeFabricante(), vacinaDTO.getNumDosesNecessarias(), vacinaDTO.getDiasEntreDoses());
+        if(vacinaDTO.getNumDosesNecessarias() ==1) {
+            validaDiasDoseUnica(vacinaDTO.getDiasEntreDoses());
+        }
+        else{
+            validaDiasEntreDoses(vacinaDTO.getDiasEntreDoses());
+        }
+
+        Vacina vacina = new Vacina(vacinaDTO.getNomeFabricante(), vacinaDTO.getNumDosesNecessarias(),
+                vacinaDTO.getDiasEntreDoses());
 
         vacinaRepository.save(vacina);
 
@@ -65,9 +73,6 @@ public class VacinaServiceImpl implements VacinaService {
 
 
 
-    // TO-DO Verificar o comportamento do lançamento da exceção, se
-    // existe algum problema no tratamento embaixo de tantas camadas de metodos.
-
     /**
      * Busca a Vacina em VacinaRepository, se encontrar ele a retorna, se não lança uma exceção
      * @param nomeFabricante eh o nome do fabricante da Vacina
@@ -82,19 +87,36 @@ public class VacinaServiceImpl implements VacinaService {
         return optionalVacina.get();
     }
 
+    /**
+     * Verifica se o número de doses é um ou dois.
+     * @param numDosesNecessarias eh o numero de doses necessárias
+     */
     private void validaNumDoses(int numDosesNecessarias){
         if(numDosesNecessarias > 2 || numDosesNecessarias <= 0){
             throw new IllegalArgumentException("Número de doses inválido! (o mínino é 1 e o máximo 2)");
         }
     }
 
+    /**
+     * Verifica se o período entre as doses é entre 28 e 90.
+     * @param diasEntreDoses eh o num de dias entre doses
+     */
     private void validaDiasEntreDoses(int diasEntreDoses){
-        if(diasEntreDoses < 30 || diasEntreDoses > 90){
+        if(diasEntreDoses < 28 || diasEntreDoses > 90){
             throw new IllegalArgumentException("Quantidade de dias entre doses inválido! O mínimo é 30 e o máximo é 90");
         }
     }
 
+    /**
+     * Verifica se o dia entre doses da Vacina de dose única é 0, afinal não tem como tomar uma dose única espaçada.
+     * @param diasEntreDoses eh o num de dias entre doses (que deve ser 0 para não lançar exceção)
+     */
+    private void validaDiasDoseUnica(int diasEntreDoses){
+        if(diasEntreDoses != 0){
+            throw new IllegalArgumentException("Dia entre doses inválido! Se a Vacina tem dose única, ela não tem " +
+                    "intevalo entre doses");
+        }
+
+    }
+
 }
-// Null pointer = nao ha vacina cadastrada
-// Illegal argument = ja existe vacina cadastrada
-// arrayindexoutofbound = nao ha doses suficientes para ministrar

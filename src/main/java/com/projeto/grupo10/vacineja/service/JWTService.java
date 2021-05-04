@@ -20,6 +20,8 @@ import java.util.Map;
 
 @Service
 public class JWTService {
+    private static final String CPF_ADM = "00000000000";
+
     @Autowired
     private CidadaoService cidadaoService;
     private final String TOKEN_KEY = "login correto";
@@ -85,6 +87,21 @@ public class JWTService {
     private void verificaToken(String authorizationHeader)  throws ServletException{
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             throw new ServletException("Token inexistente ou mal formatado!");
+        }
+    }
+
+    /**
+     * Verifica se o token passado é do administrador
+     * @param authorizatioHeader eh o token do suposto adm
+     * @throws ServletException excecao lançada se houver erro de autenticacao
+     */
+    public void verifyAdmin(String authorizatioHeader) throws ServletException{
+        verificaToken(authorizatioHeader);
+        String id = getCidadaoDoToken(authorizatioHeader);
+        String tipoLogin = getTipoLogin(authorizatioHeader);
+
+        if(!id.equals(CPF_ADM) || !tipoLogin.equals("Administrador")) {
+            throw new IllegalArgumentException();
         }
     }
 }

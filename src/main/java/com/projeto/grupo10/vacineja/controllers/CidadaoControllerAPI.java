@@ -37,6 +37,7 @@ public class CidadaoControllerAPI {
 	        
 	        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.CREATED);
 	 }
+
     @RequestMapping(value = "/usuario/cadastrarFuncionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
