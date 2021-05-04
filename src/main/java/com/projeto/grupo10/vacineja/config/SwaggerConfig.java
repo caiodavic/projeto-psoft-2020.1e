@@ -14,13 +14,13 @@ import java.util.Arrays;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-        @Bean
-        public Docket productApi() {
-            return new Docket(DocumentationType.SWAGGER_2)
-                    .select().apis(RequestHandlerSelectors.basePackage("com.projeto.grupo10.vacineja"))
-                    .build()
-                    .securitySchemes(Arrays.asList(apiKey()));
-        }
+    @Bean
+    public Docket productApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select().apis(RequestHandlerSelectors.basePackage("com.projeto.grupo10.vacineja"))
+                .build()
+                .securitySchemes(Arrays.asList(apiKey()));
+    }
 
 
     private ApiKey apiKey(){
