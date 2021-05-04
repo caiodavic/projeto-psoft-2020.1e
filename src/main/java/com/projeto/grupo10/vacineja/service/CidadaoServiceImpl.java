@@ -146,7 +146,16 @@ public class CidadaoServiceImpl implements CidadaoService{
     }
 
     @Override
-    public Cidadao updateCidadao(CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) {
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
+
+        String id = jwtService.getCidadaoDoToken(headerToken);
+
+        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
+
+        if (!cidadaoOpt.isPresent()){
+            throw new IllegalArgumentException();
+        }
+
         cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
         cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? cidadaoUpdateDTO.getComorbidades() : cidadao.getComorbidades());
         cidadao.setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.getData_nascimento());

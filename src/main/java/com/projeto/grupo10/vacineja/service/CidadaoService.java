@@ -19,5 +19,5 @@ public interface CidadaoService {
     public Cidadao criaCidadao(CidadaoDTO cidadaoDTO);
     public void salvarCidadao(Cidadao cidadao);
     public Optional<Cidadao> getCidadaoByCpf(String cpf);
-    public Cidadao updateCidadao(CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao);
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
 }

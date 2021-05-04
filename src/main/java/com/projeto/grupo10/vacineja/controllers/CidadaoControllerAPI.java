@@ -61,13 +61,27 @@ public class CidadaoControllerAPI {
     }
 
     @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateCidadao(@RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
+                                           @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
+
         Optional<Cidadao> cidadao = cidadaoService.getCidadaoById(cidadaoUpdateDTO.getCpf());
-        if(!(cidadao.isPresent())) {
-            return ErroCidadao.erroCidadaoNaoCadastrado(cidadaoUpdateDTO.getCpf());
+
+
+        try{
+            cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
         }
 
-        cidadaoService.updateCidadao(cidadaoUpdateDTO, cidadao.get());
+        catch (IllegalArgumentException iae){
+            return ErroCidadao.erroUsuarioNaoEncontrado();
+        }
+        catch (ServletException e){
+            return ErroLogin.erroTokenInvalido();
+        }
+
+
+
+
         cidadaoService.salvarCidadao(cidadao.get());
         return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
     }
