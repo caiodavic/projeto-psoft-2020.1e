@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public interface LoteRepository extends JpaRepository<Lote,Long> {
-    List<Lote> findByNomeFabricanteVacina(String nomeFabricante);
+    List<Lote> findAllByNomeFabricanteVacina(String nomeFabricante);
     Lote findByNomeFabricanteVacinaAndQtdDosesGreaterThan(String nomeFabricante,int qtdDoses);
+    Lote findByNomeFabricanteVacina(String nomeFabricante);
 }

@@ -18,10 +18,12 @@ public class LoteServiceImpl implements LoteService {
 
     @Override
     public Lote criaLote(LoteDTO loteDTO, Vacina vacina) {
-        Optional<Lote> optionalLote = loteRepository.findById(loteDTO.getId());
-        if (optionalLote.isPresent()) {
-            throw new IllegalArgumentException("Já há lote com esse ID cadastrado");
-        }
+
+        //TO-DO É possivel que o adm escolha o ID do lote ou ele será somente automatizado?
+//        Optional<Lote> optionalLote = loteRepository.findById(loteDTO.getId());
+//        if (optionalLote.isPresent()) {
+//            throw new IllegalArgumentException("Já há lote com esse ID cadastrado");
+//        }
 
         validaDoseLotes(loteDTO.getQtdDoses());
         validaDataDeValidade(loteDTO.getDataDeValidade());
@@ -36,16 +38,26 @@ public class LoteServiceImpl implements LoteService {
         return loteRepository.findAll();
     }
 
+    public List<Lote> listaLotesPorFabricante(String nomeFabricante){
+        return loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
+    }
+
     @Override
     public void salvaLote(Lote loteVacina) {
         loteRepository.save(loteVacina);
     }
 
     @Override
-    public void removeDoseLotes(String nomeFabricante) {
+    public Lote removeDoseLotes(String nomeFabricante) {
         Lote lote = loteRepository.findByNomeFabricanteVacinaAndQtdDosesGreaterThan(nomeFabricante,0);
         verificaDataValidade(lote);
         lote.diminuiQtdDoses();
+        return lote;
+    }
+
+    @Override
+    public Lote findLoteByNomeFabricante(String nomeFabricante){
+       return loteRepository.findByNomeFabricanteVacina(nomeFabricante);
     }
 
     private void validaDoseLotes(int qtdDoses) {

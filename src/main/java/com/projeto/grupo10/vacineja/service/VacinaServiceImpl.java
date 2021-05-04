@@ -37,7 +37,7 @@ public class VacinaServiceImpl implements VacinaService {
         validaDiasEntreDoses(vacinaDTO.getDiasEntreDoses());
         validaNumDoses(vacinaDTO.getNumDosesNecessarias());
 
-        Vacina vacina = new Vacina(vacinaDTO.getNomeFabricante(), vacinaDTO.getNumDosesNecessarias(), vacinaDTO.getDiasEntreDoses(), vacinaDTO.getQtdDoses());
+        Vacina vacina = new Vacina(vacinaDTO.getNomeFabricante(), vacinaDTO.getNumDosesNecessarias(), vacinaDTO.getDiasEntreDoses());
 
         vacinaRepository.save(vacina);
 
@@ -64,29 +64,6 @@ public class VacinaServiceImpl implements VacinaService {
     }
 
 
-    /**
-     * Remove uma dose de Vacina disponivel em Lote
-     * @param nomeFabricante eh o nome do fabricante da Vacina
-     */
-    @Override
-    public void removeDosesVacina(String nomeFabricante){
-        Vacina vacina = fetchVacina(nomeFabricante);
-       // loteService.removeDoseLotes(nomeFabricante);
-    }
-
-    /**
-     * Cria um lote de Vacina
-     * @param loteDTO DTO do Lote de Vacina
-     * @return Lote de Vacina criado
-     */
-    @Override
-    public Lote criaLote(LoteDTO loteDTO){
-        Vacina vacina = fetchVacina(loteDTO.getNomeFabricanteVacina());
-       // return loteService.criaLote(loteDTO, vacina);
-        Lote lote = new Lote(vacina, loteDTO.getQtdDoses(), loteDTO.getDataDeValidade());
-        return lote;
-    }
-
 
     // TO-DO Verificar o comportamento do lançamento da exceção, se
     // existe algum problema no tratamento embaixo de tantas camadas de metodos.
@@ -107,13 +84,13 @@ public class VacinaServiceImpl implements VacinaService {
 
     private void validaNumDoses(int numDosesNecessarias){
         if(numDosesNecessarias > 2 || numDosesNecessarias <= 0){
-            throw new IllegalArgumentException("Número de doses inválido");
+            throw new IllegalArgumentException("Número de doses inválido! (o mínino é 1 e o máximo 2)");
         }
     }
 
     private void validaDiasEntreDoses(int diasEntreDoses){
-        if(diasEntreDoses < 0 || diasEntreDoses > 90){
-            throw new IllegalArgumentException("Quantidade de dias entre doses inválido");
+        if(diasEntreDoses < 30 || diasEntreDoses > 90){
+            throw new IllegalArgumentException("Quantidade de dias entre doses inválido! O mínimo é 30 e o máximo é 90");
         }
     }
 

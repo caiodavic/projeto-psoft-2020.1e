@@ -8,6 +8,8 @@ import java.util.List;
 public interface LoteService {
     public Lote criaLote(LoteDTO loteDTO, Vacina vacina);
     public List<Lote> listaLotes();
+    public List<Lote> listaLotesPorFabricante(String nomeFabricante);
     public void salvaLote(Lote loteVacina);
-    public void removeDoseLotes(String nomeFabricante);
+    public Lote removeDoseLotes(String nomeFabricante);
+    public Lote findLoteByNomeFabricante(String nomeFabricante);
 }

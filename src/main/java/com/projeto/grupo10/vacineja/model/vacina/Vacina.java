@@ -15,10 +15,10 @@ public class Vacina {
     private int diasEntreDoses;
 
     public Vacina(){}
-    public Vacina(String nomeFabricante, int numDosesNecessarias, int numDiasEntredoses, int qtdDoses){
+    public Vacina(String nomeFabricante, int numDosesNecessarias, int numDiasEntreDoses){
         this.nomeFabricante = nomeFabricante;
         this.numDosesNecessarias = numDosesNecessarias;
-        this.diasEntreDoses = numDiasEntredoses;
+        this.diasEntreDoses = numDiasEntreDoses;
     }
 
     public String getNomeFabricante() {

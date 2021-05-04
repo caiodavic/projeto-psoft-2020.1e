@@ -7,8 +7,6 @@ public class VacinaDTO {
 
     private int diasEntreDoses;
 
-    private int qtdDoses;
-
     public String getNomeFabricante() {
         return nomeFabricante;
     }
@@ -21,7 +19,4 @@ public class VacinaDTO {
         return diasEntreDoses;
     }
 
-    public int getQtdDoses() {
-        return qtdDoses;
-    }
 }
