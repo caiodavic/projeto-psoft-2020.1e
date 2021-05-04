@@ -2,7 +2,6 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
@@ -28,6 +27,7 @@ public class CidadaoControllerAPI {
     @Autowired
     CidadaoService cidadaoService;
 
+
     @RequestMapping(value = "/usuario/cadastraCidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
@@ -48,6 +48,7 @@ public class CidadaoControllerAPI {
     }
 
     @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
+
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){

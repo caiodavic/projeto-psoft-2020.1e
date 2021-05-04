@@ -85,6 +85,8 @@ public class CidadaoServiceImpl implements CidadaoService{
         return result;
     }
 
+    private boolean loginAsFuncionario(String tipoLogin){ return tipoLogin.equals("Funcionário");}
+
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
 
@@ -138,6 +140,16 @@ public class CidadaoServiceImpl implements CidadaoService{
         return "Oie deu certo";
     }
 
+
+    public void verificaTokenFuncionario(String authHeader) throws ServletException {
+        String id = jwtService.getCidadaoDoToken(authHeader);
+        String tipoLogin = jwtService.getTipoLogin(authHeader);
+
+        if(!isFuncionario(id))
+            throw new ServletException("Usuario não é Funcionário cadastrado!");
+
+    }
+
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if(cidadaoOpt.isPresent()){
@@ -150,6 +162,7 @@ public class CidadaoServiceImpl implements CidadaoService{
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			cidadaoDTO.getProfissoes(),cidadaoDTO.getComorbidades(), cidadaoDTO.getSenha());
     	this.salvarCidadao(cidadao);
+
     }
 
 }
