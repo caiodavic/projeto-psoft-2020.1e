@@ -19,7 +19,7 @@ public interface CidadaoService {
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException;
     public ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
-    public Cidadao criaCidadao(CidadaoDTO cidadaoDTO);
+    public void cadastraCidadao(CidadaoDTO cidadaoDTO);
     public void salvarCidadao(Cidadao cidadao);
     public Optional<Cidadao> getCidadaoByCpf(String cpf);
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
