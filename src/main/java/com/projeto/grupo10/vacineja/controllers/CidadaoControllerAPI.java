@@ -27,7 +27,8 @@ public class CidadaoControllerAPI {
     @Autowired
     CidadaoService cidadaoService;
 
-    @RequestMapping(value = "/usuario", method = RequestMethod.POST)
+
+   @RequestMapping(value = "/usuario", method = RequestMethod.POST)
 	 public ResponseEntity<?> criarCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 		 	Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
 		 	String emailCidadao = cidadaoDTO.getEmail();
@@ -42,7 +43,8 @@ public class CidadaoControllerAPI {
 	        
 	        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.CREATED);
 	 }
-    @RequestMapping(value = "/usuario/cadastrarFuncionario", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
@@ -62,41 +64,5 @@ public class CidadaoControllerAPI {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/usuario/funcionariosNaoAutorizados", method = RequestMethod.GET)
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> getFuncionariosNaoAutorizados(@RequestHeader("Authorization") String headerToken){
-        ArrayList<String> usuariosNaoAutorizados;
 
-        try{
-            usuariosNaoAutorizados = cidadaoService.getUsuariosNaoAutorizados(headerToken);
-        }
-
-        catch (IllegalArgumentException iae){
-            return ErroCidadao.erroSemPermissaoAdministrador();
-        }
-        catch (ServletException e){
-            return ErroLogin.erroTokenInvalido();
-        }
-
-        return new ResponseEntity<ArrayList<String>>(usuariosNaoAutorizados, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/usuario/autorizarFuncionario", method = RequestMethod.POST)
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<String> autorizarCadastroFuncionario(@RequestHeader("Authorization") String headerToken,
-                                                       @RequestHeader String cpfFuncionario){
-
-        try{
-            cidadaoService.autorizarCadastroFuncionario(headerToken, cpfFuncionario);
-        }
-
-        catch (IllegalArgumentException iae){
-            return ErroCidadao.erroUsuarioNaoEncontrado();
-        }
-        catch (ServletException e){
-            return ErroLogin.erroTokenInvalido();
-        }
-
-        return new ResponseEntity<String>("Cadastro aprovado.", HttpStatus.OK);
-    }
 }
