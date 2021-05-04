@@ -4,6 +4,7 @@ package com.projeto.grupo10.vacineja.controllers;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.service.EmailService;
+import com.projeto.grupo10.vacineja.service.JWTService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +22,9 @@ public class TestControllerAPI {
 
     @Autowired
     CidadaoService cidadaoService;
+
+    @Autowired
+    JWTService jwtService;
 
 
     @GetMapping(value = "/teste")
@@ -44,5 +49,18 @@ public class TestControllerAPI {
                         " acesse o Vacine já e agende sua vacinação", email);
 
         return new ResponseEntity<String>("email enviado", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/teste/testeloginfixo", method = RequestMethod.GET)
+    public ResponseEntity<String> testeLoginFixo(@PathVariable String email,
+                                                 @RequestHeader("Authorization") String header) {
+        try {
+            return new ResponseEntity<String>(this.jwtService.getCidadaoDoToken(header), HttpStatus.OK);
+
+        } catch (IllegalArgumentException iae) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } catch (ServletException e) {
+            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+        }
     }
 }

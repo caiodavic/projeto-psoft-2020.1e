@@ -72,12 +72,6 @@ public class CidadaoServiceImpl implements CidadaoService{
         return cidadaoLogin.getTipoLogin().equals("Administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
     }
 
-    private boolean isAdmin(String id){
-        return id.equals("00000000000");
-    }
-
-    private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("Administrador");}
-
     private boolean isFuncionario(String id){
         boolean result = false;
 
@@ -108,14 +102,7 @@ public class CidadaoServiceImpl implements CidadaoService{
         this.salvarCidadao(cidadao);
     }
 
-    public ArrayList<String> getUsuariosNaoAutorizados(String headerToken) throws ServletException {
-        String id = jwtService.getCidadaoDoToken(headerToken);
-        String tipoLogin = jwtService.getTipoLogin(headerToken);
-
-        if(!isAdmin(id) || !loginAsAdmin(tipoLogin)) {
-            throw new IllegalArgumentException();
-        }
-
+    public ArrayList<String> getUsuariosNaoAutorizados() throws ServletException {
         ArrayList<String> funcionariosNaoAutorizados = new ArrayList<String>();
         for (Cidadao cidadao : this.cidadaoRepository.findAll()){
             if (cidadao.aguardandoAutorizacaoFuncionario()){
@@ -125,14 +112,7 @@ public class CidadaoServiceImpl implements CidadaoService{
         return funcionariosNaoAutorizados;
     }
 
-    public void autorizarCadastroFuncionario(String headerToken, String cpfFuncionario)throws ServletException{
-        String id = jwtService.getCidadaoDoToken(headerToken);
-        String tipoLogin = jwtService.getTipoLogin(headerToken);
-
-        if(!isAdmin(id) || !loginAsAdmin(tipoLogin)) {
-            throw new IllegalArgumentException();
-        }
-
+    public void autorizarCadastroFuncionario(String cpfFuncionario)throws ServletException{
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfFuncionario);
 
         if (!cidadaoOpt.isPresent() || !cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
@@ -145,6 +125,10 @@ public class CidadaoServiceImpl implements CidadaoService{
         this.salvarCidadao(cidadao);
     }
 
+    private boolean isAdmin(String id){
+        return id.equals("00000000000");
+    }
+    private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("Administrador");}
     public String teste(String authorizationHeader) throws ServletException {
         String id = jwtService.getCidadaoDoToken(authorizationHeader);
         String tipoLogin = jwtService.getTipoLogin(authorizationHeader);
@@ -155,6 +139,7 @@ public class CidadaoServiceImpl implements CidadaoService{
         return "Oie deu certo";
     }
 
+
     public void verificaTokenFuncionario(String authHeader) throws ServletException {
         String id = jwtService.getCidadaoDoToken(authHeader);
         String tipoLogin = jwtService.getTipoLogin(authHeader);
@@ -163,7 +148,6 @@ public class CidadaoServiceImpl implements CidadaoService{
             throw new ServletException("Usuario não é Funcionário cadastrado!");
 
     }
-
 
     public Cidadao criaCidadao(CidadaoDTO cidadaoDTO) {
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),

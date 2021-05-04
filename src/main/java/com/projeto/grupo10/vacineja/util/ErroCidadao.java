@@ -10,6 +10,7 @@ public class ErroCidadao {
             "como administrador";
     static final String USUARIO_NAO_ENCONTRADO = "O usuário não foi encontrado";
     static final String CIDADAO_CADASTRADO = "Cidadão com cpf %s já está cadastrado";
+    static final String EMAIL_INVALIDO = "Email inválido";
 
     public static ResponseEntity<String> erroSemPermissaoFuncionario(String usuario) {
         return new ResponseEntity<String>(String.format(ErroCidadao.USUARIO_SEM_PERMISSAO_FUNCIONARIO, usuario),
@@ -29,4 +30,9 @@ public class ErroCidadao {
 				String.format(ErroCidadao.CIDADAO_CADASTRADO, cpf), 
 				HttpStatus.NOT_ACCEPTABLE);
 	}
+    public static ResponseEntity<String> erroEmailInvalido() {
+        return new ResponseEntity<String>(
+                String.format(ErroCidadao.EMAIL_INVALIDO),
+                HttpStatus.NOT_ACCEPTABLE);
+    }
 }
