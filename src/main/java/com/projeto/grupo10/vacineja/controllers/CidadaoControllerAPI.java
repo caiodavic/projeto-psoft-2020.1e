@@ -2,7 +2,6 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;

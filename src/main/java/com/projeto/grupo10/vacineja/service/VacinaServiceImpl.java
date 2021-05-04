@@ -83,6 +83,8 @@ public class VacinaServiceImpl implements VacinaService {
     public Lote criaLote(LoteDTO loteDTO){
         Vacina vacina = fetchVacina(loteDTO.getNomeFabricanteVacina());
        // return loteService.criaLote(loteDTO, vacina);
+        Lote lote = new Lote(vacina, loteDTO.getQtdDoses(), loteDTO.getDataDeValidade());
+        return lote;
     }
 
 

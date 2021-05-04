@@ -16,7 +16,6 @@ public class Vacina {
 
     public Vacina(){}
     public Vacina(String nomeFabricante, int numDosesNecessarias, int numDiasEntredoses, int qtdDoses){
-        // TO-DO verificar se o fabricante existe (?)
         this.nomeFabricante = nomeFabricante;
         this.numDosesNecessarias = numDosesNecessarias;
         this.diasEntreDoses = numDiasEntredoses;
