@@ -7,23 +7,23 @@ import com.projeto.grupo10.vacineja.repository.LoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class LoteServiceImpl implements LoteService {
     @Autowired
     LoteRepository loteRepository;
 
-    @Override
-    public Lote criaLote(LoteDTO loteDTO, Vacina vacina) {
+    @Autowired
+    CidadaoService cidadaoService;
 
-        //TO-DO É possivel que o adm escolha o ID do lote ou ele será somente automatizado?
-//        Optional<Lote> optionalLote = loteRepository.findById(loteDTO.getId());
-//        if (optionalLote.isPresent()) {
-//            throw new IllegalArgumentException("Já há lote com esse ID cadastrado");
-//        }
+    @Override
+    public Lote criaLote(LoteDTO loteDTO, Vacina vacina, String headerToken) throws ServletException {
+
+        cidadaoService.verificaTokenFuncionario(headerToken);
 
         validaDoseLotes(loteDTO.getQtdDoses());
         validaDataDeValidade(loteDTO.getDataDeValidade());
@@ -48,11 +48,30 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Override
-    public Lote removeDoseLotes(String nomeFabricante) {
-        Lote lote = loteRepository.findByNomeFabricanteVacinaAndQtdDosesGreaterThan(nomeFabricante,0);
-        verificaDataValidade(lote);
-        lote.diminuiQtdDoses();
-        return lote;
+    public List<Lote> removeDoseLotes(String nomeFabricante,int qtdVacinas, String authToken) throws ServletException {
+        List<Lote> loteList = loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
+        int j = 0;
+
+        for(int i = 0 ; i < qtdVacinas; i++){
+
+            Lote currentLote = loteList.get(j);
+            if(isLoteVazio(currentLote)){
+                j++;
+            }
+            else{
+                verificaDataValidade(currentLote);
+                currentLote.diminuiQtdDoses();
+                loteRepository.save(currentLote);
+            }
+
+        }
+
+
+        return loteList;
+    }
+
+    private boolean isLoteVazio(Lote lote){
+        return lote.getQtdDoses() == 0;
     }
 
     @Override

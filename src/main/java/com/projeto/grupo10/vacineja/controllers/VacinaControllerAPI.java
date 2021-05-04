@@ -4,14 +4,13 @@ import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.model.lote.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
-import com.projeto.grupo10.vacineja.service.JWTService;
-import com.projeto.grupo10.vacineja.service.LoteService;
-import com.projeto.grupo10.vacineja.service.VacinaService;
+import com.projeto.grupo10.vacineja.service.*;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLote;
 import com.projeto.grupo10.vacineja.util.ErroVacina;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import io.swagger.annotations.OAuth2Definition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,18 +31,22 @@ public class VacinaControllerAPI {
     @Autowired
     LoteService loteService;
 
+    @Autowired
+    JWTService jwtService;
 
 
     @PostMapping("/vacina")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> criaVacina(@RequestHeader("Authorization") String headerToken, @RequestBody VacinaDTO vacinaDTO){
 
-
         try {
-            Vacina vacina = vacinaService.criaVacina(vacinaDTO);
+            Vacina vacina = vacinaService.criaVacina(vacinaDTO, headerToken);
             return new ResponseEntity<>(vacina, HttpStatus.CREATED);
 
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException | ServletException e){
             return ErroVacina.erroCadastroVacina(e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e){
+            return ErroVacina.erroCadastroVacina("eae kkk");
         }
     }
 
@@ -90,11 +93,13 @@ public class VacinaControllerAPI {
     }
 
     // TO-DO exception handling
-    @PostMapping("/vacina/{nome_fabricante}/lote")
-    public ResponseEntity<?> criaLote(@PathVariable("nome_fabricante") String nomeFabricante, @RequestBody LoteDTO loteDTO){
+    @PostMapping("/vacina/lote/{nome_fabricante}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> criaLote(@RequestHeader("Authorization") String headerToken, @PathVariable("nome_fabricante") String nomeFabricante, @RequestBody LoteDTO loteDTO){
+
         try{
             Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-            Lote lote = loteService.criaLote(loteDTO,vacina);
+            Lote lote = loteService.criaLote(loteDTO,vacina, headerToken);
             return new ResponseEntity<>(lote,HttpStatus.CREATED);
 
         }
@@ -102,12 +107,29 @@ public class VacinaControllerAPI {
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
 
         }
-        catch (IllegalArgumentException e){
+        catch (IllegalArgumentException | ServletException e){
             return ErroLote.erroCadastroLote(e.getMessage());
         }
 
     }
 
+    /**
+     * Esboço do método de retirada de Vacina
+     */
+    @PostMapping("/vacina/{nome_fabricante}/{qtd_vacinas}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> retiraVacina(@RequestHeader("Authorization") String headerToken, @PathVariable("nome_fabricante") String nomeFabricante, @PathVariable("qtd_vacinas") int qtdVacinas){
 
+        try{
+            Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
+            List<Lote> loteList = loteService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
+            return new ResponseEntity<>(loteList,HttpStatus.CREATED);
+        }
 
-}
+        catch (NullPointerException | ServletException e){
+            return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
+        }
+
+    }
+
+    }

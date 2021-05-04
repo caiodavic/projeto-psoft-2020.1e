@@ -22,4 +22,5 @@ public interface CidadaoService {
     public Cidadao criaCidadao(CidadaoDTO cidadaoDTO);
     public void salvarCidadao(Cidadao cidadao);
     public Optional<Cidadao> getCidadaoByCpf(String cpf);
+    public void verificaTokenFuncionario(String authHeader) throws ServletException;
 }

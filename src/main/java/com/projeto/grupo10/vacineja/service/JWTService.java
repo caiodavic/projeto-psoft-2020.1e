@@ -95,13 +95,16 @@ public class JWTService {
      * @param authorizatioHeader eh o token do suposto adm
      * @throws ServletException excecao lançada se houver erro de autenticacao
      */
-    public void verifyAdmin(String authorizatioHeader) throws ServletException{
+    public boolean verifyAdmin(String authorizatioHeader) throws ServletException{
         verificaToken(authorizatioHeader);
         String id = getCidadaoDoToken(authorizatioHeader);
         String tipoLogin = getTipoLogin(authorizatioHeader);
 
-        if(!id.equals(CPF_ADM) || !tipoLogin.equals("Administrador")) {
-            throw new IllegalArgumentException();
+        if(id.equals("00000000000") && tipoLogin.equals("Administrador")) {
+            System.out.println(tipoLogin);
+            return true;
         }
+
+        return false;
     }
 }

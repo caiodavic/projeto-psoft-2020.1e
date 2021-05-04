@@ -1,13 +1,13 @@
 package com.projeto.grupo10.vacineja.service;
 
-import com.projeto.grupo10.vacineja.model.lote.Lote;
-import com.projeto.grupo10.vacineja.model.lote.LoteDTO;
+
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
 import com.projeto.grupo10.vacineja.repository.VacinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,11 @@ public class VacinaServiceImpl implements VacinaService {
     @Autowired
     private VacinaRepository vacinaRepository;
 
+    @Autowired
+    private CidadaoService cidadaoService;
+
+    @Autowired
+    private JWTService jwtService;
 
     /**
      * Cria uma nova Vacina. Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
@@ -28,7 +33,12 @@ public class VacinaServiceImpl implements VacinaService {
      * @return a vacina cadastrada
      */
     @Override
-    public Vacina criaVacina(VacinaDTO vacinaDTO) {
+    public Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException {
+
+        if(!jwtService.verifyAdmin(authToken)){
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
         Optional<Vacina> optionalVacina = vacinaRepository.findById(vacinaDTO.getNomeFabricante());
 
         if(optionalVacina.isPresent()){
