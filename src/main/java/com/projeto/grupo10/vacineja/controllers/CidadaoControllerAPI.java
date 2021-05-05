@@ -1,5 +1,7 @@
 package com.projeto.grupo10.vacineja.controllers;
 
+
+import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
@@ -66,6 +68,32 @@ public class CidadaoControllerAPI {
 
         return new ResponseEntity<String>("Cidadão definido como funcionario, aguardando aprovação do administrador.",
                 HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
+                                           @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
+
+        Optional<Cidadao> cidadao = cidadaoService.getCidadaoById(cidadaoUpdateDTO.getCpf());
+
+
+        try{
+            cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
+        }
+
+        catch (IllegalArgumentException iae){
+            return ErroCidadao.erroUsuarioNaoEncontrado();
+        }
+        catch (ServletException e){
+            return ErroLogin.erroTokenInvalido();
+        }
+
+
+
+
+        cidadaoService.salvarCidadao(cidadao.get());
+        return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
     }
 
 

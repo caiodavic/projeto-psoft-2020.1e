@@ -1,10 +1,6 @@
 package com.projeto.grupo10.vacineja.service;
 
-import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioGoverno;
+import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
@@ -19,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletException;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -165,4 +162,26 @@ public class CidadaoServiceImpl implements CidadaoService{
 
     }
 
+    @Override
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
+
+        String id = jwtService.getCidadaoDoToken(headerToken);
+
+        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
+
+        if (!cidadaoOpt.isPresent()){
+            throw new IllegalArgumentException();
+        }
+
+        cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
+        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? cidadaoUpdateDTO.getComorbidades() : cidadao.getComorbidades());
+        cidadao.setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.getData_nascimento());
+        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
+        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
+        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
+        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
+        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
+        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? cidadaoUpdateDTO.getProfissoes() : cidadao.getProfissoes());
+        return cidadao;
+    }
 }

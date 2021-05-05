@@ -1,9 +1,6 @@
 package com.projeto.grupo10.vacineja.service;
 
-import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
+import com.projeto.grupo10.vacineja.model.usuario.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.ServletException;
@@ -22,5 +19,6 @@ public interface CidadaoService {
     public void cadastraCidadao(CidadaoDTO cidadaoDTO);
     public void salvarCidadao(Cidadao cidadao);
     public Optional<Cidadao> getCidadaoByCpf(String cpf);
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
 }
