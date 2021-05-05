@@ -26,7 +26,7 @@ public class JWTService {
     private CidadaoService cidadaoService;
     private final String TOKEN_KEY = "login correto";
 
-    public ResponseEntity<String> autentica(CidadaoLoginDTO cidadaoLogin){
+    public ResponseEntity<?> autentica(CidadaoLoginDTO cidadaoLogin){
         if(!cidadaoService.validaCidadaoSenha(cidadaoLogin)){
             return ErroLogin.erroLoginSenhaUsuarioErrado();
         }

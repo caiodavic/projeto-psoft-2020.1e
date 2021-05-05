@@ -13,33 +13,33 @@ public class ErroCidadao {
     static final String EMAIL_INVALIDO = "Email inválido";
     static final String CIDADAO_NAO_CADASTRADO = "Cidadão com cpf %s não está cadastrado";
 
-    public static ResponseEntity<String> erroSemPermissaoFuncionario(String usuario) {
-        return new ResponseEntity<String>(String.format(ErroCidadao.USUARIO_SEM_PERMISSAO_FUNCIONARIO, usuario),
+    public static ResponseEntity<CustomErrorType> erroSemPermissaoFuncionario(String usuario) {
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.USUARIO_SEM_PERMISSAO_FUNCIONARIO, usuario)),
                 HttpStatus.UNAUTHORIZED);
     }
 
-    public static ResponseEntity<String> erroSemPermissaoAdministrador() {
-        return new ResponseEntity<String>(ErroCidadao.USUARIO_SEM_PERMISSAO_ADMINISTRADOR,
+    public static ResponseEntity<CustomErrorType> erroSemPermissaoAdministrador() {
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroCidadao.USUARIO_SEM_PERMISSAO_ADMINISTRADOR),
                 HttpStatus.UNAUTHORIZED);
     }
 
-    public static ResponseEntity<String> erroUsuarioNaoEncontrado() {
-        return new ResponseEntity<String>(ErroCidadao.USUARIO_NAO_ENCONTRADO, HttpStatus.NOT_FOUND);
+    public static ResponseEntity<CustomErrorType> erroUsuarioNaoEncontrado() {
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroCidadao.USUARIO_NAO_ENCONTRADO), HttpStatus.NOT_FOUND);
     }
-    public static ResponseEntity<String> erroCidadaoCadastrado(String cpf) {
-		return new ResponseEntity<String>(
-				String.format(ErroCidadao.CIDADAO_CADASTRADO, cpf), 
+    public static ResponseEntity<CustomErrorType> erroCidadaoCadastrado(String cpf) {
+		return new ResponseEntity<CustomErrorType>(
+                new CustomErrorType(String.format(ErroCidadao.CIDADAO_CADASTRADO, cpf)),
 				HttpStatus.NOT_ACCEPTABLE);
 	}
-    public static ResponseEntity<String> erroEmailInvalido() {
-        return new ResponseEntity<String>(
-                String.format(ErroCidadao.EMAIL_INVALIDO),
+    public static ResponseEntity<CustomErrorType> erroEmailInvalido() {
+        return new ResponseEntity<CustomErrorType>(
+                new CustomErrorType(String.format(ErroCidadao.EMAIL_INVALIDO)),
                 HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public static ResponseEntity<String> erroCidadaoNaoCadastrado(String cpf) {
-        return new ResponseEntity<String>(
-                String.format(ErroCidadao.CIDADAO_NAO_CADASTRADO, cpf),
+    public static ResponseEntity<CustomErrorType> erroCidadaoNaoCadastrado(String cpf) {
+        return new ResponseEntity<CustomErrorType>(
+                new CustomErrorType(String.format(ErroCidadao.CIDADAO_NAO_CADASTRADO, cpf)),
                 HttpStatus.NOT_ACCEPTABLE);
     }
 }

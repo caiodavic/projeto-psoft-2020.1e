@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.controllers;
 import com.projeto.grupo10.vacineja.service.AdministradorService;
 import com.projeto.grupo10.vacineja.service.AdministradorServiceImpl;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
+import com.projeto.grupo10.vacineja.util.CustomErrorType;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +47,8 @@ public class AdministradorControllerAPI {
 
     @RequestMapping(value = "/admin/autorizarFuncionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<String> autorizarCadastroFuncionario(@RequestHeader("Authorization") String headerToken,
-                                                               @RequestHeader String cpfFuncionario){
+    public ResponseEntity<?> autorizarCadastroFuncionario(@RequestHeader("Authorization") String headerToken,
+                                                                        @RequestHeader String cpfFuncionario){
 
         try{
             this.administradorService.autorizarCadastroFuncionario(headerToken, cpfFuncionario);
