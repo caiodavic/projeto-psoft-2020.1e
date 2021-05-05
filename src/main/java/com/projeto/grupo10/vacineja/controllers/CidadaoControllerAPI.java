@@ -52,7 +52,7 @@ public class CidadaoControllerAPI {
     @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
 
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
+    public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
 
         try{
