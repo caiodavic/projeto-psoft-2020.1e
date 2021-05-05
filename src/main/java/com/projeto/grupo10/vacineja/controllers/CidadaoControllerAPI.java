@@ -1,6 +1,10 @@
 package com.projeto.grupo10.vacineja.controllers;
 
+
 import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
+import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
+import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -24,23 +29,28 @@ public class CidadaoControllerAPI {
     @Autowired
     CidadaoService cidadaoService;
 
+
     @RequestMapping(value = "/usuario/cadastraCidadao", method = RequestMethod.POST)
-    public ResponseEntity<?> criarCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+    public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+
         Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
         String emailCidadao = cidadaoDTO.getEmail();
-        if(cidadaos.isPresent())
-            return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
 
-        if(!ErroEmail.validarEmail(emailCidadao))
-            return ErroCidadao.erroEmailInvalido();
-
-        Cidadao cidadao = cidadaoService.criaCidadao(cidadaoDTO);
-        cidadaoService.salvarCidadao(cidadao);
-
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.CREATED);
+        try{
+            cidadaoService.cadastraCidadao(cidadaoDTO);
+        } catch (IllegalArgumentException e){
+            if(e.getMessage().toString() == "Email invalido"){
+                return ErroCidadao.erroEmailInvalido();
+            }
+            else if(e.getMessage().toString() == "Cidadao cadastrado"){
+                return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
+            }
+        }
+        return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
+
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<String> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){

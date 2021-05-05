@@ -4,6 +4,7 @@ import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
+import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,8 @@ public class CidadaoServiceImpl implements CidadaoService{
         return result;
     }
 
+    private boolean loginAsFuncionario(String tipoLogin){ return tipoLogin.equals("Funcionário");}
+
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
 
@@ -134,15 +137,29 @@ public class CidadaoServiceImpl implements CidadaoService{
         return "Oie deu certo";
     }
 
-    public Cidadao criaCidadao(CidadaoDTO cidadaoDTO) {
+
+    public void verificaTokenFuncionario(String authHeader) throws ServletException {
+        String id = jwtService.getCidadaoDoToken(authHeader);
+        String tipoLogin = jwtService.getTipoLogin(authHeader);
+
+        if(!isFuncionario(id))
+            throw new ServletException("Usuario não é Funcionário cadastrado!");
+
+    }
+
+    public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
+        if(cidadaoOpt.isPresent()){
+            throw new IllegalArgumentException("Cidadao cadastrado");
+        }
+        if(!ErroEmail.validarEmail(cidadaoDTO.getEmail())){
+            throw new IllegalArgumentException("Email invalido");
+        }
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			cidadaoDTO.getProfissoes(),cidadaoDTO.getComorbidades(), cidadaoDTO.getSenha());
-    	return cidadao;
-    	
-    }
-    public Optional<Cidadao> getCidadaoByCpf(String cpf){
-    	return cidadaoRepository.findById(cpf);
+    	this.salvarCidadao(cidadao);
+
     }
 
     @Override
