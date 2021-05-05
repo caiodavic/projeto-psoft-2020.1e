@@ -18,7 +18,6 @@ public interface CidadaoService {
     public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
     public void cadastraCidadao(CidadaoDTO cidadaoDTO);
     public void salvarCidadao(Cidadao cidadao);
-    public Optional<Cidadao> getCidadaoByCpf(String cpf);
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
 }
