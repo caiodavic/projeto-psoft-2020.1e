@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.states;
+package com.projeto.grupo10.vacineja.state;
 
 public class Tomou1Dose implements Situacao {
     private static final String SITUACAO_ATUAL = "Tomou a 1ª dose";

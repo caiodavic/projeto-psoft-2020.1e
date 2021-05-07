@@ -6,11 +6,12 @@ import javax.persistence.*;
 public abstract class Requisito{
 
     @Id
-    long id;
-    protected int idade;
     protected String requisito;
+    protected int idade;
+    boolean podeVacinar;
 
     public int getIdade(){return idade;}
     public String getRequisito(){return requisito;}
     public void setIdade(int idade){this.idade = idade;}
+    public void setPodeVacinar(){this.podeVacinar = true;}
 }

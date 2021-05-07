@@ -11,6 +11,7 @@ public class RequisitoComorbidade extends Requisito{
     public RequisitoComorbidade(int idade, String comorbidade){
         super.idade = idade;
         super.requisito = comorbidade;
+        super.podeVacinar = false;
     }
 
     public boolean isHabilitado() {

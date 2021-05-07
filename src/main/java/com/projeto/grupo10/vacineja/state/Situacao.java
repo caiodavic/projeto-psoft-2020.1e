@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.states;
+package com.projeto.grupo10.vacineja.state;
 
 public interface Situacao {
 

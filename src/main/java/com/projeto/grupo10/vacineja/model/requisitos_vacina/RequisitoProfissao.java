@@ -11,6 +11,7 @@ public class RequisitoProfissao extends Requisito{
     public RequisitoProfissao(int idade, String profissao){
         super.idade = idade;
         super.requisito = profissao;
+        super.podeVacinar = false;
     }
 
     public boolean isHabilitado() {
