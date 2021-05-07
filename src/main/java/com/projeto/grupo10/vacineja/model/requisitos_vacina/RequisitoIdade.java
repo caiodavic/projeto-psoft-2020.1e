@@ -8,7 +8,8 @@ public class RequisitoIdade extends Requisito{
     public RequisitoIdade(){}
     public RequisitoIdade(int idade){
         super.idade = idade;
-        super.requisito = "Idade";
+        super.requisito = "idade";
+        super.podeVacinar = true;
     }
 
 }
