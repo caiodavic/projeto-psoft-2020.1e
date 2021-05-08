@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 public class PadronizaString {
 
     public static String padronizaString(String str) {
-        str.toLowerCase();
-        String StringNormalizadaNFD = Normalizer.normalize(str, Normalizer.Form.NFD);
+        String string = str.toLowerCase();
+        String StringNormalizadaNFD = Normalizer.normalize(string, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(StringNormalizadaNFD).replaceAll("");
     }
