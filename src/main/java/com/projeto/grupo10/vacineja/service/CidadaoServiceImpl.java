@@ -12,11 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
+import static com.projeto.grupo10.vacineja.util.PadronizaString.removeAcentos;
+
 import javax.servlet.ServletException;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService{
@@ -157,7 +158,8 @@ public class CidadaoServiceImpl implements CidadaoService{
         }
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
-    			cidadaoDTO.getProfissoes(),cidadaoDTO.getComorbidades(), cidadaoDTO.getSenha());
+    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()),
+                cidadaoDTO.getSenha());
     	this.salvarCidadao(cidadao);
 
     }
@@ -174,14 +176,16 @@ public class CidadaoServiceImpl implements CidadaoService{
         }
 
         cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
-        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? cidadaoUpdateDTO.getComorbidades() : cidadao.getComorbidades());
+        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? (padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades())) : cidadao.getComorbidades());
         cidadao.setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.getData_nascimento());
         cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
         cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
         cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
         cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
         cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
-        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? cidadaoUpdateDTO.getProfissoes() : cidadao.getProfissoes());
+        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
         return cidadao;
     }
+
+
 }
