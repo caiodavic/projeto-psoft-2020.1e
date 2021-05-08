@@ -1,7 +1,9 @@
 package com.projeto.grupo10.vacineja.model.usuario;
 
+import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -10,14 +12,6 @@ public class Cidadao {
     @Id
     private String cpf;
 
-    private String email;
-
-    private String nome;
-    private String endereco;
-    private String cartaoSus;
-    private String data_nascimento;
-    private String telefone;
-
     @ElementCollection
     private Set<String> profissoes;
 
@@ -25,9 +19,20 @@ public class Cidadao {
     private Set<String> comorbidades;
 
     @OneToOne
-    private FuncionarioGoverno tipoUsuario;
+    private FuncionarioGoverno funcionarioGoverno;
 
+    @OneToOne
+    private CartaoVacina cartaoVacina;
+
+
+    private String email;
+    private String nome;
+    private String endereco;
+    private String cartaoSus;
+    private String data_nascimento;
+    private String telefone;
     private String senha;
+
 
     public Cidadao() {
     }
@@ -44,8 +49,9 @@ public class Cidadao {
         this.telefone = telefone;
         this.profissoes = profissoes;
         this.comorbidades = comorbidades;
-        this.tipoUsuario = null;
+        this.funcionarioGoverno = null;
         this.senha = senha;
+        this.cartaoVacina = new CartaoVacina(cpf);
     }
     public String getSenha(){
         return this.senha;
@@ -54,29 +60,34 @@ public class Cidadao {
         return this.cpf;
     }
 
-    public void setFuncionarioGoverno (FuncionarioGoverno funcionarioGoverno){
-        this.tipoUsuario = funcionarioGoverno;
-    }
 
     public boolean isFuncionario (){
-        return this.tipoUsuario != null && this.tipoUsuario.isAprovado();
+        return this.funcionarioGoverno != null && this.funcionarioGoverno.isAprovado();
     }
 
     public boolean isCidadao (){
-        return this.tipoUsuario == null;
+        return this.funcionarioGoverno == null;
     }
 
 
     public boolean aguardandoAutorizacaoFuncionario() {
-        return this.tipoUsuario != null && !this.tipoUsuario.isAprovado();
+        return this.funcionarioGoverno != null && !this.funcionarioGoverno.isAprovado();
     }
 
     public void autorizaCadastroFuncionario(){
-        this.tipoUsuario.aprovaCadastro();
+        this.funcionarioGoverno.aprovaCadastro();
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void avancarSituacaoVacina(){
+        this.cartaoVacina.proximaSituacao();
+    }
+
+    public void receberVacina(Vacina vacina, Date dataVacina) {
+        this.cartaoVacina.proximaSituacao(vacina, dataVacina);
+    }
+
+    public void setFuncionarioGoverno (FuncionarioGoverno funcionarioGoverno){
+        this.funcionarioGoverno = funcionarioGoverno;
     }
 
     public String getEmail() {
@@ -143,17 +154,12 @@ public class Cidadao {
         this.comorbidades = comorbidades;
     }
 
-    public FuncionarioGoverno getTipoUsuario() {
-        return tipoUsuario;
-    }
-
-    public void setTipoUsuario(FuncionarioGoverno tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
+    public FuncionarioGoverno getFuncionarioGoverno() {
+        return funcionarioGoverno;
     }
 
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
 }
 

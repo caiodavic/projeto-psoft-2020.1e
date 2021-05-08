@@ -1,10 +1,12 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 public interface CidadaoService {
@@ -19,4 +21,6 @@ public interface CidadaoService {
     public void cadastraCidadao(CidadaoDTO cidadaoDTO);
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
+    public void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException;
+
 }

@@ -3,8 +3,6 @@ package com.projeto.grupo10.vacineja.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.PushBuilder;
-
 public class ErroLogin {
     static final String ERRO_AUTENTICAR_LOGIN_USUARIO_SENHA_ERRADO = "Cpf ou senha incorreto";
     static final String ERRO_AUTENTICAR_LOGIN_ADMINISTRADOR = "Esse usuário não pode realizar login como administrador";

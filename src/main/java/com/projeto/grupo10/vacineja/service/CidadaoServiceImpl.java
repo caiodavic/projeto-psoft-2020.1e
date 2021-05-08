@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
@@ -10,8 +11,13 @@ import org.springframework.stereotype.Service;
 
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 import javax.servlet.ServletException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.*;
 import java.net.http.HttpResponse;
+
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService{
@@ -77,8 +83,6 @@ public class CidadaoServiceImpl implements CidadaoService{
         return result;
     }
 
-    private boolean loginAsFuncionario(String tipoLogin){ return tipoLogin.equals("Funcionário");}
-
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
 
@@ -137,8 +141,8 @@ public class CidadaoServiceImpl implements CidadaoService{
         String id = jwtService.getCidadaoDoToken(authHeader);
         String tipoLogin = jwtService.getTipoLogin(authHeader);
 
-        if(!isFuncionario(id))
-            throw new ServletException("Usuario não é Funcionário cadastrado!");
+        if(!isFuncionario(id) && tipoLogin.equals("Funcionario"))
+            throw new ServletException("Usuario não é um Funcionário cadastrado!");
 
     }
 
@@ -179,5 +183,24 @@ public class CidadaoServiceImpl implements CidadaoService{
         cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
         this.salvarCidadao(cidadao);
         return cidadao;
+    }
+
+    @Override
+    public void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException {
+        this.verificaTokenFuncionario(headerToken);
+
+        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfCidadao);
+
+        if (cidadaoOpt.isEmpty()){
+            throw new IllegalArgumentException("Cidadão não cadastrado no serviço");
+        }
+
+        Cidadao cidadao = cidadaoOpt.get();
+
+        this.recebeVacina(cidadao, vacina, dataVacina);
+    }
+
+    private void recebeVacina(Cidadao cidadao, Vacina vacina, Date dataVacina) {
+        cidadao.receberVacina(vacina, dataVacina);
     }
 }

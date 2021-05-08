@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.service;
+package com.projeto.grupo10.vacineja.util.email;
 
 import java.util.Properties;
 import java.util.Properties;
@@ -11,7 +11,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class EmailService {
+public class Email {
 
     public static void enviarAlertaVacinacao(String subject, String menssagem, String email) {
         Properties props = new Properties();

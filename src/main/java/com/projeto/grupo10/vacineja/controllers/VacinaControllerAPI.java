@@ -5,19 +5,16 @@ import com.projeto.grupo10.vacineja.model.lote.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
 import com.projeto.grupo10.vacineja.service.*;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLote;
 import com.projeto.grupo10.vacineja.util.ErroVacina;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import io.swagger.annotations.OAuth2Definition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
-import java.util.ArrayList;
 import java.util.List;
 
 // É necessário realizar uma verificação toda vez que uma ação com vacinação for feita
@@ -149,7 +146,8 @@ public class VacinaControllerAPI {
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
         } catch (IllegalArgumentException | ServletException e){
             return ErroVacina.erroListarVacina(e.getMessage());
-    }
+        }
 
     }
+
 }

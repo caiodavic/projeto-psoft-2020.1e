@@ -1,9 +1,7 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.service.AdministradorService;
-import com.projeto.grupo10.vacineja.service.AdministradorServiceImpl;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
-import com.projeto.grupo10.vacineja.util.CustomErrorType;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.swagger.annotations.ApiOperation;

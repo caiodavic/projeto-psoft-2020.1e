@@ -6,8 +6,10 @@ import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
 import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
+import com.projeto.grupo10.vacineja.service.JWTService;
+import com.projeto.grupo10.vacineja.service.LoteService;
+import com.projeto.grupo10.vacineja.service.VacinaService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
-import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -17,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -28,6 +28,16 @@ public class CidadaoControllerAPI {
 
     @Autowired
     CidadaoService cidadaoService;
+
+    @Autowired
+    VacinaService vacinaService;
+
+    @Autowired
+    LoteService loteService;
+
+    @Autowired
+    JWTService jwtService;
+
 
 
     @RequestMapping(value = "/usuario/cadastraCidadao", method = RequestMethod.POST)
@@ -50,7 +60,6 @@ public class CidadaoControllerAPI {
     }
 
     @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
-
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
