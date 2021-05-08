@@ -24,6 +24,7 @@ public class Cidadao {
     @OneToOne
     private CartaoVacina cartaoVacina;
 
+
     private String email;
     private String nome;
     private String endereco;
@@ -31,6 +32,7 @@ public class Cidadao {
     private String data_nascimento;
     private String telefone;
     private String senha;
+
 
     public Cidadao() {
     }

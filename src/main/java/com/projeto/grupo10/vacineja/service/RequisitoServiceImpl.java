@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaString;
 
 public class RequisitoServiceImpl implements RequisitoService{
 
@@ -33,8 +33,7 @@ public class RequisitoServiceImpl implements RequisitoService{
         if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
-
-        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(),requisito.getRequisito());
+        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
         requisitoRepository.save(novaComorbidade);
     }
 
@@ -44,8 +43,7 @@ public class RequisitoServiceImpl implements RequisitoService{
         if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
-
-        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(),requisito.getRequisito());
+        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
         requisitoRepository.save(novaComorbidade);
     }
 

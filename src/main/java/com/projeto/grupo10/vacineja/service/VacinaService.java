@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface VacinaService {
     public Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException;
-    public List<Vacina> listarVacinas();
-    public Optional<Vacina> getVacinaById(String nomeFabricante);
+    public List<Vacina> listarVacinas(String headerToken) throws ServletException;
+    public Optional<Vacina> getVacinaById(String nomeFabricante) ;
     public Vacina fetchVacina(String nomeFabricante);
 
 }

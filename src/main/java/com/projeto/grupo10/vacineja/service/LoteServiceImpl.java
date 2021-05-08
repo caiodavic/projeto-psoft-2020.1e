@@ -34,21 +34,23 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Override
-    public List<Lote> listaLotes() {
+    public List<Lote> listaLotes(String headerToken) throws ServletException{
+        cidadaoService.verificaTokenFuncionario(headerToken);
         return loteRepository.findAll();
     }
 
-    public List<Lote> listaLotesPorFabricante(String nomeFabricante){
+    public List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException{
+        cidadaoService.verificaTokenFuncionario(headerToken);
         return loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
     }
 
-    @Override
-    public void salvaLote(Lote loteVacina) {
+    private void salvaLote(Lote loteVacina) {
         loteRepository.save(loteVacina);
     }
 
     @Override
     public List<Lote> removeDoseLotes(String nomeFabricante,int qtdVacinas, String authToken) throws ServletException {
+        cidadaoService.verificaTokenFuncionario(authToken);
         List<Lote> loteList = loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
         int j = 0;
 
@@ -63,10 +65,7 @@ public class LoteServiceImpl implements LoteService {
                 currentLote.diminuiQtdDoses();
                 loteRepository.save(currentLote);
             }
-
         }
-
-
         return loteList;
     }
 
@@ -75,7 +74,8 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Override
-    public Lote findLoteByNomeFabricante(String nomeFabricante){
+    public Lote findLoteByNomeFabricante(String nomeFabricante, String headerToken) throws ServletException{
+        cidadaoService.verificaTokenFuncionario(headerToken);
        return loteRepository.findByNomeFabricanteVacina(nomeFabricante);
     }
 
