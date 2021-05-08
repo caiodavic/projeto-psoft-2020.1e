@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class PadronizaString {
 
     public static String removeAcentos(String str) {
+        str.toLowerCase();
         String StringNormalizadaNFD = Normalizer.normalize(str, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(StringNormalizadaNFD).replaceAll("");
