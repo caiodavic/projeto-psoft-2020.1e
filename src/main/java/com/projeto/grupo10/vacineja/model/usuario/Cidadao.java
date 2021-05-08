@@ -29,8 +29,6 @@ public class Cidadao {
 
     private String senha;
 
-    private 
-
     public Cidadao() {
     }
 

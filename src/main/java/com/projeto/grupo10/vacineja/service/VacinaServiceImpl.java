@@ -67,7 +67,8 @@ public class VacinaServiceImpl implements VacinaService {
      * @return lista das vacinas armazenadas em VacinaRepository
      */
     @Override
-    public List<Vacina> listarVacinas() {
+    public List<Vacina> listarVacinas(String headerToken) throws ServletException {
+        cidadaoService.verificaTokenFuncionario(headerToken);
         return vacinaRepository.findAll();
     }
 

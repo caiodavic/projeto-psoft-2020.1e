@@ -88,11 +88,6 @@ public class CidadaoControllerAPI {
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
-
-
-
-
-        cidadaoService.salvarCidadao(cidadao.get());
         return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
     }
 
