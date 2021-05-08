@@ -44,4 +44,9 @@ public class ErroVacina {
         return new ResponseEntity<CustomErrorType>(new CustomErrorType((mensagemDeErro)),
                 HttpStatus.BAD_REQUEST);
     }
+
+    public static ResponseEntity<CustomErrorType> erroListarVacina(String mensagemDeErro){
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType((mensagemDeErro)),
+                HttpStatus.BAD_REQUEST);
+    }
 }
