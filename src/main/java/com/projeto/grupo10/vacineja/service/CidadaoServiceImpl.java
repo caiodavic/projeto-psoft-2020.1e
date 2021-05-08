@@ -4,7 +4,7 @@ import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
-import com.projeto.grupo10.vacineja.util.erros.ErroEmail;
+import com.projeto.grupo10.vacineja.util.ErroEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

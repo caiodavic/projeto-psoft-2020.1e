@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.util.erros;
+package com.projeto.grupo10.vacineja.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

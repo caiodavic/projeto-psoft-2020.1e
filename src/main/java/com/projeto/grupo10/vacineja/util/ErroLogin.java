@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.util.erros;
+package com.projeto.grupo10.vacineja.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
