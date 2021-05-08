@@ -17,7 +17,6 @@ public interface CidadaoService {
     public ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
     public void cadastraCidadao(CidadaoDTO cidadaoDTO);
-    public void salvarCidadao(Cidadao cidadao);
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
 }

@@ -31,7 +31,7 @@ public class CidadaoServiceImpl implements CidadaoService{
         return this.cidadaoRepository.findById(cpf);
     }
 
-    public void salvarCidadao(Cidadao cidadao){
+    private void salvarCidadao(Cidadao cidadao){
         this.cidadaoRepository.save(cidadao);
     }
 
@@ -177,6 +177,7 @@ public class CidadaoServiceImpl implements CidadaoService{
         cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
         cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
         cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
+        this.salvarCidadao(cidadao);
         return cidadao;
     }
 }
