@@ -1,9 +1,7 @@
-package com.projeto.grupo10.vacineja.util;
+package com.projeto.grupo10.vacineja.util.erros;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import javax.servlet.http.PushBuilder;
 
 public class ErroLogin {
     static final String ERRO_AUTENTICAR_LOGIN_USUARIO_SENHA_ERRADO = "Cpf ou senha incorreto";

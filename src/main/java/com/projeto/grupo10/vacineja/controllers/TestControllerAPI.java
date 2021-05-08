@@ -1,9 +1,8 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
-import com.projeto.grupo10.vacineja.service.EmailService;
+import com.projeto.grupo10.vacineja.util.email.Email;
 import com.projeto.grupo10.vacineja.service.JWTService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -44,7 +42,7 @@ public class TestControllerAPI {
 
     @RequestMapping(value = "/teste/testeEmail", method = RequestMethod.POST)
     public ResponseEntity<String> testeEmail(@RequestHeader String email){
-        EmailService.enviarAlertaVacinacao("Atualização do Vacine Já",
+        Email.enviarAlertaVacinacao("Atualização do Vacine Já",
                 "Você esta habilitado para receber a primeira dose da vacina," +
                         " acesse o Vacine já e agende sua vacinação", email);
 
@@ -53,6 +51,19 @@ public class TestControllerAPI {
 
     @RequestMapping(value = "/teste/testeloginfixo", method = RequestMethod.GET)
     public ResponseEntity<String> testeLoginFixo(@PathVariable String email,
+                                                 @RequestHeader("Authorization") String header) {
+        try {
+            return new ResponseEntity<String>(this.jwtService.getCidadaoDoToken(header), HttpStatus.OK);
+
+        } catch (IllegalArgumentException iae) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } catch (ServletException e) {
+            return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @RequestMapping(value = "/teste/testeStates", method = RequestMethod.POST)
+    public ResponseEntity<String> testeStates(@PathVariable String cpf,
                                                  @RequestHeader("Authorization") String header) {
         try {
             return new ResponseEntity<String>(this.jwtService.getCidadaoDoToken(header), HttpStatus.OK);

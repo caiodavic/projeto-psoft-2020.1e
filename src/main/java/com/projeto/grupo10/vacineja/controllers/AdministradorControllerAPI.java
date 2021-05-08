@@ -1,11 +1,9 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.service.AdministradorService;
-import com.projeto.grupo10.vacineja.service.AdministradorServiceImpl;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
-import com.projeto.grupo10.vacineja.util.CustomErrorType;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
-import com.projeto.grupo10.vacineja.util.ErroLogin;
+import com.projeto.grupo10.vacineja.util.erros.ErroCidadao;
+import com.projeto.grupo10.vacineja.util.erros.ErroLogin;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;

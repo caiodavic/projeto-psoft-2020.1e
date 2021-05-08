@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.util;
+package com.projeto.grupo10.vacineja.util.erros;
 
 public class CustomErrorType { private String errorMessage;
 

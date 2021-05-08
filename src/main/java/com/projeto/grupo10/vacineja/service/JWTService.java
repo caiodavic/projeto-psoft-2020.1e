@@ -1,9 +1,8 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.filtros.TokenFilter;
-import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
-import com.projeto.grupo10.vacineja.util.ErroLogin;
+import com.projeto.grupo10.vacineja.util.erros.ErroLogin;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

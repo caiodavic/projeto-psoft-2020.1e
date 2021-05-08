@@ -1,6 +1,7 @@
-package com.projeto.grupo10.vacineja.util;
+package com.projeto.grupo10.vacineja.util.erros;
 
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.RequisitoDTO;
+import com.projeto.grupo10.vacineja.util.erros.CustomErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
