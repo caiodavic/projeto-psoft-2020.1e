@@ -9,12 +9,14 @@ import com.projeto.grupo10.vacineja.util.erros.ErroLote;
 import com.projeto.grupo10.vacineja.util.erros.ErroVacina;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import io.swagger.annotations.OAuth2Definition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import java.util.ArrayList;
 import java.util.List;
 
 // É necessário realizar uma verificação toda vez que uma ação com vacinação for feita
@@ -49,33 +51,50 @@ public class VacinaControllerAPI {
 
     // TO-DO exception handling
     @GetMapping("/vacina")
-    public ResponseEntity<?> listaVacinas(){
-        List<Vacina> vacinasList = vacinaService.listarVacinas();
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> listaVacinas(@RequestHeader("Authorization") String headerToken){
 
-        if(vacinasList.isEmpty()){
-            return  ErroVacina.semVacinasCadastradas();
+        try {
+            List<Vacina> vacinasList = vacinaService.listarVacinas(headerToken);
+
+            if(vacinasList.isEmpty()){
+                return  ErroVacina.semVacinasCadastradas();
+            }
+            return new ResponseEntity<>(vacinasList,HttpStatus.OK);
+        } catch (IllegalArgumentException | ServletException e){
+            return ErroVacina.erroListarVacina(e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e){
+            return ErroVacina.erroCadastroVacina("eae kkk");
         }
-        return new ResponseEntity<>(vacinasList,HttpStatus.OK);
+
     }
 
     // TO-DO exception handling
     @GetMapping("/vacina/lote")
-    public ResponseEntity<?> listaLotes(){
-        List<Lote> loteList = loteService.listaLotes();
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> listaLotes(@RequestHeader("Authorization") String headerToken){
 
-        if(loteList.isEmpty()){
-            return ErroLote.semLotesCadastrados();
+
+        try {
+            List<Lote> loteList = loteService.listaLotes(headerToken);
+            if(loteList.isEmpty()){
+                return ErroLote.semLotesCadastrados();
+            }
+            return new ResponseEntity<>(loteList,HttpStatus.OK);
+        } catch (IllegalArgumentException | ServletException e){
+            return ErroVacina.erroListarVacina(e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e){
+            return ErroVacina.erroListarVacina("eae kkk");
         }
-
-        return new ResponseEntity<>(loteList,HttpStatus.OK);
     }
 
     @GetMapping("/vacina/lote/{nome_fabricante}")
-    public ResponseEntity<?> listaLotesPorFabricante(@PathVariable ("nome_fabricante") String nomeFabricante){
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> listaLotesPorFabricante(@PathVariable ("nome_fabricante") String nomeFabricante, @RequestHeader("Authorization") String headerToken){
         try {
             Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
 
-            List<Lote> loteList = loteService.listaLotesPorFabricante(nomeFabricante);
+            List<Lote> loteList = loteService.listaLotesPorFabricante(nomeFabricante, headerToken);
 
             if(loteList.isEmpty()){
                 return ErroLote.semLotesCadastrados();
@@ -86,6 +105,10 @@ public class VacinaControllerAPI {
         }
         catch (NullPointerException e){
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
+        } catch (IllegalArgumentException | ServletException e){
+            return ErroVacina.erroListarVacina(e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e){
+            return ErroVacina.erroListarVacina("eae kkk");
         }
     }
 
@@ -121,12 +144,11 @@ public class VacinaControllerAPI {
             Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
             List<Lote> loteList = loteService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
             return new ResponseEntity<>(loteList,HttpStatus.CREATED);
-        }
-
-        catch (NullPointerException | ServletException e){
+        } catch (NullPointerException e){
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
+        } catch (IllegalArgumentException | ServletException e){
+            return ErroVacina.erroListarVacina(e.getMessage());
         }
 
     }
-
 }
