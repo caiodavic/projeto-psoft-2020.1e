@@ -3,20 +3,15 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
-import com.projeto.grupo10.vacineja.util.ErroLogin;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
+import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 import javax.servlet.ServletException;
+import java.util.*;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService{

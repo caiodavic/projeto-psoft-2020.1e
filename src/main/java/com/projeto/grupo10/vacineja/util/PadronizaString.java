@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class PadronizaString {
 
-    public static String removeAcentos(String str) {
+    public static String padronizaString(String str) {
         str.toLowerCase();
         String StringNormalizadaNFD = Normalizer.normalize(str, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -16,7 +16,7 @@ public class PadronizaString {
 
     public static Set<String> padronizaSetsDeString (Set<String> strings) {
         Set<String> setDeStringPadronizadas = new HashSet<String>();
-        for (String string : strings) { setDeStringPadronizadas.add(removeAcentos(string));}
+        for (String string : strings) { setDeStringPadronizadas.add(padronizaString(string));}
         return setDeStringPadronizadas;
     }
 }
