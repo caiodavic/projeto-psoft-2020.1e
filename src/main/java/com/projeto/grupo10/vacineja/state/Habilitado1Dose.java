@@ -16,22 +16,36 @@ public class Habilitado1Dose implements Situacao{
 
     public Habilitado1Dose() { }
 
+    @Override
+    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
+        cartaoVacina.setDataAgendamento(data);
+    }
+
     /**
      * Ao passar para o proximo estado, caso o vacina escolhida para o cidadão seja de dose unica, a vacinação dele
      * sera considerada finalizada, caso não ele deve passar para o estado "tomou primeira dose"
      * @param cartaoVacina
      */
     @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina) {
-        if (cartaoVacina.getQtdDoseVacina() == 1){
+    public void proximaSituacao(CartaoVacina cartaoVacina) {}
+
+    @Override
+    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {
+        cartaoVacina.setDataPrimeiraDose(data);
+        cartaoVacina.setVacina(vacina);
+
+        if (cartaoVacina.getQtdDoseVacina() == 1) {
             cartaoVacina.setSituacao(SituacaoEnum.VACINACAOFINALIZADA);
-        }else{
+        } else {
             cartaoVacina.setSituacao(SituacaoEnum.TOMOU1DOSE);
 
-            Date dataSegundaDose = this.diaPropostoSegundaDose(cartaoVacina.getDataPrimeiraDose() ,cartaoVacina.getIntervaloVacina());
+            Date dataSegundaDose = this.diaPropostoSegundaDose(cartaoVacina.getDataPrimeiraDose(),
+                    cartaoVacina.getIntervaloVacina());
 
             cartaoVacina.setDataPrevistaSegundaDose(dataSegundaDose);
+            cartaoVacina.setDataAgendamento(dataSegundaDose);
         }
+
     }
 
     private Date diaPropostoSegundaDose(Date primeiraDose, int diasEntreDoses){
@@ -39,13 +53,6 @@ public class Habilitado1Dose implements Situacao{
         calendarioSegundaDose.setTime(primeiraDose);
         calendarioSegundaDose.add(Calendar.DAY_OF_MONTH, diasEntreDoses);
         return calendarioSegundaDose.getTime();
-    }
-
-    @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {
-        cartaoVacina.setDataPrimeiraDose(data);
-        cartaoVacina.setVacina(vacina);
-        this.proximaSituacao(cartaoVacina);
     }
 
     @Override
