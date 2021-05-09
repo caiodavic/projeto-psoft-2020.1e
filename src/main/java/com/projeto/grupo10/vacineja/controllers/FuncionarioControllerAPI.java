@@ -38,7 +38,6 @@ public class FuncionarioControllerAPI {
     JWTService jwtService;
 
 
-
     @RequestMapping(value = "/funcionario/ministrarVacina", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> ministrarVacina(@RequestHeader("Authorization") String headerToken,

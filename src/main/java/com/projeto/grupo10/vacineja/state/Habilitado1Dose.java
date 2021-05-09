@@ -28,13 +28,13 @@ public class Habilitado1Dose implements Situacao{
         }else{
             cartaoVacina.setSituacao(SituacaoEnum.TOMOU1DOSE);
 
-            Date dataSegundaDose = this.diaPorpostoSegundaDose(cartaoVacina.getDataPrimeiraDose() ,cartaoVacina.getIntervaloVacina());
+            Date dataSegundaDose = this.diaPropostoSegundaDose(cartaoVacina.getDataPrimeiraDose() ,cartaoVacina.getIntervaloVacina());
 
             cartaoVacina.setDataPrevistaSegundaDose(dataSegundaDose);
         }
     }
 
-    private Date diaPorpostoSegundaDose (Date primeiraDose, int diasEntreDoses){
+    private Date diaPropostoSegundaDose(Date primeiraDose, int diasEntreDoses){
         Calendar calendarioSegundaDose = new Calendar.Builder().build();
         calendarioSegundaDose.setTime(primeiraDose);
         calendarioSegundaDose.add(Calendar.DAY_OF_MONTH, diasEntreDoses);

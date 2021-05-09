@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implemetação de VacinaService, realiza funções de cadastro, verificação, listagem  e busca de opções de Vacinas
+ * Implemetação de VacinaService, realiza funções de cadastro, verificação, listagem e busca de Vacinas
  * no sistema.
  */
 @Service
@@ -29,7 +29,9 @@ public class VacinaServiceImpl implements VacinaService {
 
 
     /**
-     * Cria uma nova Vacina. Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
+     * Cria uma nova Vacina a partir de VacinaDTO.
+     * Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
+     *
      * @param vacinaDTO eh o DTO da Vacina a ser criada
      * @return a vacina cadastrada
      */
@@ -98,7 +100,7 @@ public class VacinaServiceImpl implements VacinaService {
     }
 
     /**
-     * Verifica se o número de doses é um ou dois.
+     * Valida o número de doses informado na criação da vacina, ele deve ser 1 ou 2 para que não seja lançada a exceção.
      * @param numDosesNecessarias eh o numero de doses necessárias
      */
     private void validaNumDoses(int numDosesNecessarias){
@@ -108,7 +110,8 @@ public class VacinaServiceImpl implements VacinaService {
     }
 
     /**
-     * Verifica se o período entre as doses é entre 28 e 90.
+     * Valida o periodo entre as doses (caso só tenha uma dose esse método não é chmadao).
+     * O período entre as doses deve ser entre   28 e 90.
      * @param diasEntreDoses eh o num de dias entre doses
      */
     private void validaDiasEntreDoses(int diasEntreDoses){
