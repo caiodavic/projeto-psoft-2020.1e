@@ -2,7 +2,7 @@ package com.projeto.grupo10.vacineja.service;
 
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
-import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
+import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
 import com.projeto.grupo10.vacineja.repository.VacinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implemetação de VacinaService, realizando funções de cadastro, verificação, listagem  e busca de Vacinas Individuais
+ * Implemetação de VacinaService, realiza funções de cadastro, verificação, listagem  e busca de opções de Vacinas
  * no sistema.
  */
 @Service
@@ -25,7 +25,8 @@ public class VacinaServiceImpl implements VacinaService {
     private CidadaoService cidadaoService;
 
     @Autowired
-    private JWTService jwtService;
+    private AdministradorService administradorService;
+
 
     /**
      * Cria uma nova Vacina. Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
@@ -35,9 +36,7 @@ public class VacinaServiceImpl implements VacinaService {
     @Override
     public Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException {
 
-        if(!jwtService.verifyAdmin(authToken)){
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        administradorService.verificaLoginAdmin(authToken);
 
         Optional<Vacina> optionalVacina = vacinaRepository.findById(vacinaDTO.getNomeFabricante());
 

@@ -19,7 +19,6 @@ import java.util.Map;
 
 @Service
 public class JWTService {
-    private static final String CPF_ADM = "00000000000";
 
     @Autowired
     private CidadaoService cidadaoService;
@@ -89,21 +88,4 @@ public class JWTService {
         }
     }
 
-    /**
-     * Verifica se o token passado é do administrador
-     * @param authorizatioHeader eh o token do suposto adm
-     * @throws ServletException excecao lançada se houver erro de autenticacao
-     */
-    public boolean verifyAdmin(String authorizatioHeader) throws ServletException{
-        verificaToken(authorizatioHeader);
-        String id = getCidadaoDoToken(authorizatioHeader);
-        String tipoLogin = getTipoLogin(authorizatioHeader);
-
-        if(id.equals("00000000000") && tipoLogin.equals("Administrador")) {
-            System.out.println(tipoLogin);
-            return true;
-        }
-
-        return false;
-    }
 }
