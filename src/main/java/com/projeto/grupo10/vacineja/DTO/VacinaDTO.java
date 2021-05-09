@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.model.vacina;
+package com.projeto.grupo10.vacineja.DTO;
 
 public class VacinaDTO {
     private String nomeFabricante;

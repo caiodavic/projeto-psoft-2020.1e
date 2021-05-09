@@ -2,7 +2,7 @@ package com.projeto.grupo10.vacineja.service;
 
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
-import com.projeto.grupo10.vacineja.model.vacina.VacinaDTO;
+import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
 import com.projeto.grupo10.vacineja.repository.VacinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implemetação de VacinaService, realizando funções de cadastro, verificação, listagem  e busca de Vacinas Individuais
+ * Implemetação de VacinaService, realiza funções de cadastro, verificação, listagem e busca de Vacinas
  * no sistema.
  */
 @Service
@@ -25,19 +25,20 @@ public class VacinaServiceImpl implements VacinaService {
     private CidadaoService cidadaoService;
 
     @Autowired
-    private JWTService jwtService;
+    private AdministradorService administradorService;
+
 
     /**
-     * Cria uma nova Vacina. Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
+     * Cria uma nova Vacina a partir de VacinaDTO.
+     * Caso já exista uma Vacina com o mesmo nome de Fabricante, uma exceção irá ser lançada.
+     *
      * @param vacinaDTO eh o DTO da Vacina a ser criada
      * @return a vacina cadastrada
      */
     @Override
     public Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException {
 
-        if(!jwtService.verifyAdmin(authToken)){
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        administradorService.verificaLoginAdmin(authToken);
 
         Optional<Vacina> optionalVacina = vacinaRepository.findById(vacinaDTO.getNomeFabricante());
 
@@ -99,7 +100,7 @@ public class VacinaServiceImpl implements VacinaService {
     }
 
     /**
-     * Verifica se o número de doses é um ou dois.
+     * Valida o número de doses informado na criação da vacina, ele deve ser 1 ou 2 para que não seja lançada a exceção.
      * @param numDosesNecessarias eh o numero de doses necessárias
      */
     private void validaNumDoses(int numDosesNecessarias){
@@ -109,7 +110,8 @@ public class VacinaServiceImpl implements VacinaService {
     }
 
     /**
-     * Verifica se o período entre as doses é entre 28 e 90.
+     * Valida o periodo entre as doses (caso só tenha uma dose esse método não é chmadao).
+     * O período entre as doses deve ser entre   28 e 90.
      * @param diasEntreDoses eh o num de dias entre doses
      */
     private void validaDiasEntreDoses(int diasEntreDoses){

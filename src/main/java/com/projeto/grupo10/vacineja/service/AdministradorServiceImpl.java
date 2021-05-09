@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 @Service
 public class AdministradorServiceImpl implements AdministradorService{
+    private static final String CPF_ADM = "00000000000";
 
     @Autowired
     CidadaoService cidadaoService;
@@ -17,7 +18,6 @@ public class AdministradorServiceImpl implements AdministradorService{
 
     public ArrayList<String> getUsuariosNaoAutorizados(String headerToken) throws ServletException{
         verificaLoginAdmin(headerToken);
-
         return this.cidadaoService.getUsuariosNaoAutorizados();
     }
 
@@ -28,17 +28,23 @@ public class AdministradorServiceImpl implements AdministradorService{
     }
 
     private boolean isAdmin(String id){
-        return id.equals("00000000000");
+        return id.equals(CPF_ADM);
     }
 
     private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("Administrador");}
 
-    private void verificaLoginAdmin (String headerToken) throws ServletException{
+    /**
+     * Verifica se o token passado é do administrador
+     * @param headerToken eh o token do suposto adm
+     * @throws ServletException excecao lançada se houver erro de autenticacao
+     *
+     */
+    public void verificaLoginAdmin (String headerToken) throws ServletException{
         String id = jwtService.getCidadaoDoToken(headerToken);
         String tipoLogin = jwtService.getTipoLogin(headerToken);
 
         if(!isAdmin(id) || !loginAsAdmin(tipoLogin)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("O usuário não tem permissão de Administrador!");
         }
     }
 }

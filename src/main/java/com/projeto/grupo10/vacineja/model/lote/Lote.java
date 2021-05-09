@@ -20,9 +20,11 @@ public class Lote {
     @OneToOne
     private Vacina vacina;
 
-    private int qtdDoses;
+    private int qtdDosesDisponiveis;
 
     private LocalDate dataDeValidade;
+
+    private int qtdDosesReservadas;
 
     public Lote() {
     }
@@ -30,8 +32,9 @@ public class Lote {
     public Lote(Vacina vacina, int qtdDoses, LocalDate dataDeValidade) {
         this.nomeFabricanteVacina = vacina.getNomeFabricante();
         this.vacina = vacina;
-        this.qtdDoses = qtdDoses;
+        this.qtdDosesDisponiveis = qtdDoses;
         this.dataDeValidade = dataDeValidade;
+        this.qtdDosesReservadas = 0;
     }
 
     public Long getId() {
@@ -46,16 +49,24 @@ public class Lote {
         return vacina;
     }
 
-    public int getQtdDoses() {
-        return qtdDoses;
+    public int getQtdDosesDisponiveis() {
+        return qtdDosesDisponiveis;
     }
 
     public LocalDate getDataDeValidade() {
         return dataDeValidade;
     }
 
-    public void diminuiQtdDoses(){
-        qtdDoses--;
+    public void diminuiQtdDosesDisponiveis(){
+        qtdDosesDisponiveis--;
+    }
+
+    public int getQtdDosesReservadas(){return qtdDosesReservadas;}
+
+    public void diminuiQtdDosesReservadas(){ qtdDosesReservadas--;}
+
+    public void aumentaQtdDosesReservadas(){
+        qtdDosesReservadas++;
     }
 }
 

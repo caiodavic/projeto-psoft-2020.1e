@@ -146,6 +146,7 @@ public class CidadaoServiceImpl implements CidadaoService{
 
     }
 
+
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if(cidadaoOpt.isPresent()){
