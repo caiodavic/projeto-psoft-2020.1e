@@ -14,8 +14,12 @@ public class Habilitado2Dose implements Situacao {
             "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
     private static final String ASSUNTO_EMAIL = "Vacinação primeira dose";
 
-    public Habilitado2Dose() {
 
+    public Habilitado2Dose() {}
+
+    @Override
+    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
+        cartaoVacina.setDataAgendamento(data);
     }
 
     @Override

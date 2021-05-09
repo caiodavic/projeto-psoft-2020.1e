@@ -20,6 +20,7 @@ public class CartaoVacina {
     private Date dataSegundaDose;
 
     private Date dataPrevistaSegundaDose;
+    private Date dataAgendamento;
 
     @Enumerated(EnumType.STRING)
     private SituacaoEnum situacao;
@@ -33,14 +34,18 @@ public class CartaoVacina {
     }
 
     public void proximaSituacao(){
-        this.situacao.getSituacao().proximaSituacao(this);
+        this.getSituacaoAtual().proximaSituacao(this);
     }
 
     public void proximaSituacao(Vacina vacina, Date dataVacina){
         if (this.vacina != null && !this.vacina.equals(vacina)){
             throw new IllegalArgumentException("As duas doses tomadas por um cidadão devem ser do mesmo tipo.");
         }
-        this.situacao.getSituacao().proximaSituacao(this, vacina, dataVacina);
+        this.getSituacaoAtual().proximaSituacao(this, vacina, dataVacina);
+    }
+
+    public void agendarVacinacao(Date dataAgendamento){
+        this.getSituacaoAtual().agendarVacinacao(this, dataAgendamento);
     }
 
 
@@ -82,5 +87,9 @@ public class CartaoVacina {
 
     public Situacao getSituacaoAtual(){
         return this.situacao.getSituacao();
+    }
+
+    public void setDataAgendamento(Date dataAgendamento){
+        this.dataAgendamento = dataAgendamento;
     }
 }

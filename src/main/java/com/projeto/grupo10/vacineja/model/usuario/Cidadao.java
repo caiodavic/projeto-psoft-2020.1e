@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.model.usuario;
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+import com.projeto.grupo10.vacineja.state.Situacao;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -86,8 +87,16 @@ public class Cidadao {
         this.cartaoVacina.proximaSituacao(vacina, dataVacina);
     }
 
+    public void agendarVacina(Date data){
+        this.cartaoVacina.agendarVacinacao(data);
+    }
+
     public void setFuncionarioGoverno (FuncionarioGoverno funcionarioGoverno){
         this.funcionarioGoverno = funcionarioGoverno;
+    }
+
+    public Situacao getSituacao(){
+        return this.cartaoVacina.getSituacaoAtual();
     }
 
     public String getEmail() {

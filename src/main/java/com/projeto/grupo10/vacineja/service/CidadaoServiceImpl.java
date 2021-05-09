@@ -4,7 +4,11 @@ import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
+import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
+import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
+import com.projeto.grupo10.vacineja.state.Tomou1Dose;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
+import javassist.expr.Instanceof;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,8 @@ public class CidadaoServiceImpl implements CidadaoService{
     @Autowired
     private JWTService jwtService;
 
+    @Autowired
+    private LoteService loteService;
 
     @Override
     public Optional<Cidadao> getCidadaoById(String cpf) {
@@ -186,6 +192,17 @@ public class CidadaoServiceImpl implements CidadaoService{
         return cidadao;
     }
 
+    /**
+     * Metodo responsavel por ministrar uma dose da vacina ao cidadão que esteja apto a receber uma vacina,
+     * a partir disso caso essa seja a segunda dose ou a vacina ministrada seja de dose unica o estado de
+     * vacinação passa para finalizado e se for a primeira dose de uma vacina que tem duas doses o cidadão deve
+     * ir para o estado de "tomou primeira dose"
+     * @param headerToken - token do funcionario que deve ministrar a dose
+     * @param cpfCidadao - Cpf do cidadão q deve receber a dose
+     * @param vacina - O tipo da vacina que sera ministrada
+     * @param dataVacina - Data em que foi realizada a vacinação
+     * @throws ServletException
+     */
     @Override
     public void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException {
         this.verificaTokenFuncionario(headerToken);
@@ -201,7 +218,63 @@ public class CidadaoServiceImpl implements CidadaoService{
         this.recebeVacina(cidadao, vacina, dataVacina);
     }
 
+    /**
+     * Metodo responsavel por adicionar uma vacina no cartão de vacinação do cidadão e avaçar o estado de vacinação
+     * @param cidadao - Cidadaõ que deve receber a dose da vacina
+     * @param vacina - O tipo da vacina
+     * @param dataVacina - A data em que a vacina foi aplicada
+     */
     private void recebeVacina(Cidadao cidadao, Vacina vacina, Date dataVacina) {
         cidadao.receberVacina(vacina, dataVacina);
+        this.cidadaoRepository.save(cidadao);
+    }
+
+    /**
+     * Metodo que deve ser chamado por um funcionario para habilitar os cidadãos que podem ser habilitados
+     * para segunda dose
+     * @param headerToken - toke do funcionario do governo
+     */
+    @Override
+    public void habilitarSegundaDose(String headerToken) throws ServletException {
+        this.verificaTokenFuncionario(headerToken);
+
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+        int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
+
+        for (Cidadao cidadao : cidadaos){
+            if (cidadao.getSituacao() instanceof Tomou1Dose){
+                if (qtdCidadaosQuePossoLiberar > 0){
+                    cidadao.avancarSituacaoVacina();
+                }else break;
+            }
+        }
+
+    }
+
+    /**
+     * Metodo responsavel por calcular a quantidade de cidadãos estão aptos a receber a vacina, seja
+     * primeira ou segunda dose
+     * @return
+     */
+    private int getQtdHabilitados(){
+        int result = 0;
+
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+
+        for (Cidadao cidadao : cidadaos){
+            if (cidadao.getSituacao() instanceof Habilitado1Dose || cidadao.getSituacao() instanceof Habilitado2Dose){
+                result ++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Metodo responsavél por calcular a diferença entre a quantidade de doses cadastradas no sistema, e a quantidade
+     * de pessoas já habilitadas para receber alguma dose
+     * @return
+     */
+    private int getQtdDosesSemDependencia(){
+        return this.loteService.getQtdVacinaDisponivel() - this.getQtdHabilitados();
     }
 }

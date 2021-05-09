@@ -21,6 +21,9 @@ public interface CidadaoService {
     public void cadastraCidadao(CidadaoDTO cidadaoDTO);
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     public void verificaTokenFuncionario(String authHeader) throws ServletException;
+    public void habilitarSegundaDose(String headerToken) throws ServletException;
     public void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException;
+
+
 
 }

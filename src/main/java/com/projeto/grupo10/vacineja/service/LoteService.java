@@ -19,5 +19,6 @@ public interface LoteService {
     public Vacina reservaVacinaEmLote(LocalDate dataVacinacao);
     public Vacina getVacinaReservadaByIdLote(Long idLote);
     public Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante);
+    public int getQtdVacinaDisponivel();
 
 }

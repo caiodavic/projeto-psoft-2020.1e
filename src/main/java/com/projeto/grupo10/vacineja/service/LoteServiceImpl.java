@@ -231,4 +231,24 @@ public class LoteServiceImpl implements LoteService {
         return vacinaValida;
     }
 
+    /**
+     * Metodo responsavel por calcular a quantidade total de doses no sistema
+     * @return
+     */
+    public int getQtdVacinaDisponivel(){
+        int result = 0;
+
+        List<Lote> lotesVacina = this.loteRepository.findAll();
+
+        for (Lote lote : lotesVacina){
+            try{
+                this.verificaDataValidade(lote);
+                result += lote.getQtdDosesDisponiveis();
+            }catch (IllegalArgumentException iae) {
+                //Não sei oq fazer nesse catch
+            }
+        }
+        return result;
+    }
+
 }
