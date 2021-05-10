@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 import java.util.ArrayList;
 
 public interface AdministradorService {
-    public ArrayList<String> getUsuariosNaoAutorizados(String headerToken) throws ServletException;
-    public void autorizarCadastroFuncionario(String headerToken, String cpfFuncionario)  throws ServletException;
-    public void verificaLoginAdmin (String headerToken) throws ServletException;
+    ArrayList<String> getUsuariosNaoAutorizados(String headerToken) throws ServletException;
+    void autorizarCadastroFuncionario(String headerToken, String cpfFuncionario)  throws ServletException;
+    void verificaLoginAdmin (String headerToken) throws ServletException;
 }

@@ -1,7 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.filtros.TokenFilter;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoLoginDTO;
+import com.projeto.grupo10.vacineja.DTO.CidadaoLoginDTO;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

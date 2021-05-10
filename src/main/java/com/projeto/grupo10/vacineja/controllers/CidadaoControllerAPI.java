@@ -1,10 +1,10 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 
-import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.DTO.CidadaoUpdateDTO;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
+import com.projeto.grupo10.vacineja.DTO.CidadaoDTO;
+import com.projeto.grupo10.vacineja.DTO.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.service.JWTService;
 import com.projeto.grupo10.vacineja.service.LoteService;

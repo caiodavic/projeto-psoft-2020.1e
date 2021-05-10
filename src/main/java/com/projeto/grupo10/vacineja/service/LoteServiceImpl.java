@@ -1,16 +1,16 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.model.lote.Lote;
-import com.projeto.grupo10.vacineja.model.lote.LoteDTO;
+import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+import com.projeto.grupo10.vacineja.observer.Subscriber;
 import com.projeto.grupo10.vacineja.repository.LoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -25,7 +25,12 @@ public class LoteServiceImpl implements LoteService {
     @Autowired
     private CidadaoService cidadaoService;
 
+    public LoteServiceImpl() {
+        addSubscriber(cidadaoService);
+    }
+
     /**
+     *
      * Cria um lote com base em LoteDTO. Realiza verifição jwt para ver se o dono do Token passado é um administrador
      *
      * @param loteDTO eh o modelo do lote
@@ -44,6 +49,7 @@ public class LoteServiceImpl implements LoteService {
 
         Lote lote = new Lote(vacina, loteDTO.getQtdDoses(), loteDTO.getDataDeValidade());
         loteRepository.save(lote);
+        notificaNovaQtdDoses();
         return lote;
     }
 
@@ -105,6 +111,7 @@ public class LoteServiceImpl implements LoteService {
                 loteRepository.save(currentLote);
             }
         }
+        notificaNovaQtdDoses();
         return loteList;
     }
 
@@ -131,7 +138,7 @@ public class LoteServiceImpl implements LoteService {
         verificaDataValidade(loteReservado);
         loteReservado.diminuiQtdDosesReservadas();
         loteRepository.save(loteReservado);
-
+        notificaNovaQtdDoses();
 
         return loteReservado.getVacina();
     }
@@ -197,6 +204,7 @@ public class LoteServiceImpl implements LoteService {
     private void verificaDataValidade(Lote lote) {
         if (!lote.getDataDeValidade().isAfter(LocalDate.now())) {
             loteRepository.delete(lote);
+            notificaNovaQtdDoses();
             throw new IllegalArgumentException("Lote com data de validade vencida! Lote removido. " +
                     "Adicione novo lote para continuar vacinação");
         }
@@ -227,13 +235,14 @@ public class LoteServiceImpl implements LoteService {
         loteValido.aumentaQtdDosesReservadas();
 
         loteRepository.save(loteValido);
+        notificaNovaQtdDoses();
 
         return vacinaValida;
     }
 
     /**
      * Metodo responsavel por calcular a quantidade total de doses no sistema
-     * @return
+     * @return a quantidade inteira de doses de vacinas disponíveis
      */
     public int getQtdVacinaDisponivel(){
         int result = 0;
@@ -241,14 +250,19 @@ public class LoteServiceImpl implements LoteService {
         List<Lote> lotesVacina = this.loteRepository.findAll();
 
         for (Lote lote : lotesVacina){
-            try{
-                this.verificaDataValidade(lote);
-                result += lote.getQtdDosesDisponiveis();
-            }catch (IllegalArgumentException iae) {
-                //Não sei oq fazer nesse catch
-            }
+            this.verificaDataValidade(lote);
+            result += lote.getQtdDosesDisponiveis();
         }
         return result;
+    }
+
+
+
+    public void notificaNovaQtdDoses() {
+        int novaQtdDoses = this.getQtdVacinaDisponivel();
+        for(Subscriber sub: this.subscribers){
+            sub.atualizaQtdDoses(novaQtdDoses);
+        }
     }
 
 }

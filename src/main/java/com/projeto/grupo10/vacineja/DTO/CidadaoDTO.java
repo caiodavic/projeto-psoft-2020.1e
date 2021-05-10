@@ -1,5 +1,6 @@
-package com.projeto.grupo10.vacineja.model.usuario;
+package com.projeto.grupo10.vacineja.DTO;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class CidadaoDTO {
@@ -8,7 +9,7 @@ public class CidadaoDTO {
 	private String nome;
 	private String endereco;
 	private String cartaoSus;
-	private String data_nascimento;
+	private LocalDate data_nascimento;
 	private String telefone;
 	private Set<String> profissoes;
 	private Set<String> comorbidades;
@@ -28,7 +29,7 @@ public class CidadaoDTO {
 	public String getCartaoSus() {
 		return cartaoSus;
 	}
-	public String getData_nascimento() {
+	public LocalDate getData_nascimento() {
 		return data_nascimento;
 	}
 	public String getTelefone() {
