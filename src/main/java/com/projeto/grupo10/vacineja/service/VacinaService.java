@@ -11,8 +11,8 @@ import java.util.Optional;
  * Responsável por realizar funções de cadastro, verificação, listagem e busca de Vacinas no sistema.
  */
 public interface VacinaService {
-    public Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException;
-    public List<Vacina> listarVacinas(String headerToken) throws ServletException;
-    public Optional<Vacina> getVacinaById(String nomeFabricante) ;
-    public Vacina fetchVacina(String nomeFabricante);
+    Vacina criaVacina(VacinaDTO vacinaDTO, String authToken) throws ServletException;
+    List<Vacina> listarVacinas(String headerToken) throws ServletException;
+    Optional<Vacina> getVacinaById(String nomeFabricante) ;
+    Vacina fetchVacina(String nomeFabricante);
 }

@@ -1,15 +1,18 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.*;
 import com.projeto.grupo10.vacineja.repository.RequisitoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaString;
 
-public class RequisitoServiceImpl implements RequisitoService{
+@Service
+public class RequisitoServiceImpl implements RequisitoService {
 
     @Autowired
     RequisitoRepository requisitoRepository;
@@ -30,7 +33,7 @@ public class RequisitoServiceImpl implements RequisitoService{
     @Override
     public void setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException{
 
-        if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
+        if(getRequisitoById(requisito.getRequisito()).isPresent()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
         Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
@@ -40,7 +43,7 @@ public class RequisitoServiceImpl implements RequisitoService{
     @Override
     public void setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException{
 
-        if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
+        if(getRequisitoById(requisito.getRequisito()).isPresent()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
         Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
@@ -123,6 +126,5 @@ public class RequisitoServiceImpl implements RequisitoService{
 
         return new RequisitoDTO(requisitoAlterado.getIdade(),requisitoAlterado.getRequisito());
     }
-
 
 }

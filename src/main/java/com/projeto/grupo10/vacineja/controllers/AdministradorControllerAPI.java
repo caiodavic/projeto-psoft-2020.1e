@@ -1,9 +1,13 @@
 package com.projeto.grupo10.vacineja.controllers;
 
+import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
+import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.service.AdministradorService;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
+import com.projeto.grupo10.vacineja.service.VacinaService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
+import com.projeto.grupo10.vacineja.util.ErroVacina;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +28,10 @@ public class AdministradorControllerAPI {
     @Autowired
     AdministradorService administradorService;
 
-    @RequestMapping(value = "/admin/funcionariosNaoAutorizados", method = RequestMethod.GET)
+    @Autowired
+    VacinaService vacinaService;
+
+    @RequestMapping(value = "/admin/funcionarios-nao-cadastrados", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> getFuncionariosNaoAutorizados(@RequestHeader("Authorization") String headerToken){
         ArrayList<String> usuariosNaoAutorizados;
@@ -43,7 +50,7 @@ public class AdministradorControllerAPI {
         return new ResponseEntity<ArrayList<String>>(usuariosNaoAutorizados, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/admin/autorizarFuncionario", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/funcionarios", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> autorizarCadastroFuncionario(@RequestHeader("Authorization") String headerToken,
                                                                         @RequestHeader String cpfFuncionario){
@@ -60,6 +67,28 @@ public class AdministradorControllerAPI {
         }
 
         return new ResponseEntity<String>("Cadastro aprovado.", HttpStatus.OK);
+    }
+
+
+    /**
+     * Cria uma Vacina a partir de uma VacinaDTO. É necessária a apresentação do token de Administrador para relizar essa
+     * ação. Nesse sistema, por padrão, o ADM tem CPF = "00000000000".
+     *
+     * @param headerToken eh o token do administrador
+     * @param vacinaDTO eh o dto da vacina a ser criada
+     * @return response entity adequada, contendo a vacina criada
+     */
+    @PostMapping("/admin/vacinas")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> criaVacina(@RequestHeader("Authorization") String headerToken, @RequestBody VacinaDTO vacinaDTO){
+
+        try {
+            Vacina vacina = vacinaService.criaVacina(vacinaDTO, headerToken);
+            return new ResponseEntity<>(vacina, HttpStatus.CREATED);
+
+        } catch (IllegalArgumentException | ServletException e){
+            return ErroVacina.erroCadastroVacina(e.getMessage());
+        }
     }
 
 }
