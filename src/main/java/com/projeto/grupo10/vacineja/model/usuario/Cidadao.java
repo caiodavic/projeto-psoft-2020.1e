@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
+
+
 @Entity
 public class Cidadao {
 
@@ -29,21 +31,32 @@ public class Cidadao {
 
 
     private String email;
+
     private String nome;
+
     private String endereco;
+
     private String cartaoSus;
+
     private LocalDate data_nascimento;
+
+
     private String telefone;
+    
+
+
+    /**
+     * É a senha do Cidadão. Utilizada para fazer o login no sistema.
+     */
 
     @NotNull
     private String senha;
 
-
     public Cidadao() {
     }
 
-    public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email, LocalDate data_nascimento,
-                   String telefone, Set<String> profissoes, Set<String> comorbidades, String senha) {
+    public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email,  LocalDate data_nascimento,
+                   String telefone, Set<String> profissoes, Set<String> comorbidades, String senha, CartaoVacina cartaoVacina) {
 
         this.cpf = cpf;
         this.nome = nome;
@@ -56,7 +69,8 @@ public class Cidadao {
         this.comorbidades = comorbidades;
         this.funcionarioGoverno = null;
         this.senha = senha;
-        this.cartaoVacina = new CartaoVacina(cartaoSus);
+        this.cartaoVacina = cartaoVacina;
+
     }
     public String getSenha(){
         return this.senha;
@@ -64,7 +78,6 @@ public class Cidadao {
     public String getCpf(){
         return this.cpf;
     }
-
 
     public boolean isFuncionario (){
         return this.funcionarioGoverno != null && this.funcionarioGoverno.isAprovado();
@@ -74,10 +87,10 @@ public class Cidadao {
         return this.funcionarioGoverno == null;
     }
 
-
     public boolean aguardandoAutorizacaoFuncionario() {
         return this.funcionarioGoverno != null && !this.funcionarioGoverno.isAprovado();
     }
+
 
     public void autorizaCadastroFuncionario(){
         this.funcionarioGoverno.aprovaCadastro();
@@ -175,4 +188,3 @@ public class Cidadao {
         this.senha = senha;
     }
 }
-

@@ -22,7 +22,6 @@ public class AgendaServiceImpl implements AgendaService{
         this.agendaRepository.save(agenda);
     }
 
-
     @Override
     public void listaHorariosDisponiveis() {
 

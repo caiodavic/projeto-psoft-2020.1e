@@ -1,7 +1,7 @@
 
 
 -- Criando algumas Vacinas
-INSERT INTO vacina VALUES ('CoronaVac-Butatan', 28, 2);
+INSERT INTO vacina VALUES ('CoronaVac', 28, 2);
 INSERT INTO vacina VALUES ('Moderna', 28, 2);
 INSERT INTO vacina VALUES ('Pfizer', 28, 2);
 INSERT INTO vacina VALUES ('Sputnik V', 21, 1);
@@ -19,21 +19,6 @@ INSERT INTO lote (data_de_validade, nome_fabricante_vacina, qtd_doses_disponivei
 VALUES (date'2021-12-31','Sputnik V',10,'Sputnik V');
 
 
-<<<<<<< Updated upstream
---Criando o Administrador =
-/*
- login: '00000000000'
-
-
-
- */
-INSERT INTO cidadao (email,cpf,nome,senha) VALUES ('admin@admin','00000000000','Administrador','admin');
-
--- Criando um Funcionário
-/*
-
- */
-=======
 --Criando o Administrador
 /*
  {
@@ -57,7 +42,7 @@ INSERT INTO cidadao (email,cpf,nome,senha,cartao_vacina_cartao_sus) VALUES ('adm
 }
  */
 INSERT INTO cartao_vacina(cartao_sus, situacao) VALUES ('000000000000001','VACINACAOFINALIZADA');
->>>>>>> Stashed changes
+
 INSERT INTO funcionario_governo(cpf,aprovado,cargo,local_trabalho) VALUES ('12345678001',true,'Médico chefe','Laguinho da UFCG');
 INSERT INTO cidadao (cpf,data_nascimento,email,endereco,nome,senha,telefone,funcionario_governo_cpf,cartao_vacina_cartao_sus)
 VALUES ('12345678001',date'1999-05-28','fernando.costa@ccc.ufcg.edu.br','Av do Matheus, 430','Fernando','senha','(79)99982-1201','12345678001','000000000000001');
