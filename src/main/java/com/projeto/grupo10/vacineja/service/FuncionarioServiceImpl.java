@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -89,4 +90,52 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         this.cidadaoService.recebeVacina(cpfCidadao, vacina, dataVacina);
     }
+
+    /**
+     * Método que retorna todas as comorbidades cadastradas no sistema
+     * @return uma lista com todas as comorbidades já cadastradas
+     * @throws IllegalArgumentException caso não exista nenhuma comorbidade
+     * @throws  ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public List<String> listaComorbidadesCadastradas(String headerToken) throws ServletException, IllegalArgumentException {
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        List<String> requisitos = requisitoService.getTodasComorbidades();
+        return requisitos;
+    }
+
+    /**
+     * Método que retorna todas as profissoes cadastradas no sistema
+     * @return uma lista com todas as comorbidades já cadastradas
+     * @throws IllegalArgumentException caso não exista nenhuma comorbidade
+     * @throws  ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public List<String> listaProfissoesCadastradas(String headerToken) throws ServletException, IllegalArgumentException {
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        List<String> requisitos = requisitoService.getTodasProfissoes();
+        return requisitos;
+    }
+
+    /**
+     * Retorna a quantidade de cidadaos não habilitados com idade igual ou superior a idade passada como parametro
+     * @param headerToken token do usuario logado
+     * @param idade idade a ser usada para o calcul
+     * @return quantidade de cidadaos nao habilitados com idade igual ou superior a idade passada
+     * @throws ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public int getCidadaosAcimaIdade(String headerToken, int idade) throws ServletException {
+       cidadaoService.verificaTokenFuncionario(headerToken);
+       return cidadaoService.contaCidadaosAcimaIdade(idade);
+    }
+
+    public int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException{
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        return cidadaoService.contaCidadaosAtendeRequisito(requisito);
+    }
+
 }

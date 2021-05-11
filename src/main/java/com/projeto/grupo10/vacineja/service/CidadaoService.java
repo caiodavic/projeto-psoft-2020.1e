@@ -30,4 +30,6 @@ public interface CidadaoService extends Subscriber {
     public void habilitaPelaIdade(Requisito requisito);
     public void habilitaPorRequisito(Requisito requisito);
     public String getEstadoVacinacao(String headerToken) throws ServletException;
+    public int contaCidadaosAcimaIdade(int idade);
+    public int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
 }
