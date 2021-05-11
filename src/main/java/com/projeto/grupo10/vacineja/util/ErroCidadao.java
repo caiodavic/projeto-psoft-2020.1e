@@ -12,6 +12,7 @@ public class ErroCidadao {
     static final String CIDADAO_CADASTRADO = "Cidadão com cpf %s já está cadastrado";
     static final String EMAIL_INVALIDO = "Email inválido";
     static final String CIDADAO_NAO_CADASTRADO = "Cidadão com cpf %s não está cadastrado";
+    static final String CIDADAO_NAO_HABILITADO = "Cidadão não habilitado";
 
     public static ResponseEntity<CustomErrorType> erroSemPermissaoFuncionario(String usuario) {
         return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.USUARIO_SEM_PERMISSAO_FUNCIONARIO, usuario)),
@@ -40,6 +41,11 @@ public class ErroCidadao {
     public static ResponseEntity<CustomErrorType> erroCidadaoNaoCadastrado(String cpf) {
         return new ResponseEntity<CustomErrorType>(
                 new CustomErrorType(String.format(ErroCidadao.CIDADAO_NAO_CADASTRADO, cpf)),
+                HttpStatus.NOT_ACCEPTABLE);
+    }
+    public static ResponseEntity<CustomErrorType> erroCidadaoNaoHabilitado() {
+        return new ResponseEntity<CustomErrorType>(
+                new CustomErrorType(ErroCidadao.CIDADAO_NAO_HABILITADO),
                 HttpStatus.NOT_ACCEPTABLE);
     }
 }

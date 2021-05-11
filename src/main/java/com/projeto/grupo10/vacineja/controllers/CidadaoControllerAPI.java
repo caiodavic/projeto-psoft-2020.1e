@@ -2,12 +2,14 @@ package com.projeto.grupo10.vacineja.controllers;
 
 
 
+import com.projeto.grupo10.vacineja.DTO.AgendaDTO;
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.DTO.CidadaoUpdateDTO;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.DTO.CidadaoDTO;
 import com.projeto.grupo10.vacineja.DTO.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.service.*;
+import com.projeto.grupo10.vacineja.util.ErroAgenda;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,37 +122,51 @@ public class CidadaoControllerAPI {
     /**
      * O cidadao agenda sua vacinação com o seu cpf e informando o horario, data e local da vacinação
      * @param headerToken
-     * @param agenda
+     * @param agendaDTO
      * @return retorna o agendamento feito
      */
     @RequestMapping(value = "/cidadao/AgendaVacina", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> AgendamentoVacina(@RequestHeader("Authorization") String headerToken,
-                                           @RequestBody Agenda agenda) {
+                                           @RequestBody AgendaDTO agendaDTO) throws ServletException {
+
+        String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         try {
-            agendaService.agendaVacinação(headerToken, agenda);
-        } catch (ServletException e) {
+            agendaService.agendaVacinação(headerToken, agendaDTO);
+        }
+        catch (IllegalArgumentException e){
+            if(e.getMessage().toString() == "Cidadao nao cadastrado")
+                return ErroCidadao.erroCidadaoNaoCadastrado(cpf_cidadao);
+            else if(e.getMessage().toString() == "Cidadao nao habilitado")
+                return ErroCidadao.erroCidadaoNaoHabilitado();
+            else if(e.getMessage().toString() == "Data invalida"){
+                return ErroAgenda.erroDataInvalida(LocalDate.now());
+            }
+        }
+        catch (ServletException e) {
             return ErroLogin.erroTokenInvalido();
         }
-        return new ResponseEntity<Agenda>(agenda, HttpStatus.CREATED);
+        return new ResponseEntity<AgendaDTO>(agendaDTO, HttpStatus.CREATED);
     }
 
     /**
      * Pega os agendamentos feitos por um cidadao usando o cpf
      * @param headerToken
-     * @param cpf
      * @return Retorna todos os agendamentos feitos pelo cidadao
      */
     @RequestMapping(value = "/cidadao/AgendaVacina/{cpf}", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> listaAgendamentoCidadao(@RequestHeader("Authorization") String headerToken,
-                                               @RequestParam String cpf) {
+    public ResponseEntity<?> listaAgendamentoCidadao(@RequestHeader("Authorization") String headerToken) throws ServletException {
+        String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         try{
-            List<Agenda> agenda = agendaService.getAgendamentobyCpf(headerToken,cpf);
-            return new ResponseEntity<List<Agenda>>(agenda,HttpStatus.OK);
-        }catch (ServletException e){
+            List<Agenda> agenda = agendaService.getAgendamentobyCpf(headerToken);
+            return new ResponseEntity<List<Agenda>>(agenda, HttpStatus.OK);
+        }
+
+        catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
 
     }
+
 }

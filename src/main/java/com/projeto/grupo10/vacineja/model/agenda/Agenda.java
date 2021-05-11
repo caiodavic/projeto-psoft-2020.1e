@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.model.agenda;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.util.Date;
 @Entity
 public class Agenda {
@@ -10,11 +11,11 @@ public class Agenda {
     @GeneratedValue
     private Long id;
     private String cpf;
-    private String data;
+    private LocalDate data;
     private String horario;
     private String local;
 
-    public Agenda(String cpf, String data, String horario, String local){
+    public Agenda(String cpf, LocalDate data, String horario, String local){
         this.cpf = cpf;
         this.data = data;
         this.horario = horario;
@@ -33,7 +34,7 @@ public class Agenda {
         return horario;
     }
 
-    public String getData() {
+    public LocalDate getData() {
         return data;
     }
 

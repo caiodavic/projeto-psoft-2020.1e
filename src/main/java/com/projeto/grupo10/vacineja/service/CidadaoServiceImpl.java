@@ -6,10 +6,7 @@ import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CartaoVacinaRepository;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
-import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
-import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
-import com.projeto.grupo10.vacineja.state.NaoHabilitado;
-import com.projeto.grupo10.vacineja.state.Tomou1Dose;
+import com.projeto.grupo10.vacineja.state.*;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +44,11 @@ public class CidadaoServiceImpl implements CidadaoService {
         return this.cidadaoRepository.findById(cpf);
     }
 
+    /**
+     * Salva um cidadao no repository
+     * @param cidadao
+     * @author Holliver Costa
+     */
     private void salvarCidadao(Cidadao cidadao){
         this.cidadaoRepository.save(cidadao);
     }
@@ -155,7 +157,11 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     }
 
-
+    /**
+     * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
+     * @param cidadaoDTO
+     * @author Holliver Costa
+     */
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if(cidadaoOpt.isPresent()){
@@ -335,4 +341,16 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         return this.getQtdDosesSemDependencia() >= contProvaveisHabilitados + this.getQtdHabilitados();
     }
+
+    /**
+     * Metodo que pega o estagio de vacinação do cidadao
+     * @param cpf
+     * @return retorna a situacao do cidadao
+     * @author Holliver Costa
+     */
+    @Override
+    public Situacao getSituacao(String cpf){
+        return this.getCidadaoById(cpf).get().getSituacao();
+    }
+
 }
