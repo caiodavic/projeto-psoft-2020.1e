@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.observer.Subscriber;
@@ -26,4 +27,6 @@ public interface CidadaoService extends Subscriber {
     void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException;
     public boolean podeAlterarIdade(RequisitoDTO requisito);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
+    public void habilitaPelaIdade(Requisito requisito);
+    public void habilitaPorRequisito(Requisito requisito);
 }

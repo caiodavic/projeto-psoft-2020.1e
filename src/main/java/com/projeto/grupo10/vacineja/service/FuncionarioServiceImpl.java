@@ -1,10 +1,12 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import java.util.Optional;
 
 @Service
 public class FuncionarioServiceImpl implements FuncionarioService {
@@ -30,6 +32,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new IllegalCallerException("Impossivel habilitar a idade");
 
         requisitoService.setIdade(requisito);
+        Optional<Requisito> requisitoOptional = requisitoService.getRequisitoById(requisito.getRequisito());
+        if(requisitoOptional.isEmpty())
+            throw new IllegalCallerException("Ocorreu algum erro com o requisito");
+
+        cidadaoService.habilitaPelaIdade(requisitoOptional.get());
     }
 
     /**
@@ -47,5 +54,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new IllegalCallerException("Impossível habilitar tal requisito");
 
         requisitoService.setPodeVacinar(requisito);
+        Optional<Requisito> requisitoOptional = requisitoService.getRequisitoById(requisito.getRequisito());
+        if(requisitoOptional.isEmpty())
+            throw new IllegalCallerException("Ocorreu algum erro com o requisito");
+
+        cidadaoService.habilitaPorRequisito(requisitoOptional.get());
     }
 }
