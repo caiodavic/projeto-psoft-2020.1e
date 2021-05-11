@@ -15,7 +15,6 @@ import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.email.Email;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -199,6 +198,12 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
 
+    /**
+     * Metodo responsavel por cadastrar um Cidadao. Verificas-se quais informacoes deseja-se colocar no Cidadao, de acordo
+     * com as informacoes que vem do DTO.
+     * @param cidadaoDTO - DTO contendo as informacoes desejadas para o Cidadao.
+     * @throws ServletException
+     */
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
         CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
@@ -210,6 +215,12 @@ public class CidadaoServiceImpl implements CidadaoService {
     	this.salvarCidadao(cidadao);
     }
 
+    /**
+     * Metodo privado responsavel por verificar se os atributos de email, cartao do sus, data de nascimento e senha
+     * são valores validos. Tambem verifica se ja existe um cpf igual ao que deseja cadastrar.
+     * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @throws ServletException
+     */
     private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if(cidadaoOpt.isPresent()){
@@ -238,26 +249,34 @@ public class CidadaoServiceImpl implements CidadaoService {
      * com as informacoes que vem do DTO.
      * @param headerToken - token do Cidadao que tera seus dados alterardos
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @param cidadao - O cidadao que tera seus dados alterados
      * @throws ServletException
      */
     @Override
-    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao)  throws ServletException{
-        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao);
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException{
 
-        cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
-        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
-        cidadao.setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.getData_nascimento());
-        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
-        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
-        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
-        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
-        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
-        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
-        this.salvarCidadao(cidadao);
-        return cidadao;
+        Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
+        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
+
+        cidadao.get().setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.get().getCartaoSus());
+        cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
+        cidadao.get().setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.get().getData_nascimento());
+        cidadao.get().setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.get().getEmail());
+        cidadao.get().setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.get().getEndereco());
+        cidadao.get().setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.get().getSenha());
+        cidadao.get().setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.get().getNome());
+        cidadao.get().setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.get().getTelefone());
+        cidadao.get().setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.get().getProfissoes());
+        this.salvarCidadao(cidadao.get());
+        return cidadao.get();
     }
 
+    /**
+     * Metodo privado responsavel por verificar se os novos atributos de email, cartao do sus, data de nascimento e senha
+     * são valores validos.
+     * @param headerToken - token do Cidadao que tera seus dados alterardos
+     * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @throws ServletException
+     */
     private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
