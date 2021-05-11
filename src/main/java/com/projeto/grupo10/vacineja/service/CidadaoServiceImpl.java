@@ -200,6 +200,17 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+        analisaEntradasDoCadastraCidadao(cidadaoDTO);
+        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
+        this.cartaoVacinaRepository.save(cartaoVacina);
+      
+    	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
+    			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
+    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
+    	this.salvarCidadao(cidadao);
+    }
+
+    private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if(cidadaoOpt.isPresent()){
             throw new IllegalArgumentException("Cidadao cadastrado");
@@ -220,14 +231,6 @@ public class CidadaoServiceImpl implements CidadaoService {
         if (ErroCidadao.erroDataInvalida(cidadaoDTO.getData_nascimento())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
         }
-
-        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
-        this.cartaoVacinaRepository.save(cartaoVacina);
-      
-    	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
-    			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
-    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
-    	this.salvarCidadao(cidadao);
     }
 
     /**
@@ -239,15 +242,8 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @throws ServletException
      */
     @Override
-    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
-
-        String id = jwtService.getCidadaoDoToken(headerToken);
-
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
-
-        if (cidadaoOpt.isEmpty()){
-            throw new IllegalArgumentException();
-        }
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao)  throws ServletException{
+        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao);
 
         cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
         cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
@@ -260,6 +256,34 @@ public class CidadaoServiceImpl implements CidadaoService {
         cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
         this.salvarCidadao(cidadao);
         return cidadao;
+    }
+
+    private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
+        String id = jwtService.getCidadaoDoToken(headerToken);
+        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
+        if (cidadaoOpt.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
+            if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
+                throw new IllegalArgumentException("Novo Email invalido");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getCartaoSus())) {
+            if (ErroCidadao.erroCartaoSUSInvalido(cidadaoUpdateDTO.getCartaoSus())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com esse numero de cartao do SUS");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getData_nascimento())) {
+            if (ErroCidadao.erroDataInvalida(cidadaoUpdateDTO.getData_nascimento())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa data de nascimento");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())) {
+            if (ErroCidadao.erroSenhaInvalida(cidadaoUpdateDTO.getSenha())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa senha");
+            }
+        }
     }
 
     /**
