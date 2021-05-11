@@ -13,13 +13,16 @@ import java.util.Optional;
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaString;
 
 @Service
-public class RequisitoServiceImpl implements RequisitoService, Subscriber {
+public class RequisitoServiceImpl implements RequisitoService{
 
     @Autowired
     RequisitoRepository requisitoRepository;
 
     @Override
     public void setIdade(RequisitoDTO requisito) {
+        if(!requisito.getRequisito().equals("idade"))
+            throw new IllegalArgumentException("Requisito inválido");
+
         Optional<Requisito> idadeRequisito = getRequisitoById("idade");
         Requisito idade;
         if(idadeRequisito.isEmpty()){
@@ -34,7 +37,7 @@ public class RequisitoServiceImpl implements RequisitoService, Subscriber {
     @Override
     public void setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException{
 
-        if(getRequisitoById(requisito.getRequisito()).isPresent()){
+        if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
         Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
@@ -44,24 +47,11 @@ public class RequisitoServiceImpl implements RequisitoService, Subscriber {
     @Override
     public void setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException{
 
-        if(getRequisitoById(requisito.getRequisito()).isPresent()){
+        if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
         Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
         requisitoRepository.save(novaComorbidade);
-    }
-
-    @Override
-    public void setNovaIdadeComorbidadeProfissao(RequisitoDTO requisito) {
-        if(getRequisitoById(requisito.getRequisito()).isEmpty()){
-            throw  new IllegalArgumentException(String.format("Requisito %s não esta cadastrado", requisito.getRequisito()));
-        }
-
-        Requisito requisitoEditado = getRequisitoById(requisito.getRequisito()).get();
-
-        requisitoEditado.setIdade(requisito.getIdade());
-
-        requisitoRepository.save(requisitoEditado);
     }
 
     @Override
@@ -114,22 +104,19 @@ public class RequisitoServiceImpl implements RequisitoService, Subscriber {
     }
 
     @Override
-    public RequisitoDTO setPodeVacinar(String requisito) throws IllegalArgumentException{
-        Optional<Requisito> requisitoPodeVacinar = requisitoRepository.findById(requisito);
+    public RequisitoDTO setPodeVacinar(RequisitoDTO requisito) throws IllegalArgumentException{
+        Optional<Requisito> requisitoPodeVacinar = requisitoRepository.findById(requisito.getRequisito());
 
         if(requisitoPodeVacinar.isEmpty()){
             throw new IllegalArgumentException("Requisito inexistete");
         }
 
         Requisito requisitoAlterado = requisitoPodeVacinar.get();
+        requisitoAlterado.setIdade(requisito.getIdade());
         requisitoAlterado.setPodeVacinar();
         requisitoRepository.save(requisitoAlterado);
 
         return new RequisitoDTO(requisitoAlterado.getIdade(),requisitoAlterado.getRequisito());
     }
 
-    @Override
-    public void atualizaQtdDoses() {
-
-    }
 }

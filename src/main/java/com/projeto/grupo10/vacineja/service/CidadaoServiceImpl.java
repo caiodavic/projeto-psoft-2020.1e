@@ -1,17 +1,17 @@
 package com.projeto.grupo10.vacineja.service;
 
-import com.projeto.grupo10.vacineja.DTO.CidadaoDTO;
-import com.projeto.grupo10.vacineja.DTO.CidadaoLoginDTO;
-import com.projeto.grupo10.vacineja.DTO.CidadaoUpdateDTO;
-import com.projeto.grupo10.vacineja.DTO.FuncionarioCadastroDTO;
+import com.projeto.grupo10.vacineja.DTO.*;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+import com.projeto.grupo10.vacineja.repository.CartaoVacinaRepository;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
 import com.projeto.grupo10.vacineja.state.NaoHabilitado;
 import com.projeto.grupo10.vacineja.state.Tomou1Dose;
+import com.projeto.grupo10.vacineja.util.CalculaIdade;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,8 @@ public class CidadaoServiceImpl implements CidadaoService {
     @Autowired
     private FuncionarioGovernoRepository funcionarioGovernoRepository;
 
+    @Autowired
+    private CartaoVacinaRepository cartaoVacinaRepository;
     @Autowired
     private JWTService jwtService;
 
@@ -107,7 +109,6 @@ public class CidadaoServiceImpl implements CidadaoService {
         Cidadao cidadao;
         cidadao = cidadaoOpt.get();
         cidadao.setFuncionarioGoverno(this.adicionarFuncionarioGoverno(cadastroFuncionario, id));
-
         this.salvarCidadao(cidadao);
     }
 
@@ -168,9 +169,11 @@ public class CidadaoServiceImpl implements CidadaoService {
         if(!ErroEmail.validarEmail(cidadaoDTO.getEmail())){
             throw new IllegalArgumentException("Email invalido");
         }
+        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
+        this.cartaoVacinaRepository.save(cartaoVacina);
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
-    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha());
+    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
     	this.salvarCidadao(cidadao);
 
     }
@@ -316,5 +319,93 @@ public class CidadaoServiceImpl implements CidadaoService {
     @Override
     public void atualizaQtdDoses() {
        habilitarAutoSegundaDoseCidadaos();
+    }
+
+    /**
+     * Método que verifica se temos doses suficientes para todas as pessoas mais velhas do que a idade a ser habilitada
+     * @param requisito idada a ser habilitada
+     * @return true caso tenhamos mais doses do que pessoas a serem habilitadas, false caso contrario
+     * @author Caio Silva
+     */
+    public boolean podeAlterarIdade(RequisitoDTO requisito){
+        Integer idadeRequisito = requisito.getIdade();
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+        int contProvaveisHabilitados = 0;
+
+        for(Cidadao cidadao: cidadaos){
+            Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
+            if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                contProvaveisHabilitados++;
+        }
+
+        return this.getQtdDosesSemDependencia() >= contProvaveisHabilitados + this.getQtdHabilitados();
+    }
+
+    /**
+     * Método que verifica se temos doses suficientes para todas as pessoas que tenham o requisito que o funcionário quer habilitar
+     * @param requisito requisito a ser habilitado
+     * @return true caso tenhamos mais doses do que pessoas a serem habilitadas, false caso contrario
+     * @author Caio Silva
+     */
+    public boolean podeHabilitarRequisito(RequisitoDTO requisito) {
+        String requisitoPodeHabilitar = requisito.getRequisito();
+        Integer idadeRequisito = requisito.getIdade();
+
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+        int contProvaveisHabilitados = 0;
+
+        for (Cidadao cidadao : cidadaos) {
+            Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
+            Set<String> profissoesCidadao = cidadao.getProfissoes();
+            Set<String> comorbidadesCidadao = cidadao.getComorbidades();
+
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                    contProvaveisHabilitados++;
+            }
+        }
+        return this.getQtdDosesSemDependencia() >= contProvaveisHabilitados + this.getQtdHabilitados();
+    }
+
+    /**
+     * Método que habilita cidadaos utilizando a idade como requisito
+     * @param requisito idade a ser utilizada como requisito
+     *
+     * @author Caio Silva
+     */
+    public void habilitaPelaIdade(Requisito requisito){
+        Integer idadeRequisito = requisito.getIdade();
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+
+        for(Cidadao cidadao: cidadaos){
+            Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
+            if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                cidadao.avancarSituacaoVacina();
+        }
+    }
+
+    /**
+     * Método que habilita cidadaos utilizando o requisito no parametro como requisito
+     * @param requisito requisito que irá habilitar cidadaos
+     *
+     * @author Caio Silva
+     */
+    public void habilitaPorRequisito(Requisito requisito) {
+        String requisitoPodeHabilitar = requisito.getRequisito();
+        Integer idadeRequisito = requisito.getIdade();
+
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+
+        for (Cidadao cidadao : cidadaos) {
+            Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
+            Set<String> profissoesCidadao = cidadao.getProfissoes();
+            Set<String> comorbidadesCidadao = cidadao.getComorbidades();
+
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                    cidadao.avancarSituacaoVacina();
+            }
+        }
+
     }
 }

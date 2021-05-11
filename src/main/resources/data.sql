@@ -8,19 +8,10 @@ INSERT INTO vacina VALUES ('Vacina do Caetano',0,1);
 INSERT INTO vacina VALUES ('string',0,2);
 
 
---Criando o Administrador =
-/*
- login: '00000000000'
-
-
-
- */
+--Criando o Administrador 
 INSERT INTO cidadao (email,cpf,nome,senha) VALUES ('admin@admin','00000000000','Administrador','admin');
 
 -- Criando um Funcionário
-/*
-
- */
 INSERT INTO funcionario_governo(cpf,aprovado,cargo,local_trabalho) VALUES ('12345678001',true,'Médico chefe','Laguinho da UFCG');
 INSERT INTO cidadao (cpf,data_nascimento,email,endereco,nome,senha,telefone,funcionario_governo_cpf)
 VALUES ('12345678001',date'1999-05-28','fernando.costa@ccc.ufcg.edu.br','Rua das Ostras,4','Fernando','senha','(79)99982-1201','12345678001');
