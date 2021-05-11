@@ -8,5 +8,4 @@ public interface FuncionarioService {
 
     public void alteraIdadeGeral(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
     public void setComorbidadeHabilitada(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
-
 }
