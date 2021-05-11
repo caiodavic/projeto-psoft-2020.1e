@@ -257,12 +257,4 @@ public class LoteServiceImpl implements LoteService {
     }
 
 
-
-    public void notificaNovaQtdDoses() {
-        int novaQtdDoses = this.getQtdVacinaDisponivel();
-        for(Subscriber sub: this.subscribers){
-            sub.atualizaQtdDoses(novaQtdDoses);
-        }
-    }
-
 }

@@ -2,7 +2,7 @@ package com.projeto.grupo10.vacineja.model.usuario;
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.state.Situacao;
-import org.apache.tomcat.jni.Local;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -34,6 +34,8 @@ public class Cidadao {
     private String cartaoSus;
     private LocalDate data_nascimento;
     private String telefone;
+
+    @NotNull
     private String senha;
 
 
@@ -54,7 +56,7 @@ public class Cidadao {
         this.comorbidades = comorbidades;
         this.funcionarioGoverno = null;
         this.senha = senha;
-        this.cartaoVacina = new CartaoVacina(cpf);
+        this.cartaoVacina = new CartaoVacina(cartaoSus);
     }
     public String getSenha(){
         return this.senha;

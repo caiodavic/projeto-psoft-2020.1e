@@ -10,6 +10,7 @@ import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
+import com.projeto.grupo10.vacineja.state.NaoHabilitado;
 import com.projeto.grupo10.vacineja.state.Tomou1Dose;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
+
+import javax.persistence.UniqueConstraint;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +60,7 @@ public class CidadaoServiceImpl implements CidadaoService {
 
         return funcionarioGoverno;
     }
+
 
     @Override
     public boolean validaCidadaoSenha (CidadaoLoginDTO cidadaoLogin){
@@ -146,8 +150,9 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 
     public void verificaTokenFuncionario(String authHeader) throws ServletException {
-        String id = jwtService.getCidadaoDoToken(authHeader);
-        String tipoLogin = jwtService.getTipoLogin(authHeader);
+        String token = "Bearer "+ authHeader;
+        String id = jwtService.getCidadaoDoToken(token);
+        String tipoLogin = jwtService.getTipoLogin(token);
 
         if(!isFuncionario(id) && tipoLogin.equals("Funcionario"))
             throw new ServletException("Usuario não é um Funcionário cadastrado!");
@@ -281,9 +286,35 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
 
-    //TODO
+    /**
+     * Atualiza automaticamente Cidadãos aguardando a chegada de SEGUNDA DOSE.
+     * TODO tirar os souts
+     */
+    private void habilitarAutoSegundaDoseCidadaos(){
+        int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
+
+        if(qtdCidadaosQuePossoLiberar <=0) {
+            System.out.println("nenhum novo cidadao liberado");
+            return;
+        }
+
+
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+        System.out.println(System.out.format("%d cidadaos liberados: ",qtdCidadaosQuePossoLiberar));
+        for (Cidadao cidadao : cidadaos){
+            if (cidadao.getSituacao() instanceof Tomou1Dose){
+                if (qtdCidadaosQuePossoLiberar > 0){
+                    cidadao.avancarSituacaoVacina();
+                    System.out.println(cidadao.toString());
+                    qtdCidadaosQuePossoLiberar--;
+                }else break;
+            }
+        }
+
+    }
+
     @Override
-    public void atualizaQtdDoses(int qtdDoses) {
-       return;
+    public void atualizaQtdDoses() {
+       habilitarAutoSegundaDoseCidadaos();
     }
 }
