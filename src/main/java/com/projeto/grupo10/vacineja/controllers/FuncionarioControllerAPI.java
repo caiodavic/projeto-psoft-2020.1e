@@ -44,15 +44,8 @@ public class FuncionarioControllerAPI {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> ministrarVacina(@RequestHeader("Authorization") String headerToken,
                                              @RequestBody MinistraVacinaDTO ministraVacinaDTO){
-
-        String tipoVacina = ministraVacinaDTO.getTipoVacina();
-        Date dataVacina = ministraVacinaDTO.getDataVacinacao();
-        String cpfCidadao = ministraVacinaDTO.getCpfCidadao();
-
         try{
-            Vacina vacina = vacinaService.fetchVacina(tipoVacina);
-            this.cidadaoService.ministraVacina(headerToken, cpfCidadao, vacina, dataVacina);
-            List<Lote> loteList = loteService.removeDoseLotes(tipoVacina,1,headerToken);
+            this.funcionarioService.ministraVacina(headerToken, ministraVacinaDTO);
         }
         catch (IllegalArgumentException iae){
             return ErroCidadao.erroUsuarioNaoEncontrado();

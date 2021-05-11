@@ -187,4 +187,16 @@ public class Cidadao {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public Date getDataPrevistaSegundaDose (){
+        return this.cartaoVacina.getDataPrevistaSegundaDose();
+    }
+
+    public String getTipoVacina() {
+        return this.cartaoVacina.getVacinaString();
+    }
+
+    public CartaoVacina getCartaoVacina() {
+        return cartaoVacina;
+    }
 }

@@ -1,5 +1,6 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.comparators.ComparatorLotePorValidade;
 import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
@@ -238,6 +239,8 @@ public class LoteServiceImpl implements LoteService {
     /**
      * Metodo responsavel por calcular a quantidade total de doses no sistema
      * @return a quantidade inteira de doses de vacinas disponíveis
+     *
+     * @author Caetano Albuquerque
      */
     public int getQtdVacinaDisponivel(){
         int result = 0;
@@ -250,5 +253,40 @@ public class LoteServiceImpl implements LoteService {
         return result;
     }
 
+    /**
+     * Metodo responsavel por retirar uma dose de um lote que contenha a vacina requisitada
+     * @param tipoVacina - Representa o tipo da vacina
+     * @return - A vacina requisitada
+     *
+     * @author Cartano Albuquerque
+     */
+    public Vacina retirarVacinaValidadeProxima(String tipoVacina) {
+        if (!this.existeLoteDaVacina(tipoVacina)){
+            throw new IllegalArgumentException("Sem lotes da vacina requisitada");
+        }
+
+        List<Lote> lotes = loteRepository.findAllByNomeFabricanteVacina(tipoVacina);
+
+        Collections.sort(lotes, new ComparatorLotePorValidade());
+
+        Lote loteProxValidade = lotes.get(0);
+        loteProxValidade.diminuiQtdDosesDisponiveis();
+
+        if (this.isLoteVazio(loteProxValidade)) this.loteRepository.delete(loteProxValidade);
+
+        return loteProxValidade.getVacina();
+    }
+
+    /**
+     * Metodo responsavel por verificar a existencia de lotes de uma determinada vacina
+     * @param tipoVacina - Tipo da vacina que queremos ver se existe algum lote
+     * @return - true se existir algum lote daquele determinado tipo de vacina.
+     *
+     * @author Caetano Albuquerque
+     */
+    public boolean existeLoteDaVacina(String tipoVacina){
+        List<Lote> lotes = loteRepository.findAllByNomeFabricanteVacina(tipoVacina);
+        return !lotes.isEmpty();
+    }
 
 }

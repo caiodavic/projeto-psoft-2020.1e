@@ -66,6 +66,14 @@ public class CidadaoControllerAPI {
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
 
+    /**
+     * Metodo para o cadastro do funcionario
+     * @param headerToken - token do cidadao que esta tentando viarr funcionario
+     * @param cadastroFuncionario -Um objeto com as seguintes informações -cpf do cidadão, local de trabalho e a função-
+     * @return response entity adequada, dizendo se o cidadao foi definido com funcionario
+     *
+     * @author Caetano Albuquerque
+     */
     @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
@@ -150,6 +158,32 @@ public class CidadaoControllerAPI {
         }catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
+    }
 
+    /**
+     * Metodo responsavel por pegar o estado de vacinação
+     * @param headerToken - token cidadao que quer ver o seu estado
+     * @return - um ResponseEntity contendo o estado de vacinação do cidadão
+     *
+     * @author Caetano Albuquerque
+     */
+    @RequestMapping(value = "/cidadao/estadoVacinacao", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getEstadoVacinacao(@RequestHeader("Authorization") String headerToken){
+
+        String estadoVacinacao = "";
+
+        try{
+            estadoVacinacao = cidadaoService.getEstadoVacinacao(headerToken);
+        }
+
+        catch (IllegalArgumentException iae){
+            return ErroCidadao.erroUsuarioNaoEncontrado();
+        }
+        catch (ServletException e){
+            return ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<String>(estadoVacinacao, HttpStatus.OK);
     }
 }

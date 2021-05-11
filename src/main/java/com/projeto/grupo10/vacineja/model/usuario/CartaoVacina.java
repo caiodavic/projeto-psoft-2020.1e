@@ -94,4 +94,8 @@ public class CartaoVacina {
     public void setDataAgendamento(Date dataAgendamento){
         this.dataAgendamento = dataAgendamento;
     }
+
+    public String getVacinaString() {
+        return vacina.getNomeFabricante();
+    }
 }

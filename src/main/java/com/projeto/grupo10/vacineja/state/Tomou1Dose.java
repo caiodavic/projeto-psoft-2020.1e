@@ -37,10 +37,9 @@ public class Tomou1Dose implements Situacao {
      */
     @Override
     public void proximaSituacao(CartaoVacina cartaoVacina) {
-        cartaoVacina.setSituacao(SituacaoEnum.HABILITADO2DOSE);
         Date dataPrevistaSegundaDose = cartaoVacina.getDataPrevistaSegundaDose();
         if (dataPrevistaSegundaDose.before(new Date())) {
-
+            cartaoVacina.setSituacao(SituacaoEnum.HABILITADO2DOSE);
         }
     }
 
