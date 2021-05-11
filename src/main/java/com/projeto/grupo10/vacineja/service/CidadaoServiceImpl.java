@@ -14,6 +14,7 @@ import com.projeto.grupo10.vacineja.state.Tomou1Dose;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
+import com.projeto.grupo10.vacineja.util.email.Email;
 import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,15 @@ import java.util.*;
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService {
+    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE1 = "Ola %s" +
+            "\nVocê esta apto para receber a 1ª dose da vacina! " +
+            "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
+    private static final String ASSUNTO_EMAIL_ALERTA_DOSE1 = "Vacinação primeira dose";
+
+    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE2 = "Ola %s" +
+            "\nVocê esta apto para receber a 2ª dose da vacina! " +
+            "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
+    private static final String ASSUNTO_EMAIL_ALERTA_DOSE2 = "Vacinação segunda dose";
 
     @Autowired
     private CidadaoRepository cidadaoRepository;
@@ -286,17 +296,22 @@ public class CidadaoServiceImpl implements CidadaoService {
 
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
         int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
+        String emails = "";
 
-        for (Cidadao cidadao : cidadaos){
-            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().before(new Date())){
-                if (qtdCidadaosQuePossoLiberar > 0 && this.loteService.existeLoteDaVacina(cidadao.getTipoVacina())){
+        for (Cidadao cidadao : cidadaos) {
+            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().before(new Date())) {
+                if (qtdCidadaosQuePossoLiberar > 0 && this.loteService.existeLoteDaVacina(cidadao.getTipoVacina())) {
                     cidadao.avancarSituacaoVacina();
                     this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
-                    qtdCidadaosQuePossoLiberar --;
-                }else break;
+                    emails += (cidadao.getEmail() + ", ");
+                    qtdCidadaosQuePossoLiberar--;
+                } else break;
             }
         }
-
+        if (!emails.equals("")) {
+            emails = emails.substring(0, emails.length() -2);
+            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+        }
     }
 
     /**
