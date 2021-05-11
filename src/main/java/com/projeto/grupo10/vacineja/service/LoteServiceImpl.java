@@ -3,7 +3,6 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
-import com.projeto.grupo10.vacineja.observer.Subscriber;
 import com.projeto.grupo10.vacineja.repository.LoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +24,6 @@ public class LoteServiceImpl implements LoteService {
     @Autowired
     private CidadaoService cidadaoService;
 
-    public LoteServiceImpl() {
-        addSubscriber(cidadaoService);
-    }
-
     /**
      *
      * Cria um lote com base em LoteDTO. Realiza verifição jwt para ver se o dono do Token passado é um administrador
@@ -41,13 +36,12 @@ public class LoteServiceImpl implements LoteService {
      */
     @Override
     public Lote criaLote(LoteDTO loteDTO, Vacina vacina, String headerToken) throws ServletException {
-
         cidadaoService.verificaTokenFuncionario(headerToken);
-
+        addSubscriber(cidadaoService);
         validaDoseLotes(loteDTO.getQtdDoses());
         validaDataDeValidade(loteDTO.getDataDeValidade());
-
         Lote lote = new Lote(vacina, loteDTO.getQtdDoses(), loteDTO.getDataDeValidade());
+
         loteRepository.save(lote);
         notificaNovaQtdDoses();
         return lote;
@@ -82,7 +76,7 @@ public class LoteServiceImpl implements LoteService {
 
 
 
-     //TODO Esse método é um esboço, será removido após definir que só podem ser ministradas doses reservadas
+     //TODO Esse método ainda é um esboço
     /**
      * Remove qtdVacinas dose(s) de Vacina dentro de Lotes. Realiza verifição jwt para ver se o dono do Token passado é um funcionário.
      * Se a data de validade de algum lote encontrado estiver vencida, o lote é removido e uma exceção é lançada (IllegalArgument).
@@ -115,57 +109,9 @@ public class LoteServiceImpl implements LoteService {
         return loteList;
     }
 
-    //TODO os dois métodos abaixo são redundantes, apenas um pode sobreviver
 
     /**
-     * Retorna Vacina cuja dose já foi reservada dentro de um Lote com id = idLote. Exceções serão lançadas caso haja
-     * id inexistente (NullPointer) ou não houver doses reservadas disponíveis (IllegalArgument).
-     *
-     * @param idLote eh id do lote procurado
-     * @return a vacina cuja dose está reservada
-     */
-    public Vacina getVacinaReservadaByIdLote(Long idLote){
-        Optional<Lote> optionalLote = loteRepository.findById(idLote);
-
-        if(optionalLote.isEmpty())
-            throw new NullPointerException("Não há Lote com esse ID!!!");
-
-        Lote loteReservado = optionalLote.get();
-
-        if(loteReservado.getQtdDosesReservadas() <= 0)
-            throw new IllegalArgumentException("O Lote informado não tem doses reservadas!");
-
-        verificaDataValidade(loteReservado);
-        loteReservado.diminuiQtdDosesReservadas();
-        loteRepository.save(loteReservado);
-        notificaNovaQtdDoses();
-
-        return loteReservado.getVacina();
-    }
-
-    /**
-     * Retorna Vacina cuja dose já foi reservada em algum Lote. Exceção será lançada caso não haja Lotes válidos no
-     * sistema. Lotes válidos são aqueles com fabricante = nomeFabricante e qtdDosesReservadas > 0
-     *
-     * @param nomeFabricante eh o nome do fabricante do lote
-     * @return a vacina cuja dose está reservada
-     */
-    public Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante) {
-        Optional<Lote> optionalLote = loteRepository.findFirstByQtdDosesDisponiveisGreaterThanAndNomeFabricanteVacina(0, nomeFabricante);
-
-        if (optionalLote.isEmpty())
-            throw new NullPointerException("Não há Lotes da Vacina informada contendo Doses reservadas!!");
-
-        Lote loteReservado = optionalLote.get();
-        verificaDataValidade(loteReservado);
-        loteReservado.diminuiQtdDosesReservadas();
-        loteRepository.save(loteReservado);
-
-        return loteReservado.getVacina();
-    }
-
-    /**
-     * Verifica se o Lote está vazio
+     * Verifica se o Lote está vazio.
      *
      * @param lote eh o lote
      * @return booleano informado se está vazio ou nao
@@ -210,35 +156,84 @@ public class LoteServiceImpl implements LoteService {
         }
     }
 
-    //TODO ver se é melhor metodo abaixo retorna Lote ao invés de Vacina, afinal é mt mais util saber o Lote do que a Vacina
-    //TODO verificar tambem QUEM irá fazer a reserva (Cidadao ou Funcionario), para questoes de verificacao JWT
-    /**
-     * Método que reserva uma vacina no primeiro lote válido que encontrar. Leia-se lote válido aquele que terá
-     * validade depois da data prevista para vacinação. Se não encontrar lotes válidos, lança uma exceção.
-     *
-     * @param dataVacinacao é a data prevista para vacinação
-     * @return a vacina válida
-     */
-    public Vacina reservaVacinaEmLote(LocalDate dataVacinacao)  {
+//    //TODO ver se é melhor metodo abaixo retorna Lote ao invés de Vacina, afinal é mt mais util saber o Lote do que a Vacina
+//    //TODO verificar tambem QUEM irá fazer a reserva (Cidadao ou Funcionario), para questoes de verificacao JWT
+//    /**
+//     * Método que reserva uma vacina no primeiro lote válido que encontrar. Leia-se lote válido aquele que terá
+//     * validade depois da data prevista para vacinação. Se não encontrar lotes válidos, lança uma exceção.
+//     *
+//     * @param dataVacinacao é a data prevista para vacinação
+//     * @return a vacina válida
+//     */
+//    public Vacina reservaVacinaEmLote(LocalDate dataVacinacao)  {
+//
+//        // TODO is this a bed smell? https://imgur.com/a/jMF5qXz
+//        Optional<Lote> optPrimeiroLoteValido = loteRepository.findAllByQtdDosesDisponiveisGreaterThanAndDataDeValidadeBeforeOrderByDataDeValidadeAsc(0,dataVacinacao);
+//
+//        if(optPrimeiroLoteValido.isEmpty()){
+//            throw new NullPointerException("Não há lotes com data de validade disponíveis para essa data!");
+//        }
+//
+//        Lote loteValido = optPrimeiroLoteValido.get();
+//        Vacina vacinaValida = loteValido.getVacina();
+//
+//        loteValido.diminuiQtdDosesDisponiveis();
+//        loteValido.aumentaQtdDosesReservadas();
+//
+//        loteRepository.save(loteValido);
+//        notificaNovaQtdDoses();
+//
+//        return vacinaValida;
+//    }
+//    //TODO os dois métodos abaixo são redundantes, apenas um pode sobreviver
+//
+//    /**
+//     * Retorna Vacina cuja dose já foi reservada dentro de um Lote com id = idLote. Exceções serão lançadas caso haja
+//     * id inexistente (NullPointer) ou não houver doses reservadas disponíveis (IllegalArgument).
+//     *
+//     * @param idLote eh id do lote procurado
+//     * @return a vacina cuja dose está reservada
+//     */
+//    public Vacina getVacinaReservadaByIdLote(Long idLote){
+//        Optional<Lote> optionalLote = loteRepository.findById(idLote);
+//
+//        if(optionalLote.isEmpty())
+//            throw new NullPointerException("Não há Lote com esse ID!!!");
+//
+//        Lote loteReservado = optionalLote.get();
+//
+//        if(loteReservado.getQtdDosesReservadas() <= 0)
+//            throw new IllegalArgumentException("O Lote informado não tem doses reservadas!");
+//
+//        verificaDataValidade(loteReservado);
+//        loteReservado.diminuiQtdDosesReservadas();
+//        loteRepository.save(loteReservado);
+//        notificaNovaQtdDoses();
+//
+//        return loteReservado.getVacina();
+//    }
+//
+//    /**
+//     * Retorna Vacina cuja dose já foi reservada em algum Lote. Exceção será lançada caso não haja Lotes válidos no
+//     * sistema. Lotes válidos são aqueles com fabricante = nomeFabricante e qtdDosesReservadas > 0
+//     *
+//     * @param nomeFabricante eh o nome do fabricante do lote
+//     * @return a vacina cuja dose está reservada
+//     */
+//    public Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante) {
+//        Optional<Lote> optionalLote = loteRepository.findFirstByQtdDosesDisponiveisGreaterThanAndNomeFabricanteVacina(0, nomeFabricante);
+//
+//        if (optionalLote.isEmpty())
+//            throw new NullPointerException("Não há Lotes da Vacina informada contendo Doses reservadas!!");
+//
+//        Lote loteReservado = optionalLote.get();
+//        verificaDataValidade(loteReservado);
+//        loteReservado.diminuiQtdDosesReservadas();
+//        loteRepository.save(loteReservado);
+//
+//        return loteReservado.getVacina();
+//    }
 
-        // TODO is this a bed smell? https://imgur.com/a/jMF5qXz
-        Optional<Lote> optPrimeiroLoteValido = loteRepository.findAllByQtdDosesDisponiveisGreaterThanAndDataDeValidadeBeforeOrderByDataDeValidadeAsc(0,dataVacinacao);
-
-        if(optPrimeiroLoteValido.isEmpty()){
-            throw new NullPointerException("Não há lotes com data de validade disponíveis para essa data!");
-        }
-
-        Lote loteValido = optPrimeiroLoteValido.get();
-        Vacina vacinaValida = loteValido.getVacina();
-
-        loteValido.diminuiQtdDosesDisponiveis();
-        loteValido.aumentaQtdDosesReservadas();
-
-        loteRepository.save(loteValido);
-        notificaNovaQtdDoses();
-
-        return vacinaValida;
-    }
 
     /**
      * Metodo responsavel por calcular a quantidade total de doses no sistema
@@ -246,7 +241,6 @@ public class LoteServiceImpl implements LoteService {
      */
     public int getQtdVacinaDisponivel(){
         int result = 0;
-
         List<Lote> lotesVacina = this.loteRepository.findAll();
 
         for (Lote lote : lotesVacina){

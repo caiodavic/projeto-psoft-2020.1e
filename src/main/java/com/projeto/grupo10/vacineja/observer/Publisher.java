@@ -12,7 +12,6 @@ public interface Publisher {
     }
 
     default void notificaNovaQtdDoses(){
-        for(Subscriber sub: subscribers)
-            sub.atualizaQtdDoses();
+        subscribers.forEach(Subscriber::atualizaQtdDoses);
     }
 }

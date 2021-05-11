@@ -2,7 +2,6 @@ package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.*;
-import com.projeto.grupo10.vacineja.observer.Subscriber;
 import com.projeto.grupo10.vacineja.repository.RequisitoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
