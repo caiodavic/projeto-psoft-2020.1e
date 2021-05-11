@@ -2,6 +2,7 @@ package com.projeto.grupo10.vacineja.model.usuario;
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.state.Situacao;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -76,10 +77,13 @@ public class Cidadao {
      * É o numero do telefone do Cidadão.
      */
     private String telefone;
+    
 
     /**
      * É a senha do Cidadão. Utilizada para fazer o login no sistema.
      */
+
+    @NotNull
     private String senha;
 
 
@@ -104,6 +108,7 @@ public class Cidadao {
         this.funcionarioGoverno = null;
         this.senha = senha;
         this.cartaoVacina = cartaoVacina;
+
     }
     public String getSenha(){
         return this.senha;

@@ -44,8 +44,9 @@ public class AdministradorServiceImpl implements AdministradorService{
      *
      */
     public void verificaLoginAdmin (String headerToken) throws ServletException{
-        String id = jwtService.getCidadaoDoToken(headerToken);
-        String tipoLogin = jwtService.getTipoLogin(headerToken);
+        String token = "Bearer "+ headerToken;
+        String id = jwtService.getCidadaoDoToken(token);
+        String tipoLogin = jwtService.getTipoLogin(token);
 
         if(!isAdmin(id) || !loginAsAdmin(tipoLogin)) {
             throw new IllegalArgumentException("O usuário não tem permissão de Administrador!");
