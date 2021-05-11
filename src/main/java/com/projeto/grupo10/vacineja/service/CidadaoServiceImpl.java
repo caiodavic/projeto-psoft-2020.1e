@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.DTO.*;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+import com.projeto.grupo10.vacineja.repository.CartaoVacinaRepository;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
@@ -33,6 +34,8 @@ public class CidadaoServiceImpl implements CidadaoService {
     @Autowired
     private FuncionarioGovernoRepository funcionarioGovernoRepository;
 
+    @Autowired
+    private CartaoVacinaRepository cartaoVacinaRepository;
     @Autowired
     private JWTService jwtService;
 
@@ -161,9 +164,11 @@ public class CidadaoServiceImpl implements CidadaoService {
         if(!ErroEmail.validarEmail(cidadaoDTO.getEmail())){
             throw new IllegalArgumentException("Email invalido");
         }
+        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
+        this.cartaoVacinaRepository.save(cartaoVacina);
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
-    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha());
+    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
     	this.salvarCidadao(cidadao);
 
     }

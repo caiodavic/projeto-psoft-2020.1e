@@ -11,7 +11,7 @@ import java.util.Date;
 public class CartaoVacina {
 
     @Id
-    private String cpfUsuario;
+    private String cartaoSus;
 
     @ManyToOne
     private Vacina vacina;
@@ -28,8 +28,8 @@ public class CartaoVacina {
     public CartaoVacina() {
     }
 
-    public CartaoVacina(String cpfUsuario) {
-        this.cpfUsuario = cpfUsuario;
+    public CartaoVacina(String cartaoSus) {
+        this.cartaoSus = cartaoSus;
         this.situacao = SituacaoEnum.NAO_HABILITADO;
     }
 
