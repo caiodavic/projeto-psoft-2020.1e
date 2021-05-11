@@ -4,14 +4,13 @@ import java.util.Date;
 
 public class MinistraVacinaDTO {
 
-    //TODO se cartao vacinacao usa o numero do cartao_sus, esse usaria tb?
-    private String cpfCidadao;
+    private String cartaoSus;
     private Date dataVacinacao;
     private long loteVacina;
     private String tipoVacina;
 
-    public String getCpfCidadao() {
-        return cpfCidadao;
+    public String getCartaoSus() {
+        return cartaoSus;
     }
 
     public Date getDataVacinacao() {

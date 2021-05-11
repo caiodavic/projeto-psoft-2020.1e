@@ -1,11 +1,14 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.MinistraVacinaDTO;
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
+import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -16,6 +19,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Autowired
     RequisitoService requisitoService;
+
+    @Autowired
+    LoteService loteService;
 
     /**
      * Método responsável por chamar o método de requisitoService que altera a idade geral das pessoas que podem vacinar
@@ -59,5 +65,28 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new IllegalCallerException("Ocorreu algum erro com o requisito");
 
         cidadaoService.habilitaPorRequisito(requisitoOptional.get());
+    }
+
+    /**
+     * Metodo responsavel por ministrar uma dose da vacina ao cidadão que esteja apto a receber uma vacina,
+     * a partir disso caso essa seja a segunda dose ou a vacina ministrada seja de dose unica o estado de
+     * vacinação passa para finalizado e se for a primeira dose de uma vacina que tem duas doses o cidadão deve
+     * ir para o estado de "tomou primeira dose"
+     * @param headerToken - token do funcionario que deve ministrar a dose
+     * @param  ministraVacinaDTO - Objeto que contem todas as informações necessarias para testar a vacina
+     * @throws ServletException
+     * @author Caetano Albuquerque
+     */
+    @Override
+    public void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+
+        String cpfCidadao = ministraVacinaDTO.getCartaoSus();
+        Date dataVacina = ministraVacinaDTO.getDataVacinacao();
+        String Tipovacina = ministraVacinaDTO.getTipoVacina();
+
+        Vacina vacina = this.loteService.retirarVacinaValidadeProxima(Tipovacina);
+
+        this.cidadaoService.recebeVacina(cpfCidadao, vacina, dataVacina);
     }
 }

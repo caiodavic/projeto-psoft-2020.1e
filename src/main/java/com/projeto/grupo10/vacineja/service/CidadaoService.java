@@ -24,9 +24,10 @@ public interface CidadaoService extends Subscriber {
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
-    void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException;
+    public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
     public boolean podeAlterarIdade(RequisitoDTO requisito);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
     public void habilitaPelaIdade(Requisito requisito);
     public void habilitaPorRequisito(Requisito requisito);
+    public String getEstadoVacinacao(String headerToken) throws ServletException;
 }
