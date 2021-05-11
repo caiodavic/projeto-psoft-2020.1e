@@ -428,10 +428,18 @@ public class CidadaoServiceImpl implements CidadaoService {
         Integer idadeRequisito = requisito.getIdade();
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
+        String emails = "";
+
         for(Cidadao cidadao: cidadaos){
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
-            if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+            if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                 cidadao.avancarSituacaoVacina();
+                emails += (cidadao.getEmail() + ", ");
+            }
+        }
+        if (!emails.equals("")) {
+            emails = emails.substring(0, emails.length() -2);
+            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
         }
     }
 
@@ -445,6 +453,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         String requisitoPodeHabilitar = requisito.getRequisito();
         Integer idadeRequisito = requisito.getIdade();
 
+        String emails = "";
+
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
         for (Cidadao cidadao : cidadaos) {
@@ -453,12 +463,18 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
             if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
-                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
+                    emails += (cidadao.getEmail() + ", ");
+                }
             }
         }
-
+        if (!emails.equals("")) {
+            emails = emails.substring(0, emails.length() -2);
+            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+        }
     }
+
     /**
      * Isso n faz a msm coisa q o outro lá em cima n ?
      */
