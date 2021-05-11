@@ -1,14 +1,12 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.DTO.MinistraVacinaDTO;
+import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.service.*;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
-import com.projeto.grupo10.vacineja.util.ErroLogin;
-import com.projeto.grupo10.vacineja.util.ErroLote;
-import com.projeto.grupo10.vacineja.util.ErroVacina;
+import com.projeto.grupo10.vacineja.util.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,9 @@ public class FuncionarioControllerAPI {
 
     @Autowired
     VacinaService vacinaService;
+
+    @Autowired
+    FuncionarioService funcionarioService;
 
     @Autowired
     LoteService loteService;
@@ -200,5 +201,41 @@ public class FuncionarioControllerAPI {
             return ErroVacina.erroListarVacina(e.getMessage());
         }
 
+    }
+
+    @RequestMapping(value = "/funcionario/habilita-idade", method = RequestMethod.POST)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> habilitaIdade(@RequestHeader("Authorization") String headerToken,
+                                           @RequestBody RequisitoDTO requisito){
+
+        try{
+            this.funcionarioService.alteraIdadeGeral(requisito,headerToken);
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        } catch (IllegalCallerException ice){
+            ErroRequisito.requisitoNaoPodeHabilitar(requisito);
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.requisitoNaoCadastrado(requisito);
+        }
+
+        return new ResponseEntity<String>(String.format("A partir de agora pessoas com %d ou mais poderão se vacinar",requisito.getIdade()),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/funcionario/habilita-requisito", method = RequestMethod.POST)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> habilitaRequisito(@RequestHeader("Authorization") String headerToken,
+                                               @RequestBody RequisitoDTO requisito){
+
+        try{
+            this.funcionarioService.setComorbidadeHabilitada(requisito,headerToken);
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        } catch (IllegalCallerException ice){
+            ErroRequisito.requisitoNaoPodeHabilitar(requisito);
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.requisitoNaoCadastrado(requisito);
+        }
+
+        return new ResponseEntity<String>(String.format("A partir de agora pessoas com o requisito %s com a idade %d ou mais poderão se vacinar",requisito.getRequisito(),requisito.getIdade()),HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class AdministradorServiceImpl implements AdministradorService{
 
     @Autowired
     CidadaoService cidadaoService;
+
+    @Autowired
+    RequisitoService requisitoService;
 
     @Autowired
     private JWTService jwtService;
@@ -46,5 +50,31 @@ public class AdministradorServiceImpl implements AdministradorService{
         if(!isAdmin(id) || !loginAsAdmin(tipoLogin)) {
             throw new IllegalArgumentException("O usuário não tem permissão de Administrador!");
         }
+    }
+
+    /**
+     * Adiciona uma nova comorbidade no sistema
+     * @param requisito comorbidade a ser adicionada
+     * @param headerToken token com o acesso atual
+     * @throws ServletException caso o token esteja expirado ou nao pertença a um admin
+     * @throws IllegalArgumentException caso a comorbidade ja existe no sistema
+     */
+    @Override
+    public void adicionaNovaComorbidade(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException{
+        this.verificaLoginAdmin(headerToken);
+        requisitoService.setNovaComorbidade(requisito);
+    }
+
+    /**
+     * Adiciona uma nova profissao no sistema
+     * @param requisito profissao a ser adicionada
+     * @param headerToken token com o acesso atual
+     * @throws ServletException caso o token esteja expirado ou nao pertença a um admin
+     * @throws IllegalArgumentException caso a profissao ja existe no sistema
+     */
+    @Override
+    public void adicionaNovaProfissao(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException {
+        this.verificaLoginAdmin(headerToken);
+        requisitoService.setNovaProfissao(requisito);
     }
 }
