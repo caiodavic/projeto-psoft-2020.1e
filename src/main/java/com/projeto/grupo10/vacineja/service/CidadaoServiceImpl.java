@@ -101,7 +101,6 @@ public class CidadaoServiceImpl implements CidadaoService{
         Cidadao cidadao;
         cidadao = cidadaoOpt.get();
         cidadao.setFuncionarioGoverno(this.adicionarFuncionarioGoverno(cadastroFuncionario, id));
-
         this.salvarCidadao(cidadao);
     }
 
