@@ -79,6 +79,15 @@ public class CidadaoControllerAPI {
                 HttpStatus.OK);
     }
 
+    /**
+     * Altera os valores de um Cidadao a partir de uma cidadaoUpdateDTO. É necessária a apresentação do token de Cidadão para relizar essa
+     * ação. O unico valor que não pode ser alterado é o cpf do Cidadao, visto que é sua primaryKey.
+     *
+     * @param headerToken eh o token do cidadão
+     * @param cidadaoUpdateDTO eh o dto da vacina a ser criada
+     * @return response entity adequada, contendo o Cidadao atualizado
+     */
+
     @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
