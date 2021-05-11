@@ -4,6 +4,7 @@ import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.state.Situacao;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class Cidadao {
     /**
      * É a data em que o Cidadão nasceu.
      */
-    private String data_nascimento;
+    private LocalDate data_nascimento;
 
     /**
      * É o numero do telefone do Cidadão.
@@ -88,7 +89,7 @@ public class Cidadao {
     public Cidadao() {
     }
 
-    public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email, String data_nascimento,
+    public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email,  LocalDate data_nascimento,
                    String telefone, Set<String> profissoes, Set<String> comorbidades, String senha) {
 
         this.cpf = cpf;
@@ -191,11 +192,11 @@ public class Cidadao {
         this.cartaoSus = cartaoSus;
     }
 
-    public String getData_nascimento() {
+    public LocalDate getData_nascimento() {
         return data_nascimento;
     }
 
-    public void setData_nascimento(String data_nascimento) {
+    public void setData_nascimento(LocalDate data_nascimento) {
         this.data_nascimento = data_nascimento;
     }
 

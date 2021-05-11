@@ -40,7 +40,7 @@ public class CidadaoControllerAPI {
 
 
 
-    @RequestMapping(value = "/usuario/cadastraCidadao", method = RequestMethod.POST)
+    @RequestMapping(value = "/usuario/cadastra-cidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
         Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
@@ -59,7 +59,7 @@ public class CidadaoControllerAPI {
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
+    @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){

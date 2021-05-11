@@ -40,7 +40,7 @@ public class TestControllerAPI {
         }
     }
 
-    @RequestMapping(value = "/teste/testeEmail", method = RequestMethod.POST)
+    @RequestMapping(value = "/teste/teste-email", method = RequestMethod.POST)
     public ResponseEntity<String> testeEmail(@RequestHeader String email){
         Email.enviarAlertaVacinacao("Atualização do Vacine Já",
                 "Você esta habilitado para receber a primeira dose da vacina," +
@@ -49,7 +49,7 @@ public class TestControllerAPI {
         return new ResponseEntity<String>("email enviado", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/teste/testeloginfixo", method = RequestMethod.GET)
+    @RequestMapping(value = "/teste/teste-login-fixo", method = RequestMethod.GET)
     public ResponseEntity<String> testeLoginFixo(@PathVariable String email,
                                                  @RequestHeader("Authorization") String header) {
         try {
@@ -62,7 +62,7 @@ public class TestControllerAPI {
         }
     }
 
-    @RequestMapping(value = "/teste/testeStates", method = RequestMethod.POST)
+    @RequestMapping(value = "/teste/teste-states", method = RequestMethod.POST)
     public ResponseEntity<String> testeStates(@PathVariable String cpf,
                                                  @RequestHeader("Authorization") String header) {
         try {
