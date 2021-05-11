@@ -31,13 +31,11 @@ public class LoteServiceImpl implements LoteService {
      *
      * @param loteDTO eh o modelo do lote
      * @param vacina eh a vacina do lote
-     * @param headerToken eh o token de verificacao do adm
      * @return o lote criado
      * @throws ServletException se houver algum problema na validacao jwt
      */
     @Override
-    public Lote criaLote(LoteDTO loteDTO, Vacina vacina, String headerToken) throws ServletException {
-        cidadaoService.verificaTokenFuncionario(headerToken);
+    public Lote criaLote(LoteDTO loteDTO, Vacina vacina){
         addSubscriber(cidadaoService);
         validaDoseLotes(loteDTO.getQtdDoses());
         validaDataDeValidade(loteDTO.getDataDeValidade());
@@ -51,13 +49,11 @@ public class LoteServiceImpl implements LoteService {
     /**
      * Retorna todos os lotes armazenados no sistema. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
      *
-     * @param headerToken eh o token de verificacao de funcionario
      * @return a lista de lotes
      * @throws ServletException se houver aglum problema na verificacao jwt
      */
     @Override
-    public List<Lote> listaLotes(String headerToken) throws ServletException{
-        cidadaoService.verificaTokenFuncionario(headerToken);
+    public List<Lote> listaLotes(){
         return loteRepository.findAll();
     }
 
@@ -65,13 +61,11 @@ public class LoteServiceImpl implements LoteService {
      * Retorna todos os lotes de vacina de um determinado fabricante. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
      *
      * @param nomeFabricante eh o nome do fabricante da vacina procurada
-     * @param headerToken eh o token de verificacao de funcionario
      * @return a lista de lotes da fabricante
      * @throws ServletException se houver algum problema na verificacao jwt
      */
     @Override
-    public List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException{
-        cidadaoService.verificaTokenFuncionario(headerToken);
+    public List<Lote> listaLotesPorFabricante(String nomeFabricante){
         return loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
     }
 
@@ -84,13 +78,11 @@ public class LoteServiceImpl implements LoteService {
      *
      * @param nomeFabricante eh o nome da fabricante da vacina
      * @param qtdVacinas eh
-     * @param authToken eh o token de verificacao de funcionario
      * @return a lista de lotes validos (???) TODO mudar isso
      * @throws ServletException se houver algum problema na verificacao jwt
      */
     @Override
-    public List<Lote> removeDoseLotes(String nomeFabricante,int qtdVacinas, String authToken) throws ServletException {
-        cidadaoService.verificaTokenFuncionario(authToken);
+    public List<Lote> removeDoseLotes(String nomeFabricante,int qtdVacinas){
         List<Lote> loteList = loteRepository.findAllByNomeFabricanteVacina(nomeFabricante);
         int j = 0;
 
