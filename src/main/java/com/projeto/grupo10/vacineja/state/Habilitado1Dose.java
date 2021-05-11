@@ -8,11 +8,6 @@ import java.util.Date;
 
 public class Habilitado1Dose implements Situacao{
     private static final String SITUACAO_ATUAL = "Habilitado para tomar a 1ª dose";
-    private static final String MENSSAGEM_EMAIL = "Ola %s" +
-            "\nVocê esta apto para receber a 1ª dose da vacina! " +
-            "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL = "Vacinação primeira dose";
-
 
     public Habilitado1Dose() { }
 
