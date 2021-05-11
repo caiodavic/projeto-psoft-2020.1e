@@ -29,18 +29,22 @@ public class Tomou1Dose implements Situacao {
         cartaoVacina.setDataAgendamento(data);
     }
 
+    // FIXME> fernando: essa mudança de State deveria ser revista, há a possibilidade do cabra estar habilitado pra segunda
+    // FIXME> dose e nao ter Data prevista de vacinacao. Dá um monte de NullPointer em CidadaoServiceImpl
     /**
      * Se a data prevista para segunda dose já tiver passado, o cidadão pode ser habilitado para segunda dose
      * @param cartaoVacina
      */
     @Override
     public void proximaSituacao(CartaoVacina cartaoVacina) {
+        cartaoVacina.setSituacao(SituacaoEnum.HABILITADO2DOSE);
         Date dataPrevistaSegundaDose = cartaoVacina.getDataPrevistaSegundaDose();
         if (dataPrevistaSegundaDose.before(new Date())) {
-            cartaoVacina.setSituacao(SituacaoEnum.HABILITADO2DOSE);
+
         }
     }
 
+   
     @Override
     public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {}
 

@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.model.usuario;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.state.Situacao;
 import com.projeto.grupo10.vacineja.state.SituacaoEnum;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class CartaoVacina {
     private Date dataAgendamento;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private SituacaoEnum situacao;
 
     public CartaoVacina() {

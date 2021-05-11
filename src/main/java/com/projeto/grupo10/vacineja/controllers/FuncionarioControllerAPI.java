@@ -121,6 +121,7 @@ public class FuncionarioControllerAPI {
 
         }
         catch (NullPointerException e){
+            System.out.println(e.getMessage());
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
 
         }

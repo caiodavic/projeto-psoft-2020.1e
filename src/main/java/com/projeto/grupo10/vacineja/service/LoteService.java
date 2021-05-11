@@ -17,8 +17,8 @@ public interface LoteService extends Publisher {
     List<Lote> listaLotes(String headerToken) throws ServletException;
     List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException;
     List<Lote> removeDoseLotes(String nomeFabricante, int qtdVacinas, String headerToken) throws ServletException;
-    Vacina reservaVacinaEmLote(LocalDate dataVacinacao);
-    Vacina getVacinaReservadaByIdLote(Long idLote);
-    Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante);
+//    Vacina reservaVacinaEmLote(LocalDate dataVacinacao);
+//    Vacina getVacinaReservadaByIdLote(Long idLote);
+//    Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante); //TODO
     int getQtdVacinaDisponivel();
 }
