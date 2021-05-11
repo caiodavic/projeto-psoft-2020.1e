@@ -11,6 +11,7 @@ import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
 import com.projeto.grupo10.vacineja.state.Tomou1Dose;
+import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -163,6 +164,18 @@ public class CidadaoServiceImpl implements CidadaoService {
         if(!ErroEmail.validarEmail(cidadaoDTO.getEmail())){
             throw new IllegalArgumentException("Email invalido");
         }
+        if (ErroCidadao.erroCPFInvalido(cidadaoDTO.getCpf())) {
+            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse cpf");
+        }
+        if (ErroCidadao.erroCartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
+            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS");
+        }
+        if (ErroCidadao.erroSenhaInvalida(cidadaoDTO.getSenha())) {
+            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
+        }
+        if (ErroCidadao.erroDataInvalida(cidadaoDTO.getData_nascimento())) {
+            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
+        }
     	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha());
@@ -170,6 +183,14 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     }
 
+    /**
+     * Metodo responsavel por alterar os atributos de Cidadao. Verificas-se quais informacoes deseja-se mudar, de acordo
+     * com as informacoes que vem do DTO.
+     * @param headerToken - token do Cidadao que tera seus dados alterardos
+     * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @param cidadao - O cidadao que tera seus dados alterados
+     * @throws ServletException
+     */
     @Override
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
 
