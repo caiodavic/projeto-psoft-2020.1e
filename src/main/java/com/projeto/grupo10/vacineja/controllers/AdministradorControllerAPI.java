@@ -1,5 +1,6 @@
 package com.projeto.grupo10.vacineja.controllers;
 
+import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.service.AdministradorService;
@@ -7,6 +8,7 @@ import com.projeto.grupo10.vacineja.service.CidadaoService;
 import com.projeto.grupo10.vacineja.service.VacinaService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
+import com.projeto.grupo10.vacineja.util.ErroRequisito;
 import com.projeto.grupo10.vacineja.util.ErroVacina;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -89,6 +91,34 @@ public class AdministradorControllerAPI {
         } catch (IllegalArgumentException | ServletException e){
             return ErroVacina.erroCadastroVacina(e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/admin/novo-requisito-comorbidade", method = RequestMethod.POST)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> cadastraComorbidade(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+        try{
+            administradorService.adicionaNovaComorbidade(requisito,headerToken);
+        } catch (ServletException e){
+            ErroCidadao.erroSemPermissaoAdministrador();
+        } catch (IllegalArgumentException iae) {
+            ErroRequisito.requisitoCadastrado(requisito);
+        }
+
+        return new ResponseEntity<String>(String.format("Requisito comorbidade %s adicionado no sistema",requisito.getRequisito()),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/admin/novo-requisito-profissao", method = RequestMethod.POST)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> cadastraProfissao(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+        try{
+            administradorService.adicionaNovaProfissao(requisito,headerToken);
+        } catch (ServletException e){
+            ErroCidadao.erroSemPermissaoAdministrador();
+        } catch (IllegalArgumentException iae) {
+            ErroRequisito.requisitoCadastrado(requisito);
+        }
+
+        return new ResponseEntity<String>(String.format("Requisito profissao %s adicionado no sistema",requisito.getRequisito()),HttpStatus.OK);
     }
 
 }
