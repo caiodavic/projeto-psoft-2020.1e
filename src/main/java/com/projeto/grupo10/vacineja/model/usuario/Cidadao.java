@@ -90,7 +90,7 @@ public class Cidadao {
     }
 
     public Cidadao(String nome, String cpf,String endereco, String cartaoSus, String email,  LocalDate data_nascimento,
-                   String telefone, Set<String> profissoes, Set<String> comorbidades, String senha) {
+                   String telefone, Set<String> profissoes, Set<String> comorbidades, String senha, CartaoVacina cartaoVacina) {
 
         this.cpf = cpf;
         this.nome = nome;
@@ -103,7 +103,7 @@ public class Cidadao {
         this.comorbidades = comorbidades;
         this.funcionarioGoverno = null;
         this.senha = senha;
-        this.cartaoVacina = new CartaoVacina(cpf);
+        this.cartaoVacina = cartaoVacina;
     }
     public String getSenha(){
         return this.senha;
