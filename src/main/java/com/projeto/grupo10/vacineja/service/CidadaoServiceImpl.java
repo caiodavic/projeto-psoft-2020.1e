@@ -1,5 +1,9 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.CidadaoDTO;
+import com.projeto.grupo10.vacineja.DTO.CidadaoLoginDTO;
+import com.projeto.grupo10.vacineja.DTO.CidadaoUpdateDTO;
+import com.projeto.grupo10.vacineja.DTO.FuncionarioCadastroDTO;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
@@ -8,7 +12,6 @@ import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
 import com.projeto.grupo10.vacineja.state.Tomou1Dose;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
-import javassist.expr.Instanceof;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +23,10 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.*;
-import java.net.http.HttpResponse;
 
 
 @Service
-public class CidadaoServiceImpl implements CidadaoService{
+public class CidadaoServiceImpl implements CidadaoService {
 
     @Autowired
     private CidadaoRepository cidadaoRepository;
@@ -94,7 +96,7 @@ public class CidadaoServiceImpl implements CidadaoService{
 
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
-        if (!cidadaoOpt.isPresent()){
+        if (cidadaoOpt.isEmpty()){
             throw new IllegalArgumentException();
         }
 
@@ -117,7 +119,7 @@ public class CidadaoServiceImpl implements CidadaoService{
     public void autorizarCadastroFuncionario(String cpfFuncionario)throws ServletException{
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfFuncionario);
 
-        if (!cidadaoOpt.isPresent() || !cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
+        if (cidadaoOpt.isEmpty() || !cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
             throw new IllegalArgumentException();
         }
 
@@ -174,7 +176,7 @@ public class CidadaoServiceImpl implements CidadaoService{
 
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
-        if (!cidadaoOpt.isPresent()){
+        if (cidadaoOpt.isEmpty()){
             throw new IllegalArgumentException();
         }
 
@@ -275,5 +277,12 @@ public class CidadaoServiceImpl implements CidadaoService{
      */
     private int getQtdDosesSemDependencia(){
         return this.loteService.getQtdVacinaDisponivel() - this.getQtdHabilitados();
+    }
+
+
+    //TODO
+    @Override
+    public void atualizaQtdDoses(int qtdDoses) {
+       return;
     }
 }

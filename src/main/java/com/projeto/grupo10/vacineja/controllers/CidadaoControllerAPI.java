@@ -1,12 +1,16 @@
 package com.projeto.grupo10.vacineja.controllers;
 
 
+
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
-import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.DTO.CidadaoUpdateDTO;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
-import com.projeto.grupo10.vacineja.model.usuario.CidadaoDTO;
-import com.projeto.grupo10.vacineja.model.usuario.FuncionarioCadastroDTO;
-import com.projeto.grupo10.vacineja.service.*;
+import com.projeto.grupo10.vacineja.DTO.CidadaoDTO;
+import com.projeto.grupo10.vacineja.DTO.FuncionarioCadastroDTO;
+import com.projeto.grupo10.vacineja.service.CidadaoService;
+import com.projeto.grupo10.vacineja.service.JWTService;
+import com.projeto.grupo10.vacineja.service.LoteService;
+import com.projeto.grupo10.vacineja.service.VacinaService;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +50,7 @@ public class CidadaoControllerAPI {
      * @return retorna o cidadaoDTO
      */
 
-    @RequestMapping(value = "/usuario/cadastraCidadao", method = RequestMethod.POST)
+    @RequestMapping(value = "/usuario/cadastra-cidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
         Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
@@ -65,7 +69,7 @@ public class CidadaoControllerAPI {
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/cidadao/cadastrarFuncionario", method = RequestMethod.POST)
+    @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
                                         @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
@@ -84,6 +88,15 @@ public class CidadaoControllerAPI {
         return new ResponseEntity<String>("Cidadão definido como funcionario, aguardando aprovação do administrador.",
                 HttpStatus.OK);
     }
+
+    /**
+     * Altera os valores de um Cidadao a partir de uma cidadaoUpdateDTO. É necessária a apresentação do token de Cidadão para relizar essa
+     * ação. O unico valor que não pode ser alterado é o cpf do Cidadao, visto que é sua primaryKey.
+     *
+     * @param headerToken eh o token do cidadão
+     * @param cidadaoUpdateDTO eh o dto da vacina a ser criada
+     * @return response entity adequada, contendo o Cidadao atualizado
+     */
 
     @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })

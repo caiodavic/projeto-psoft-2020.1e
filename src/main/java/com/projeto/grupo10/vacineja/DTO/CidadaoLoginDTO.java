@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.model.usuario;
+package com.projeto.grupo10.vacineja.DTO;
 
 public class CidadaoLoginDTO {
 

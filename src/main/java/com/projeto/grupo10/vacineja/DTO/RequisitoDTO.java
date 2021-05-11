@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.model.requisitos_vacina;
+package com.projeto.grupo10.vacineja.DTO;
 
 public class RequisitoDTO {
     protected int idade;

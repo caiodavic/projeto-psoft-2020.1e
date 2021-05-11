@@ -1,4 +1,4 @@
-package com.projeto.grupo10.vacineja.model.lote;
+package com.projeto.grupo10.vacineja.DTO;
 
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 
