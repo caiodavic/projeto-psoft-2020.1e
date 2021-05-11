@@ -39,7 +39,7 @@ public class FuncionarioControllerAPI {
 
 
 
-    @RequestMapping(value = "/funcionario/ministrarVacina", method = RequestMethod.POST)
+    @RequestMapping(value = "/funcionario/ministrar-vacina", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> ministrarVacina(@RequestHeader("Authorization") String headerToken,
                                              @RequestBody MinistraVacinaDTO ministraVacinaDTO){
@@ -64,7 +64,7 @@ public class FuncionarioControllerAPI {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/funcionario/habilitarSegundaDose", method = RequestMethod.POST)
+    @RequestMapping(value = "/funcionario/habilitar-segunda-dose", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> habilitarSegundaDose(@RequestHeader("Authorization") String headerToken){
         try{
