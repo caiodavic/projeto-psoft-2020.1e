@@ -9,5 +9,5 @@ INSERT INTO vacina VALUES ('Vacina do Caetano',0,1);
 
 INSERT INTO funcionario_governo(cpf,aprovado,cargo,local_trabalho) VALUES ('12345678001',true,'Médico chefe','Laguinho da UFCG');
 
-INSERT INTO cidadao (cpf,data_nascimento,email,endereco,nome,senha,funcionario_governo_cpf,cartao_vacina_cpf_usuario,funcionario_governo_cpf)
-VALUES ('12345678001','1999-05-28','fernando.costa@ccc.ufcg.edu.br','Rua das Ostras,4','senha','12345678001');
+INSERT INTO cidadao (cpf,data_nascimento,email,endereco,nome,senha,funcionario_governo_cpf)
+VALUES ('12345678001',date'1999-05-28','fernando.costa@ccc.ufcg.edu.br','Rua das Ostras,4','Fernando','senha','12345678001');
