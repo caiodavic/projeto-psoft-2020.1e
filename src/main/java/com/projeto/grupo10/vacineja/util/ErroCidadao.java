@@ -10,6 +10,7 @@ public class ErroCidadao {
             " como funcionario";
     static final String USUARIO_SEM_PERMISSAO_ADMINISTRADOR = "O usuário não tem permissão para realizar operações " +
             "como administrador";
+    static final String USUARIO_SEM_CADASTRO_FUNC_PENDENTE = "O usuário %s não esta com um cadastro de funcionario pendente";
     static final String USUARIO_NAO_ENCONTRADO = "O usuário não foi encontrado";
     static final String CIDADAO_CADASTRADO = "Cidadão com cpf %s já está cadastrado";
     static final String EMAIL_INVALIDO = "Email inválido";
@@ -78,6 +79,11 @@ public class ErroCidadao {
         return new ResponseEntity<CustomErrorType>(
                 new CustomErrorType(ErroCidadao.DATA_DE_NASCIMENTO_INVALIDA),
                 HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    public static ResponseEntity<CustomErrorType> erroUsuarioSemCadastroPendente(String usuario) {
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.USUARIO_SEM_CADASTRO_FUNC_PENDENTE, usuario)),
+                HttpStatus.UNAUTHORIZED);
     }
 
 
