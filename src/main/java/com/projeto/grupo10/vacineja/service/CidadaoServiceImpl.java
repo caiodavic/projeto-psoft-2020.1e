@@ -124,7 +124,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
         if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Usuario não encontrado");
         }
 
         Cidadao cidadao;
@@ -161,8 +161,10 @@ public class CidadaoServiceImpl implements CidadaoService {
     public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfFuncionario);
 
-        if (cidadaoOpt.isEmpty() || !cidadaoOpt.get().aguardandoAutorizacaoFuncionario()) {
-            throw new IllegalArgumentException();
+        if (cidadaoOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuario não cadastrado");
+        }if(!cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
+            throw new IllegalArgumentException("Usuario não é um funcionario não autorizado");
         }
 
         Cidadao cidadao = cidadaoOpt.get();
@@ -561,7 +563,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
         if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Usuario não encontrado");
         }
 
         Cidadao cidadao = cidadaoOpt.get();

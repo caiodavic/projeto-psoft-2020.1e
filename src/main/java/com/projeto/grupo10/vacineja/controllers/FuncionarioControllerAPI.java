@@ -48,14 +48,16 @@ public class FuncionarioControllerAPI {
             this.funcionarioService.ministraVacina(headerToken, ministraVacinaDTO);
         }
         catch (IllegalArgumentException iae){
-            return ErroCidadao.erroUsuarioNaoEncontrado();
+            if(iae.getMessage().equals("Sem lotes da vacina requisitada"))
+                return ErroLote.erroSemLoteDaVacina(ministraVacinaDTO.getTipoVacina());
+            if (iae.getMessage().equals("Cidadão não cadastrado no sistema"))
+                return ErroCidadao.erroUsuarioNaoEncontrado();
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<String>("Vacina aplicada com sucesso.",
-                HttpStatus.OK);
+        return new ResponseEntity<String>("Vacina aplicada com sucesso.", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/funcionario/habilitar-segunda-dose", method = RequestMethod.POST)
@@ -313,8 +315,6 @@ public class FuncionarioControllerAPI {
 
         try{
             cpfsAutorizados = this.funcionarioService.listarCidadaosHabilitados(headerToken);
-        } catch (IllegalArgumentException iae){
-            ErroRequisito.nenhumRequisitoCadastrado();
         } catch (ServletException e){
             ErroLogin.erroTokenInvalido();
         }
