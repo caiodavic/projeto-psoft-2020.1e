@@ -471,6 +471,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
             if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                 cidadao.avancarSituacaoVacina();
+                cartaoVacinaRepository.save(cidadao.getCartaoVacina());
                 emails += (cidadao.getEmail() + ", ");
             }
         }
@@ -502,6 +503,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
+                    cartaoVacinaRepository.save(cidadao.getCartaoVacina());
                     emails += (cidadao.getEmail() + ", ");
                 }
             }
@@ -607,7 +609,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> profissoesCidadao = cidadao.getProfissoes();
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
                     qtdCidadaosMaisVelhos++;
             }

@@ -10,9 +10,9 @@ import java.util.Set;
 public interface RequisitoService {
 
     public void setIdade(RequisitoDTO requisito);
-    public void setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException;
-    public void setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException;
-    public Optional<Requisito> getRequisitoById(String requisito) throws IllegalArgumentException;
+    public Requisito setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException;
+    public Requisito setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException;
+    public Optional<Requisito> getRequisitoById(String requisito);
     public List<String> getTodasComorbidades() throws IllegalArgumentException;
     public Requisito getIdade() throws IllegalArgumentException;
     public List<String> getTodasProfissoes()throws IllegalArgumentException;

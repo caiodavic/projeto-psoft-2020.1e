@@ -56,7 +56,7 @@ public class FuncionarioControllerAPI {
             return ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<String>("Cidadão definido como funcionario, aguardando aprovação do administrador.",
+        return new ResponseEntity<String>("Vacina aplicada com sucesso.",
                 HttpStatus.OK);
     }
 
@@ -245,7 +245,7 @@ public class FuncionarioControllerAPI {
             ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<>(listaComorbidades,HttpStatus.OK);
+        return new ResponseEntity<List<String>>(listaComorbidades,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/funcionario/profissoes-cadastradas", method = RequestMethod.GET)
@@ -261,7 +261,7 @@ public class FuncionarioControllerAPI {
             ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<>(listaProfissoes,HttpStatus.OK);
+        return new ResponseEntity<List<String>>(listaProfissoes,HttpStatus.OK);
     }
 
     /**
@@ -273,7 +273,8 @@ public class FuncionarioControllerAPI {
      */
     @RequestMapping(value = "/funcionario/cidadaos-por-idade", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorIdade(@RequestHeader("Authorization") String headerToken, @RequestAttribute int idade){
+    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorIdade(@RequestHeader("Authorization") String headerToken, @RequestParam int idade){
+        System.out.println(idade);
         int qtdCidadaosAcimadeIdade = 0;
 
         try{
@@ -282,7 +283,7 @@ public class FuncionarioControllerAPI {
             ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
+        return new ResponseEntity<Integer>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
     }
 
     /**
@@ -294,16 +295,17 @@ public class FuncionarioControllerAPI {
      */
     @RequestMapping(value = "/funcionario/cidadaos-por-requisito", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorRequisito(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
+    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorRequisito(@RequestHeader("Authorization") String headerToken, @RequestParam String requisito, @RequestParam int idade){
+
         int qtdCidadaosAcimadeIdade = 0;
 
         try{
-            qtdCidadaosAcimadeIdade = funcionarioService.getQtdCidadaosAtendeRequisito(headerToken,requisito);
+            qtdCidadaosAcimadeIdade = funcionarioService.getQtdCidadaosAtendeRequisito(headerToken,new RequisitoDTO(idade,requisito));
         } catch (ServletException e){
             ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
+        return new ResponseEntity<Integer>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
     }
 
 }
