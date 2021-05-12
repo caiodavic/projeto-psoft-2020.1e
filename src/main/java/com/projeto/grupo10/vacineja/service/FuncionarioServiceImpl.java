@@ -201,4 +201,15 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return this.loteService.removeDoseLotes(nomeFabricante, qtdVacinas);
     }
 
+    /**
+     * Pega uma lista com todos os cpfs dos cidadãos que estão autorizados a tomar primeira ou segunda dose
+     * @param headerToken - token do funcionario
+     * @return uma lista com os cpfs autorizados para tomar alguma dose
+     */
+    @Override
+    public List<String> listarCidadaosHabilitados(String headerToken) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+        return this.cidadaoService.listarCidadaosHabilitados();
+    }
+
 }
