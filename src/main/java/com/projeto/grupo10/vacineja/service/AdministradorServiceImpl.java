@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,13 +57,14 @@ public class AdministradorServiceImpl implements AdministradorService{
      * Adiciona uma nova comorbidade no sistema
      * @param requisito comorbidade a ser adicionada
      * @param headerToken token com o acesso atual
+     * @return o requisito cadastrado
      * @throws ServletException caso o token esteja expirado ou nao pertença a um admin
      * @throws IllegalArgumentException caso a comorbidade ja existe no sistema
      */
     @Override
-    public void adicionaNovaComorbidade(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException{
+    public Requisito adicionaNovaComorbidade(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException{
         this.verificaLoginAdmin(headerToken);
-        requisitoService.setNovaComorbidade(requisito);
+        return requisitoService.setNovaComorbidade(requisito);
     }
 
     /**
@@ -73,8 +75,8 @@ public class AdministradorServiceImpl implements AdministradorService{
      * @throws IllegalArgumentException caso a profissao ja existe no sistema
      */
     @Override
-    public void adicionaNovaProfissao(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException {
+    public Requisito adicionaNovaProfissao(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException {
         this.verificaLoginAdmin(headerToken);
-        requisitoService.setNovaProfissao(requisito);
+        return requisitoService.setNovaProfissao(requisito);
     }
 }

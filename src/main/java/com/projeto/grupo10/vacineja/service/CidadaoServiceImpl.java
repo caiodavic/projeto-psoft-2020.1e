@@ -605,7 +605,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> profissoesCidadao = cidadao.getProfissoes();
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
                     qtdCidadaosMaisVelhos++;
             }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaString;
 
@@ -27,7 +26,7 @@ public class RequisitoServiceImpl implements RequisitoService{
         Optional<Requisito> idadeRequisito = getRequisitoById("idade");
         Requisito idade;
         if(idadeRequisito.isEmpty()){
-            idade = new RequisitoIdade(requisito.getIdade());
+            idade = new Requisito("idade",requisito.getIdade(),TipoRequisito.IDADE);
         } else {
             idade = idadeRequisito.get();
             idade.setIdade(requisito.getIdade());
@@ -36,33 +35,33 @@ public class RequisitoServiceImpl implements RequisitoService{
     }
 
     @Override
-    public void setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException{
+    public Requisito setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException{
 
         if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
-        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
+        Requisito novaComorbidade = new Requisito(padronizaString(requisito.getRequisito()),requisito.getIdade(),TipoRequisito.COMORBIDADE);
+
         requisitoRepository.save(novaComorbidade);
+
+        return getRequisitoById(requisito.getRequisito()).get();
     }
 
     @Override
-    public void setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException{
+    public Requisito setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException{
 
         if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
-        Requisito novaComorbidade = new RequisitoComorbidade(requisito.getIdade(), padronizaString(requisito.getRequisito()));
+        Requisito novaComorbidade = new Requisito(padronizaString(requisito.getRequisito()),requisito.getIdade(),TipoRequisito.IDADE);
         requisitoRepository.save(novaComorbidade);
+
+        return getRequisitoById(requisito.getRequisito()).get();
     }
 
     @Override
-    public Optional<Requisito> getRequisitoById(String requisito) {
+    public Optional<Requisito> getRequisitoById(String requisito){
         Optional<Requisito> requisitoExistente = requisitoRepository.findById(requisito);
-        System.out.println(requisitoExistente.get().getRequisito());
-
-        if(requisitoExistente.isEmpty())
-            throw new IllegalArgumentException("Requisito não cadastrado");
-
         return requisitoExistente;
     }
 
@@ -75,7 +74,7 @@ public class RequisitoServiceImpl implements RequisitoService{
             throw new IllegalArgumentException("Nenhuma comorbidade cadastrada");
         }
         for(Requisito requisito:requisitos){
-            if(requisito instanceof RequisitoComorbidade)
+            if(requisito.getTipoRequisito().equals(TipoRequisito.COMORBIDADE))
                 requisitoComorbidades.add(requisito.getRequisito());
         }
 
@@ -101,7 +100,7 @@ public class RequisitoServiceImpl implements RequisitoService{
             throw new IllegalArgumentException("Nenhuma profissao cadastrada");
         }
         for(Requisito requisito:requisitos){
-            if(requisito instanceof RequisitoProfissao)
+            if(requisito.getTipoRequisito().equals(TipoRequisito.PROFISSAO))
                 requisitoProfissoes.add(requisito.getRequisito());
         }
 
