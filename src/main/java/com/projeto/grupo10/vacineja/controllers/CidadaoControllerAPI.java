@@ -51,6 +51,42 @@ public class CidadaoControllerAPI {
     @Autowired
     JWTService jwtService;
 
+    /**
+     * Cria um cidadao a partir de um CidadaoDTO
+     * @param cidadaoDTO
+     * @return retorna o cidadaoDTO
+     */
+    @RequestMapping(value = "/cidadao/cadastra-cidadao", method = RequestMethod.POST)
+    public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+
+        Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
+        String emailCidadao = cidadaoDTO.getEmail();
+
+        try{
+            cidadaoService.cadastraCidadao(cidadaoDTO);
+        } catch (IllegalArgumentException e){
+            if(e.getMessage().toString() == "Email invalido"){
+                return ErroCidadao.erroEmailInvalido();
+            }
+            if(e.getMessage().toString() == "Cidadao cadastrado"){
+                return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse cpf"){
+                return ErroCidadao.erroCPFInvalido();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS"){
+                return ErroCidadao.erroCartaoSUSInvalido();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa senha"){
+                return ErroCidadao.erroSenhaInvalida();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa data de nascimento"){
+                return ErroCidadao.erroDataInvalida();
+            }
+
+        }
+        return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
+    }
 
     /**
      * Metodo para o cadastro do funcionario
