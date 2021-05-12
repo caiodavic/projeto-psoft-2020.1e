@@ -21,7 +21,7 @@ public interface CidadaoService extends Subscriber {
     void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException;
     ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
-    void cadastraCidadao(CidadaoDTO cidadaoDTO);
+    Optional<Cidadao> cadastraCidadao(CidadaoDTO cidadaoDTO);
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;

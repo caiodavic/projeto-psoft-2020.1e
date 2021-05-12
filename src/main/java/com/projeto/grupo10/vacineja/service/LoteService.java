@@ -5,7 +5,6 @@ import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.observer.Publisher;
 
-import javax.servlet.ServletException;
 import java.time.LocalDate;
 import java.util.List;
 

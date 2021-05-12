@@ -248,9 +248,10 @@ public class LoteServiceImpl implements LoteService {
 
     @Override
     public LocalDate getMaiorValidadeLotes() {
-        List<Lote> lotes = loteRepository.findAll();
+        List<Lote> lotes = listaLotes();
         Collections.sort(lotes, new OrdenarPorData());
 
+        return lotes.get(lotes.size()).getDataDeValidade() ;
     }
 
     /**

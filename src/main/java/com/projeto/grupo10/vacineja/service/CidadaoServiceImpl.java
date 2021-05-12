@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 
-import javax.persistence.UniqueConstraint;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -210,9 +209,11 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
      * @param cidadaoDTO
      * @author Holliver Costa
+     * @return
      */
-    public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+    public Optional<Cidadao> cadastraCidadao(CidadaoDTO cidadaoDTO) {
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
+
         CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
         this.cartaoVacinaRepository.save(cartaoVacina);
       
@@ -220,6 +221,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
     	this.salvarCidadao(cidadao);
+    	return getCidadaoById(cidadaoDTO.getCpf());
     }
 
     /**
@@ -469,7 +471,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     public Situacao getSituacao(String cpf){
         return this.getCidadaoById(cpf).get().getSituacao();
     }
-
+    /*
      * Método que habilita cidadaos utilizando a idade como requisito
      *
      * @param requisito idade a ser utilizada como requisito
