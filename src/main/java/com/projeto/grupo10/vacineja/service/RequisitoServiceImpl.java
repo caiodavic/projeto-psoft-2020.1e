@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaString;
 
 @Service
@@ -57,20 +59,23 @@ public class RequisitoServiceImpl implements RequisitoService{
     public Optional<Requisito> getRequisitoById(String requisito) {
         Optional<Requisito> requisitoExistente = requisitoRepository.findById(requisito);
 
+        if(requisitoExistente.isEmpty())
+            throw new IllegalArgumentException("Requisito não cadastrado");
+
         return requisitoExistente;
     }
 
     @Override
-    public List<Requisito> getTodasComorbidades() throws IllegalArgumentException{
+    public List<String> getTodasComorbidades() throws IllegalArgumentException{
         List<Requisito> requisitos = requisitoRepository.findAll();
-        List<Requisito> requisitoComorbidades = new ArrayList<>();
+        List<String> requisitoComorbidades = new ArrayList<>();
 
         if(requisitos.isEmpty()){
             throw new IllegalArgumentException("Nenhuma comorbidade cadastrada");
         }
         for(Requisito requisito:requisitos){
             if(requisito instanceof RequisitoComorbidade)
-                requisitoComorbidades.add(requisito);
+                requisitoComorbidades.add(requisito.getRequisito());
         }
 
         return requisitoComorbidades;
@@ -87,16 +92,16 @@ public class RequisitoServiceImpl implements RequisitoService{
     }
 
     @Override
-    public List<Requisito> getTodasProfissoes() {
+    public List<String> getTodasProfissoes() {
         List<Requisito> requisitos = requisitoRepository.findAll();
-        List<Requisito> requisitoProfissoes = new ArrayList<>();
+        List<String> requisitoProfissoes = new ArrayList<>();
 
         if(requisitos.isEmpty()){
             throw new IllegalArgumentException("Nenhuma profissao cadastrada");
         }
         for(Requisito requisito:requisitos){
             if(requisito instanceof RequisitoProfissao)
-                requisitoProfissoes.add(requisito);
+                requisitoProfissoes.add(requisito.getRequisito());
         }
 
         return requisitoProfissoes;
@@ -118,5 +123,22 @@ public class RequisitoServiceImpl implements RequisitoService{
         return new RequisitoDTO(requisitoAlterado.getIdade(),requisitoAlterado.getRequisito());
     }
 
+    @Override
+    public List<String> requisitosHabilitados() throws IllegalArgumentException {
+        List<String> requisitosString = new ArrayList<>();
+        List<Requisito> requisitos = requisitoRepository.findAll();
+
+        for(Requisito requisito:requisitos){
+            if(requisito.isPodeVacinar()){
+                String aux = "Requisito: " + requisito.getRequisito() + "\n" + "Idade: " + requisito.getIdade();
+                requisitosString.add(aux);
+            }
+        }
+        if(requisitosString.isEmpty()){
+            throw new IllegalArgumentException("Nenhum requisito está habilitado ainda");
+        }
+
+        return requisitosString;
+    }
 
 }

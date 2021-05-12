@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.observer.Subscriber;
@@ -21,11 +22,17 @@ public interface CidadaoService extends Subscriber {
     ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
     void cadastraCidadao(CidadaoDTO cidadaoDTO);
-    Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException;
+    Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
-    void ministraVacina(String headerToken, String cpfCidadao, Vacina vacina, Date dataVacina) throws ServletException;
+    public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
     public boolean podeAlterarIdade(RequisitoDTO requisito);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
     public Situacao getSituacao(String cpf);
+    public void habilitaPelaIdade(Requisito requisito);
+    public void habilitaPorRequisito(Requisito requisito);
+    public String getEstadoVacinacao(String headerToken) throws ServletException;
+    public int contaCidadaosAcimaIdade(int idade);
+    public int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
+
 }

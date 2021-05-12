@@ -5,16 +5,18 @@ import com.projeto.grupo10.vacineja.model.requisitos_vacina.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface RequisitoService {
 
     public void setIdade(RequisitoDTO requisito);
     public void setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException;
     public void setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException;
-    public Optional<Requisito> getRequisitoById(String requisito);
-    public List<Requisito> getTodasComorbidades() throws IllegalArgumentException;
+    public Optional<Requisito> getRequisitoById(String requisito) throws IllegalArgumentException;
+    public List<String> getTodasComorbidades() throws IllegalArgumentException;
     public Requisito getIdade() throws IllegalArgumentException;
-    public List<Requisito> getTodasProfissoes();
+    public List<String> getTodasProfissoes()throws IllegalArgumentException;
     public RequisitoDTO setPodeVacinar(RequisitoDTO requisito) throws IllegalArgumentException;
+    public List<String> requisitosHabilitados() throws IllegalArgumentException;
 
 }

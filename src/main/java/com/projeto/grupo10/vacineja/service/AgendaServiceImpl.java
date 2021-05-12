@@ -53,6 +53,7 @@ public class AgendaServiceImpl implements AgendaService{
     }
 
 
+
     /**
      * Metodo que pega os agendamentos de um cidadao
      * @param headerToken
@@ -60,6 +61,7 @@ public class AgendaServiceImpl implements AgendaService{
      * @throws ServletException
      * @author Holliver Costa
      */
+
     @Override
     public List<Agenda> getAgendamentobyCpf(String headerToken) throws ServletException {
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);

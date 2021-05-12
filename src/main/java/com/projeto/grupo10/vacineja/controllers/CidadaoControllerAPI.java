@@ -12,6 +12,7 @@ import com.projeto.grupo10.vacineja.service.*;
 import com.projeto.grupo10.vacineja.util.ErroAgenda;
 import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroLogin;
+import com.projeto.grupo10.vacineja.util.ErroRequisito;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,9 @@ public class CidadaoControllerAPI {
 
     @Autowired
     AgendaService agendaService;
+
+    @Autowired
+    RequisitoService requisitoService;
 
     @Autowired
     JWTService jwtService;
@@ -69,6 +74,14 @@ public class CidadaoControllerAPI {
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
 
+    /**
+     * Metodo para o cadastro do funcionario
+     * @param headerToken - token do cidadao que esta tentando viarr funcionario
+     * @param cadastroFuncionario -Um objeto com as seguintes informações -cpf do cidadão, local de trabalho e a função-
+     * @return response entity adequada, dizendo se o cidadao foi definido com funcionario
+     *
+     * @author Caetano Albuquerque
+     */
     @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
@@ -103,11 +116,10 @@ public class CidadaoControllerAPI {
     public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
 
-        Optional<Cidadao> cidadao = cidadaoService.getCidadaoById(cidadaoUpdateDTO.getCpf());
-
+        Cidadao cidadao;
 
         try{
-            cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
+             cidadao = cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO);
         }
 
         catch (IllegalArgumentException iae){
@@ -116,7 +128,9 @@ public class CidadaoControllerAPI {
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
-        return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
+
+
+        return new ResponseEntity<Cidadao>(cidadao,HttpStatus.ACCEPTED);
     }
 
     /**
@@ -125,7 +139,7 @@ public class CidadaoControllerAPI {
      * @param agendaDTO
      * @return retorna o agendamento feito
      */
-    @RequestMapping(value = "/cidadao/AgendaVacina", method = RequestMethod.POST)
+    @RequestMapping(value = "/cidadao/agenda-vacina", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> AgendamentoVacina(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody AgendaDTO agendaDTO) throws ServletException {
@@ -154,7 +168,7 @@ public class CidadaoControllerAPI {
      * @param headerToken
      * @return Retorna todos os agendamentos feitos pelo cidadao
      */
-    @RequestMapping(value = "/cidadao/AgendaVacina/{cpf}", method = RequestMethod.GET)
+    @RequestMapping(value = "/cidadao/agenda-vacina/{cpf}", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> listaAgendamentoCidadao(@RequestHeader("Authorization") String headerToken) throws ServletException {
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
@@ -166,7 +180,85 @@ public class CidadaoControllerAPI {
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
-
     }
+
+    /**
+     * Metodo responsavel por pegar o estado de vacinação
+     * @param headerToken - token cidadao que quer ver o seu estado
+     * @return - um ResponseEntity contendo o estado de vacinação do cidadão
+     *
+     * @author Caetano Albuquerque
+     */
+    @RequestMapping(value = "/cidadao/estado-vacinacao", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getEstadoVacinacao(@RequestHeader("Authorization") String headerToken){
+
+        String estadoVacinacao = "";
+
+        try{
+            estadoVacinacao = cidadaoService.getEstadoVacinacao(headerToken);
+        }
+
+        catch (IllegalArgumentException iae){
+            return ErroCidadao.erroUsuarioNaoEncontrado();
+        }
+        catch (ServletException e){
+            return ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<String>(estadoVacinacao, HttpStatus.OK);
+    }
+
+
+    /**
+     * Método aberto para qualquer usuário para informar a idade mínima que poderá vacinar
+     * @return a idade mínima que será habilitada para tomar a vacina
+     */
+    @RequestMapping(value = "/cidadao/idade-habilitada", method = RequestMethod.GET)
+    public ResponseEntity<?> getIdadeHabilitada(){
+        int idade = 0;
+        try{
+            idade = requisitoService.getIdade().getIdade();
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.idadeAindaNaoCadastrada();
+        }
+
+        return new ResponseEntity<String>(String.format("Idade mínima para ser vacinado(a) atualmente é: %d",idade),HttpStatus.OK);
+    }
+
+    /**
+     * Método aberto para qualquer usuário para informar os requisitos que podem vacinar
+     * @return os requisitos habilitados para vacinar
+     */
+    @RequestMapping(value = "/cidadao/requisitos-habilitados", method = RequestMethod.GET)
+    public ResponseEntity<?> getRequisitosHabilitados(){
+        List<String> requisitos = new ArrayList<>();
+
+        try{
+            requisitos = requisitoService.requisitosHabilitados();
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.nenhumRequisitoHabilitado();
+        }
+
+        return new ResponseEntity<List<String>>(requisitos,HttpStatus.OK);
+    }
+
+    /**
+     * Método aberto para qualquer usuário para informar os requisitos que podem vacinar
+     * @return os requisitos habilitados para vacinar
+     */
+    @RequestMapping(value = "/cidadao/consulta-requisitos", method = RequestMethod.GET)
+    public ResponseEntity<?> getRequisito(@RequestParam String requisito){
+        String requisitoString = "";
+
+        try{
+            requisitoString = requisitoService.getRequisitoById(requisito).get().toString();
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.requisitoNaoCadastrado(requisito);
+        }
+
+        return new ResponseEntity<String>(requisitoString,HttpStatus.OK);
+    }
+
 
 }

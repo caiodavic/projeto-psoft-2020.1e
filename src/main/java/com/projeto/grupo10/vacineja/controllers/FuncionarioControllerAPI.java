@@ -9,12 +9,14 @@ import com.projeto.grupo10.vacineja.service.*;
 import com.projeto.grupo10.vacineja.util.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,15 +46,8 @@ public class FuncionarioControllerAPI {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> ministrarVacina(@RequestHeader("Authorization") String headerToken,
                                              @RequestBody MinistraVacinaDTO ministraVacinaDTO){
-
-        String tipoVacina = ministraVacinaDTO.getTipoVacina();
-        Date dataVacina = ministraVacinaDTO.getDataVacinacao();
-        String cpfCidadao = ministraVacinaDTO.getCpfCidadao();
-
         try{
-            Vacina vacina = vacinaService.fetchVacina(tipoVacina);
-            this.cidadaoService.ministraVacina(headerToken, cpfCidadao, vacina, dataVacina);
-            List<Lote> loteList = loteService.removeDoseLotes(tipoVacina,1,headerToken);
+            this.funcionarioService.ministraVacina(headerToken, ministraVacinaDTO);
         }
         catch (IllegalArgumentException iae){
             return ErroCidadao.erroUsuarioNaoEncontrado();
@@ -116,12 +111,14 @@ public class FuncionarioControllerAPI {
     public ResponseEntity<?> criaLote(@RequestHeader("Authorization") String headerToken, @PathVariable("nome-fabricante") String nomeFabricante, @RequestBody LoteDTO loteDTO){
 
         try{
+            Lote lote = funcionarioService.criarLote(headerToken, nomeFabricante, loteDTO);
             Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-            Lote lote = loteService.criaLote(loteDTO,vacina, headerToken);
+            //Lote lote = loteService.criaLote(loteDTO,vacina, headerToken);
             return new ResponseEntity<>(lote,HttpStatus.CREATED);
 
         }
         catch (NullPointerException e){
+            System.out.println(e.getMessage());
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
 
         }
@@ -143,9 +140,7 @@ public class FuncionarioControllerAPI {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> listaLotesPorFabricante(@PathVariable ("nome-fabricante") String nomeFabricante, @RequestHeader("Authorization") String headerToken){
         try {
-            Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-
-            List<Lote> loteList = loteService.listaLotesPorFabricante(nomeFabricante, headerToken);
+            List<Lote> loteList = funcionarioService.listaLotesPorFabricante(nomeFabricante, headerToken);
 
             if(loteList.isEmpty()){
                 return ErroLote.semLotesCadastrados();
@@ -174,7 +169,7 @@ public class FuncionarioControllerAPI {
 
 
         try {
-            List<Lote> loteList = loteService.listaLotes(headerToken);
+            List<Lote> loteList = funcionarioService.listaLotes(headerToken);
             if(loteList.isEmpty()){
                 return ErroLote.semLotesCadastrados();
             }
@@ -192,8 +187,7 @@ public class FuncionarioControllerAPI {
     public ResponseEntity<?> retiraVacina(@RequestHeader("Authorization") String headerToken, @PathVariable("nome-fabricante") String nomeFabricante, @PathVariable("qtd-vacinas") int qtdVacinas){
 
         try{
-            vacinaService.fetchVacina(nomeFabricante);
-            List<Lote> loteList = loteService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
+            List<Lote> loteList = funcionarioService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
             return new ResponseEntity<>(loteList,HttpStatus.CREATED);
         } catch (NullPointerException e){
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
@@ -203,7 +197,7 @@ public class FuncionarioControllerAPI {
 
     }
 
-    @RequestMapping(value = "/funcionario/habilita-idade", method = RequestMethod.POST)
+    @RequestMapping(value = "/funcionario/habilita-idade", method = RequestMethod.PUT)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> habilitaIdade(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody RequisitoDTO requisito){
@@ -215,13 +209,13 @@ public class FuncionarioControllerAPI {
         } catch (IllegalCallerException ice){
             ErroRequisito.requisitoNaoPodeHabilitar(requisito);
         } catch (IllegalArgumentException iae){
-            ErroRequisito.requisitoNaoCadastrado(requisito);
+            ErroRequisito.requisitoNaoCadastrado(requisito.getRequisito());
         }
 
         return new ResponseEntity<String>(String.format("A partir de agora pessoas com %d ou mais poderão se vacinar",requisito.getIdade()),HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/funcionario/habilita-requisito", method = RequestMethod.POST)
+    @RequestMapping(value = "/funcionario/habilita-requisito", method = RequestMethod.PUT)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> habilitaRequisito(@RequestHeader("Authorization") String headerToken,
                                                @RequestBody RequisitoDTO requisito){
@@ -233,9 +227,83 @@ public class FuncionarioControllerAPI {
         } catch (IllegalCallerException ice){
             ErroRequisito.requisitoNaoPodeHabilitar(requisito);
         } catch (IllegalArgumentException iae){
-            ErroRequisito.requisitoNaoCadastrado(requisito);
+            ErroRequisito.requisitoNaoCadastrado(requisito.getRequisito());
         }
 
         return new ResponseEntity<String>(String.format("A partir de agora pessoas com o requisito %s com a idade %d ou mais poderão se vacinar",requisito.getRequisito(),requisito.getIdade()),HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/funcionario/comorbidades-cadastradas", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getComorbidadesCadastradas(@RequestHeader("Authorization") String headerToken){
+        List<String> listaComorbidades = new ArrayList<String>();
+        try{
+           listaComorbidades = this.funcionarioService.listaComorbidadesCadastradas(headerToken);
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.nenhumRequisitoCadastrado();
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<>(listaComorbidades,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/funcionario/profissoes-cadastradas", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getProfissoesCadastradas(@RequestHeader("Authorization") String headerToken){
+        List<String> listaProfissoes = new ArrayList<String>();
+
+        try{
+            listaProfissoes = this.funcionarioService.listaComorbidadesCadastradas(headerToken);
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.nenhumRequisitoCadastrado();
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<>(listaProfissoes,HttpStatus.OK);
+    }
+
+    /**
+     * Retorna a quantidade de cidadaos não habilitados com idade igual ou superior a idade passada como parametro
+     * @param headerToken token do usuario logado
+     * @param idade idade a ser usada para o calculo
+     * @return quantidade de cidadaos nao habilitados com idade igual ou superior a idade passada
+     * @author Caio Silva
+     */
+    @RequestMapping(value = "/funcionario/cidadaos-por-idade", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorIdade(@RequestHeader("Authorization") String headerToken, @RequestAttribute int idade){
+        int qtdCidadaosAcimadeIdade = 0;
+
+        try{
+            qtdCidadaosAcimadeIdade = funcionarioService.getCidadaosAcimaIdade(headerToken,idade);
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
+    }
+
+    /**
+     * Retorna a quantidade de cidadaos não habilitados que atendem ao requisito passado por parametro
+     * @param headerToken token do usuario logado
+     * @param requisito requisito a ser utilizado
+     * @return quantidade de cidadaos nao habilitados que se encaixam no requisito enviado
+     * @author Caio Silva
+     */
+    @RequestMapping(value = "/funcionario/cidadaos-por-requisito", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> getNumeroCidadaosNaoHabilitadosPorRequisito(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
+        int qtdCidadaosAcimadeIdade = 0;
+
+        try{
+            qtdCidadaosAcimadeIdade = funcionarioService.getQtdCidadaosAtendeRequisito(headerToken,requisito);
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
+    }
+
 }
