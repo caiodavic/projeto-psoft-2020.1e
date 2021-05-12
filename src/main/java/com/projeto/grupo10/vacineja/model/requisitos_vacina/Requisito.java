@@ -14,4 +14,14 @@ public abstract class Requisito{
     public String getRequisito(){return requisito;}
     public void setIdade(int idade){this.idade = idade;}
     public void setPodeVacinar(){this.podeVacinar = true;}
+    public boolean isPodeVacinar() {
+        return podeVacinar;
+    }
+
+    @Override
+    public String toString() {
+        return "Requisito: " + requisito + '\n' +
+                "Idade: " + idade + '\n' +
+                "Habilitado para vacina: " + podeVacinar;
+    }
 }

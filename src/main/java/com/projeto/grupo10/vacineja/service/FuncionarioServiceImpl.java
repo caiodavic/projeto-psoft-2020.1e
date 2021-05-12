@@ -97,7 +97,55 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     /**
-     * Retorna todos os lotes armazenados no sistema. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
+
+     * Método que retorna todas as comorbidades cadastradas no sistema
+     * @return uma lista com todas as comorbidades já cadastradas
+     * @throws IllegalArgumentException caso não exista nenhuma comorbidade
+     * @throws  ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public List<String> listaComorbidadesCadastradas(String headerToken) throws ServletException, IllegalArgumentException {
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        List<String> requisitos = requisitoService.getTodasComorbidades();
+        return requisitos;
+    }
+
+    /**
+     * Método que retorna todas as profissoes cadastradas no sistema
+     * @return uma lista com todas as comorbidades já cadastradas
+     * @throws IllegalArgumentException caso não exista nenhuma comorbidade
+     * @throws  ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public List<String> listaProfissoesCadastradas(String headerToken) throws ServletException, IllegalArgumentException {
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        List<String> requisitos = requisitoService.getTodasProfissoes();
+        return requisitos;
+    }
+
+    /**
+     * Retorna a quantidade de cidadaos não habilitados com idade igual ou superior a idade passada como parametro
+     * @param headerToken token do usuario logado
+     * @param idade idade a ser usada para o calcul
+     * @return quantidade de cidadaos nao habilitados com idade igual ou superior a idade passada
+     * @throws ServletException lança caso o token seja inválido
+     * @author Caio Silva
+     */
+    @Override
+    public int getCidadaosAcimaIdade(String headerToken, int idade) throws ServletException {
+       cidadaoService.verificaTokenFuncionario(headerToken);
+       return cidadaoService.contaCidadaosAcimaIdade(idade);
+    }
+
+    public int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException{
+        cidadaoService.verificaTokenFuncionario(headerToken);
+        return cidadaoService.contaCidadaosAtendeRequisito(requisito);
+    }
+
+
+     /** Retorna todos os lotes armazenados no sistema. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
      * @param headerToken - token do funcionario que ta criando a vacina
      * @return a lista de lotes
      * @throws ServletException se houver aglum problema na verificacao jwt
@@ -152,4 +200,5 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         this.cidadaoService.verificaTokenFuncionario(headerToken);
         return this.loteService.removeDoseLotes(nomeFabricante, qtdVacinas);
     }
+
 }
