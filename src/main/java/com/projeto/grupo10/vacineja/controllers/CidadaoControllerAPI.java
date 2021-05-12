@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.ServletException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +69,22 @@ public class CidadaoControllerAPI {
             if(e.getMessage().toString() == "Email invalido"){
                 return ErroCidadao.erroEmailInvalido();
             }
-            else if(e.getMessage().toString() == "Cidadao cadastrado"){
+            if(e.getMessage().toString() == "Cidadao cadastrado"){
                 return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
             }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse cpf"){
+                return ErroCidadao.erroCPFInvalido();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS"){
+                return ErroCidadao.erroCartaoSUSInvalido();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa senha"){
+                return ErroCidadao.erroSenhaInvalida();
+            }
+            if(e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa data de nascimento"){
+                return ErroCidadao.erroDataInvalida();
+            }
+
         }
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.CREATED);
     }
@@ -107,7 +122,7 @@ public class CidadaoControllerAPI {
      * ação. O unico valor que não pode ser alterado é o cpf do Cidadao, visto que é sua primaryKey.
      *
      * @param headerToken eh o token do cidadão
-     * @param cidadaoUpdateDTO eh o dto da vacina a ser criada
+     * @param cidadaoUpdateDTO eh o dto das novas informações desejadas para o usuário
      * @return response entity adequada, contendo o Cidadao atualizado
      */
 
@@ -116,20 +131,24 @@ public class CidadaoControllerAPI {
     public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
 
-        Cidadao cidadao;
+        Cidadao cidadao = new Cidadao();
 
         try{
              cidadao = cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(cidadao.getCpf()).toUri();
+            return ResponseEntity.created(uri).body(cidadaoUpdateDTO);
         }
         catch (IllegalArgumentException iae){
+            if (iae.getMessage().equals("Novo Email invalido")) {
+                return ErroCidadao.erroEmailInvalido();
+            }
             return ErroCidadao.erroUsuarioNaoEncontrado();
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
 
-
-        return new ResponseEntity<Cidadao>(cidadao,HttpStatus.ACCEPTED);
     }
 
     /**

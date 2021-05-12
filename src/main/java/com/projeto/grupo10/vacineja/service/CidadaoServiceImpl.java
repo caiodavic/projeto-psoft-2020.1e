@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 
-import javax.persistence.UniqueConstraint;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -236,16 +235,16 @@ public class CidadaoServiceImpl implements CidadaoService {
             throw new IllegalArgumentException("Email invalido");
         }
 
-        if (ErroCidadao.erroCPFInvalido(cidadaoDTO.getCpf())) {
+        if (ErroCidadao.CPFInvalido(cidadaoDTO.getCpf())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse cpf");
         }
-        if (ErroCidadao.erroCartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
+        if (ErroCidadao.cartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS");
         }
-        if (ErroCidadao.erroSenhaInvalida(cidadaoDTO.getSenha())) {
+        if (ErroCidadao.senhaInvalida(cidadaoDTO.getSenha())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
         }
-        if (ErroCidadao.erroDataInvalida(cidadaoDTO.getData_nascimento())) {
+        if (ErroCidadao.dataInvalida(cidadaoDTO.getData_nascimento())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
         }
 
@@ -271,9 +270,6 @@ public class CidadaoServiceImpl implements CidadaoService {
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException, IllegalArgumentException{
 
         Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
-        if(cidadao.isEmpty()){
-            throw new IllegalArgumentException("Cidadao não existe");
-        }
         analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
 
         cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
@@ -299,14 +295,20 @@ public class CidadaoServiceImpl implements CidadaoService {
         String id = jwtService.getCidadaoDoToken(headerToken);
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
         if (cidadaoOpt.isEmpty()){
-
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cidadao não existe");
         }
         if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
             if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
                 throw new IllegalArgumentException("Novo Email invalido");
             }
         }
+        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())){
+            if (ErroCidadao.senhaInvalida(cidadaoUpdateDTO.getSenha())) {
+                throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
+            }
+        }
+
+
     }
 
     /**
