@@ -58,6 +58,7 @@ public class RequisitoServiceImpl implements RequisitoService{
     @Override
     public Optional<Requisito> getRequisitoById(String requisito) {
         Optional<Requisito> requisitoExistente = requisitoRepository.findById(requisito);
+        System.out.println(requisitoExistente.get().getRequisito());
 
         if(requisitoExistente.isEmpty())
             throw new IllegalArgumentException("Requisito não cadastrado");

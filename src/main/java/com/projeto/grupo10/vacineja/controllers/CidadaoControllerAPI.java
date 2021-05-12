@@ -121,7 +121,6 @@ public class CidadaoControllerAPI {
         try{
              cidadao = cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO);
         }
-
         catch (IllegalArgumentException iae){
             return ErroCidadao.erroUsuarioNaoEncontrado();
         }

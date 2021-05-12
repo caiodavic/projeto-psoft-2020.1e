@@ -95,7 +95,7 @@ public class AdministradorControllerAPI {
 
     @RequestMapping(value = "/admin/novo-requisito-comorbidade", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> cadastraComorbidade(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+    public ResponseEntity<?> cadastraComorbidade(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
         try{
             administradorService.adicionaNovaComorbidade(requisito,headerToken);
         } catch (ServletException e){
@@ -109,7 +109,7 @@ public class AdministradorControllerAPI {
 
     @RequestMapping(value = "/admin/novo-requisito-profissao", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> cadastraProfissao(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+    public ResponseEntity<?> cadastraProfissao(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
         try{
             administradorService.adicionaNovaProfissao(requisito,headerToken);
         } catch (ServletException e){

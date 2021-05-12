@@ -197,9 +197,8 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 
     public void verificaTokenFuncionario(String authHeader) throws ServletException {
-        String token = "Bearer " + authHeader;
-        String id = jwtService.getCidadaoDoToken(token);
-        String tipoLogin = jwtService.getTipoLogin(token);
+        String id = jwtService.getCidadaoDoToken(authHeader);
+        String tipoLogin = jwtService.getTipoLogin(authHeader);
 
         if (!isFuncionario(id) && tipoLogin.equals("Funcionario"))
             throw new ServletException("Usuario não é um Funcionário cadastrado!");
@@ -266,25 +265,25 @@ public class CidadaoServiceImpl implements CidadaoService {
      *
      * @param headerToken      - token do Cidadao que tera seus dados alterardos
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @param cidadao          - O cidadao que tera seus dados alterados
-
      * @throws ServletException
      */
     @Override
-    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException{
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException, IllegalArgumentException{
 
         Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
+        if(cidadao.isEmpty()){
+            throw new IllegalArgumentException("Cidadao não existe");
+        }
         analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
 
-        cidadao.get().setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.get().getCartaoSus());
         cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
-        cidadao.get().setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.get().getData_nascimento());
         cidadao.get().setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.get().getEmail());
         cidadao.get().setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.get().getEndereco());
         cidadao.get().setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.get().getSenha());
         cidadao.get().setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.get().getNome());
         cidadao.get().setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.get().getTelefone());
         cidadao.get().setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.get().getProfissoes());
+
         this.salvarCidadao(cidadao.get());
         return cidadao.get();
     }
@@ -306,21 +305,6 @@ public class CidadaoServiceImpl implements CidadaoService {
         if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
             if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
                 throw new IllegalArgumentException("Novo Email invalido");
-            }
-        }
-        if (Objects.nonNull(cidadaoUpdateDTO.getCartaoSus())) {
-            if (ErroCidadao.erroCartaoSUSInvalido(cidadaoUpdateDTO.getCartaoSus())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com esse numero de cartao do SUS");
-            }
-        }
-        if (Objects.nonNull(cidadaoUpdateDTO.getData_nascimento())) {
-            if (ErroCidadao.erroDataInvalida(cidadaoUpdateDTO.getData_nascimento())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa data de nascimento");
-            }
-        }
-        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())) {
-            if (ErroCidadao.erroSenhaInvalida(cidadaoUpdateDTO.getSenha())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa senha");
             }
         }
     }
@@ -470,7 +454,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         return this.getCidadaoById(cpf).get().getSituacao();
     }
 
-     * Método que habilita cidadaos utilizando a idade como requisito
+     /* Método que habilita cidadaos utilizando a idade como requisito
      *
      * @param requisito idade a ser utilizada como requisito
      * @author Caio Silva
