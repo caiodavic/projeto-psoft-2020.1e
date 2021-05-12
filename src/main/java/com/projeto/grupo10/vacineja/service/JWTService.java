@@ -51,7 +51,8 @@ public class JWTService {
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)).compact();
     }
 
-    public String getCidadaoDoToken(String authorizationHeader) throws ServletException{
+    public String getCidadaoDoToken(String authoHeader) throws ServletException{
+        String authorizationHeader = "Bearer "+ authoHeader;
         this.verificaToken(authorizationHeader);
 
         // Extraindo apenas o token do cabecalho.
@@ -66,7 +67,8 @@ public class JWTService {
         return subject;
     }
 
-    public String getTipoLogin(String authorizationHeader) throws ServletException {
+    public String getTipoLogin(String authoHeader) throws ServletException {
+        String authorizationHeader = "Bearer "+ authoHeader;
         this.verificaToken(authorizationHeader);
 
         // Extraindo apenas o token do cabecalho.
