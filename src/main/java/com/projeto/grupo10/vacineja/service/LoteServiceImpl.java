@@ -5,6 +5,7 @@ import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.LoteRepository;
+import com.projeto.grupo10.vacineja.util.OrdenarPorData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -243,6 +244,13 @@ public class LoteServiceImpl implements LoteService {
             result += lote.getQtdDosesDisponiveis();
         }
         return result;
+    }
+
+    @Override
+    public LocalDate getMaiorValidadeLotes() {
+        List<Lote> lotes = loteRepository.findAll();
+        Collections.sort(lotes, new OrdenarPorData());
+
     }
 
     /**

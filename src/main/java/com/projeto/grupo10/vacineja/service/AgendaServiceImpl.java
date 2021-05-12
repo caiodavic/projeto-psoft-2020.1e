@@ -1,11 +1,18 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.AgendaDTO;
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.repository.AgendaRepository;
+import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
+import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
+import com.projeto.grupo10.vacineja.state.NaoHabilitado;
+import com.projeto.grupo10.vacineja.state.Situacao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.health.HealthEndpointAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -13,24 +20,52 @@ public class AgendaServiceImpl implements AgendaService{
     @Autowired
     private AgendaRepository agendaRepository;
     @Autowired
+    private CidadaoService cidadaoService;
+    @Autowired
     private JWTService jwtService;
-    @Override
-    public void agendaVacinação(String headerToken,Agenda agendaDTO) throws ServletException {
-        String id = jwtService.getCidadaoDoToken(headerToken);
 
-        Agenda agenda = new Agenda(agendaDTO.getCpf(),agendaDTO.getData(),agendaDTO.getHorario(),agendaDTO.getLocal());
-        this.agendaRepository.save(agenda);
+    /**
+     * Agenda uma vacinação,para agendar uma vacinação o cidadao precisa estar habilitado para alguma dose da vacina
+     * @param headerToken
+     * @param agendaDTO
+     * @throws ServletException
+     * @author Holliver Costa
+     */
+    @Override
+    public void agendaVacinação(String headerToken, AgendaDTO agendaDTO) throws ServletException {
+        String id = jwtService.getCidadaoDoToken(headerToken);
+        String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
+
+        if(!cidadaoService.getCidadaoById(cpf_cidadao).isPresent())
+            throw new IllegalArgumentException("Cidadao nao cadastrado");
+        if(agendaDTO.getData().isBefore(LocalDate.now()))
+            throw new IllegalArgumentException("Data invalida");
+
+        Situacao situacaoCidadao = cidadaoService.getSituacao(cpf_cidadao);
+
+        if( situacaoCidadao instanceof Habilitado1Dose || situacaoCidadao instanceof Habilitado2Dose){
+            Agenda agenda = new Agenda(cpf_cidadao,agendaDTO.getData(),agendaDTO.getHorario(),agendaDTO.getLocal());
+            this.agendaRepository.save(agenda);
+        }else{
+            throw new IllegalArgumentException("Cidadao nao habilitado");
+        }
+
     }
 
+
+
+    /**
+     * Metodo que pega os agendamentos de um cidadao
+     * @param headerToken
+     * @return retorna todos os agendamentos do cidadao
+     * @throws ServletException
+     * @author Holliver Costa
+     */
+
     @Override
-    public void listaHorariosDisponiveis() {
-
-    }
-
-
-    @Override
-    public List<Agenda> getAgendamentobyCpf(String headerToken, String cpf) throws ServletException {
+    public List<Agenda> getAgendamentobyCpf(String headerToken) throws ServletException {
+        String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         String id = jwtService.getCidadaoDoToken(headerToken);
-        return agendaRepository.findAllByCpf(cpf);
+        return agendaRepository.findAllByCpf(cpf_cidadao);
     }
 }

@@ -7,6 +7,7 @@ import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CartaoVacinaRepository;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
+import com.projeto.grupo10.vacineja.state.*;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
 import com.projeto.grupo10.vacineja.state.NaoHabilitado;
@@ -62,7 +63,12 @@ public class CidadaoServiceImpl implements CidadaoService {
         return this.cidadaoRepository.findById(cpf);
     }
 
-    private void salvarCidadao(Cidadao cidadao) {
+    /**
+     * Salva um cidadao no repository
+     * @param cidadao
+     * @author Holliver Costa
+     */
+    private void salvarCidadao(Cidadao cidadao){
         this.cidadaoRepository.save(cidadao);
     }
 
@@ -200,12 +206,10 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     }
 
-
     /**
-     * Metodo responsavel por cadastrar um Cidadao. Verificas-se quais informacoes deseja-se colocar no Cidadao, de acordo
-     * com as informacoes que vem do DTO.
-     * @param cidadaoDTO - DTO contendo as informacoes desejadas para o Cidadao.
-     * @throws ServletException
+     * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
+     * @param cidadaoDTO
+     * @author Holliver Costa
      */
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
@@ -456,6 +460,16 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     /**
+     * Metodo que pega o estagio de vacinação do cidadao
+     * @param cpf
+     * @return retorna a situacao do cidadao
+     * @author Holliver Costa
+     */
+    @Override
+    public Situacao getSituacao(String cpf){
+        return this.getCidadaoById(cpf).get().getSituacao();
+    }
+
      * Método que habilita cidadaos utilizando a idade como requisito
      *
      * @param requisito idade a ser utilizada como requisito
@@ -614,4 +628,5 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         return qtdCidadaosMaisVelhos;
     }
+
 }

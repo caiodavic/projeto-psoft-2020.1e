@@ -17,6 +17,7 @@ public class ErroCidadao {
     static final String CIDADAO_CADASTRADO = "Cidadão com cpf %s já está cadastrado";
     static final String EMAIL_INVALIDO = "Email inválido";
     static final String CIDADAO_NAO_CADASTRADO = "Cidadão com cpf %s não está cadastrado";
+    static final String CIDADAO_NAO_HABILITADO = "Cidadão não habilitado";
     static final String CPFINVALIDO = "Não é possivel cadastrar um Cidadão com cpf %s .";
 
     public static ResponseEntity<CustomErrorType> erroSemPermissaoFuncionario(String usuario) {
@@ -48,6 +49,13 @@ public class ErroCidadao {
                 new CustomErrorType(String.format(ErroCidadao.CIDADAO_NAO_CADASTRADO, cpf)),
                 HttpStatus.NOT_ACCEPTABLE);
     }
+
+    public static ResponseEntity<CustomErrorType> erroCidadaoNaoHabilitado() {
+        return new ResponseEntity<CustomErrorType>(
+                new CustomErrorType(ErroCidadao.CIDADAO_NAO_HABILITADO),
+                HttpStatus.NOT_ACCEPTABLE);
+    }
+
 
     /**
      * Metodo responsavel por verificar se o cpf do cidadao contem 11 numerais.

@@ -21,6 +21,8 @@ public interface LoteService extends Publisher {
 //    Vacina getVacinaReservadaByIdLote(Long idLote);
 //    Vacina getVacinaReservadaByNomeFabricante(String nomeFabricante); //TODO
     int getQtdVacinaDisponivel();
+    LocalDate getMaiorValidadeLotes();
     Vacina retirarVacinaValidadeProxima(String nomeFabricante);
     boolean existeLoteDaVacina(String tipoVacina);
+
 }

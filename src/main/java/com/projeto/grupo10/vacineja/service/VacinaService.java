@@ -15,4 +15,5 @@ public interface VacinaService {
     List<Vacina> listarVacinas(String headerToken) throws ServletException;
     Optional<Vacina> getVacinaById(String nomeFabricante) ;
     Vacina fetchVacina(String nomeFabricante);
+
 }

@@ -5,6 +5,7 @@ import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.observer.Subscriber;
+import com.projeto.grupo10.vacineja.state.Situacao;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
@@ -27,9 +28,11 @@ public interface CidadaoService extends Subscriber {
     public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
     public boolean podeAlterarIdade(RequisitoDTO requisito);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
+    public Situacao getSituacao(String cpf);
     public void habilitaPelaIdade(Requisito requisito);
     public void habilitaPorRequisito(Requisito requisito);
     public String getEstadoVacinacao(String headerToken) throws ServletException;
     public int contaCidadaosAcimaIdade(int idade);
     public int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
+
 }
