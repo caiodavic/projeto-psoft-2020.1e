@@ -113,11 +113,10 @@ public class CidadaoControllerAPI {
     public ResponseEntity<?> updateCidadao(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO) {
 
-        Optional<Cidadao> cidadao = cidadaoService.getCidadaoById(cidadaoUpdateDTO.getCpf());
-
+        Cidadao cidadao;
 
         try{
-            cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
+             cidadao = cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO);
         }
 
         catch (IllegalArgumentException iae){
@@ -126,7 +125,9 @@ public class CidadaoControllerAPI {
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
-        return new ResponseEntity<Cidadao>(cidadao.get(),HttpStatus.ACCEPTED);
+
+
+        return new ResponseEntity<Cidadao>(cidadao,HttpStatus.ACCEPTED);
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.projeto.grupo10.vacineja.service;
 
+import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.DTO.MinistraVacinaDTO;
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
+import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Autowired
     LoteService loteService;
+
+    @Autowired
+    VacinaService vacinaService;
 
     /**
      * Método responsável por chamar o método de requisitoService que altera a idade geral das pessoas que podem vacinar
@@ -92,6 +97,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     /**
+
      * Método que retorna todas as comorbidades cadastradas no sistema
      * @return uma lista com todas as comorbidades já cadastradas
      * @throws IllegalArgumentException caso não exista nenhuma comorbidade
@@ -136,6 +142,63 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException{
         cidadaoService.verificaTokenFuncionario(headerToken);
         return cidadaoService.contaCidadaosAtendeRequisito(requisito);
+    }
+
+
+     /** Retorna todos os lotes armazenados no sistema. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
+     * @param headerToken - token do funcionario que ta criando a vacina
+     * @return a lista de lotes
+     * @throws ServletException se houver aglum problema na verificacao jwt
+     */
+    @Override
+    public List<Lote> listaLotes(String headerToken) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+        return this.loteService.listaLotes();
+    }
+
+    /**
+     *
+     * Cria um lote com base em LoteDTO. Realiza verifição jwt para ver se o dono do Token passado é um administrador
+     * @param headerToken - token do funcionario que ta criando a vacina
+     * @param loteDTO eh o modelo do lote
+     * @param nomeFabricante o tipo da vacina
+     * @return o lote criado
+     * @throws ServletException se houver algum problema na validacao jwt
+     */
+    @Override
+    public Lote criarLote(String headerToken, String nomeFabricante, LoteDTO loteDTO) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+
+        Vacina vacina = this.vacinaService.fetchVacina(nomeFabricante);
+        return this.loteService.criaLote(loteDTO, vacina);
+    }
+
+    /**
+     * Retorna todos os lotes de vacina de um determinado fabricante. Realiza verifição jwt para ver se o dono do Token passado é um funcionário
+     * @param headerToken - token do funcionario
+     * @param nomeFabricante eh o nome do fabricante da vacina procurada
+     * @return a lista de lotes da fabricante
+     * @throws ServletException se houver algum problema na verificacao jwt
+     */
+    @Override
+    public List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+        return this.loteService.listaLotesPorFabricante(nomeFabricante);
+    }
+
+    /**
+     * Remove qtdVacinas dose(s) de Vacina dentro de Lotes. Realiza verifição jwt para ver se o dono do Token passado é um funcionário.
+     * Se a data de validade de algum lote encontrado estiver vencida, o lote é removido e uma exceção é lançada (IllegalArgument).
+     * @param headerToken - toke do funcionario
+     * @param nomeFabricante eh o nome da fabricante da vacina
+     * @param qtdVacinas eh
+     * @return a lista de lotes validos (???) TODO mudar isso
+     * @throws ServletException se houver algum problema na verificacao jwt
+     */
+    @Override
+    public List<Lote> removeDoseLotes(String nomeFabricante, int qtdVacinas, String headerToken) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+        return this.loteService.removeDoseLotes(nomeFabricante, qtdVacinas);
     }
 
 }

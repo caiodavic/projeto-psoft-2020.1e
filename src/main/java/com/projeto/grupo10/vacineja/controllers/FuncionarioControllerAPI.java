@@ -111,8 +111,9 @@ public class FuncionarioControllerAPI {
     public ResponseEntity<?> criaLote(@RequestHeader("Authorization") String headerToken, @PathVariable("nome-fabricante") String nomeFabricante, @RequestBody LoteDTO loteDTO){
 
         try{
+            Lote lote = funcionarioService.criarLote(headerToken, nomeFabricante, loteDTO);
             Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-            Lote lote = loteService.criaLote(loteDTO,vacina, headerToken);
+            //Lote lote = loteService.criaLote(loteDTO,vacina, headerToken);
             return new ResponseEntity<>(lote,HttpStatus.CREATED);
 
         }
@@ -139,9 +140,7 @@ public class FuncionarioControllerAPI {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> listaLotesPorFabricante(@PathVariable ("nome-fabricante") String nomeFabricante, @RequestHeader("Authorization") String headerToken){
         try {
-            Vacina vacina = vacinaService.fetchVacina(nomeFabricante);
-
-            List<Lote> loteList = loteService.listaLotesPorFabricante(nomeFabricante, headerToken);
+            List<Lote> loteList = funcionarioService.listaLotesPorFabricante(nomeFabricante, headerToken);
 
             if(loteList.isEmpty()){
                 return ErroLote.semLotesCadastrados();
@@ -170,7 +169,7 @@ public class FuncionarioControllerAPI {
 
 
         try {
-            List<Lote> loteList = loteService.listaLotes(headerToken);
+            List<Lote> loteList = funcionarioService.listaLotes(headerToken);
             if(loteList.isEmpty()){
                 return ErroLote.semLotesCadastrados();
             }
@@ -188,8 +187,7 @@ public class FuncionarioControllerAPI {
     public ResponseEntity<?> retiraVacina(@RequestHeader("Authorization") String headerToken, @PathVariable("nome-fabricante") String nomeFabricante, @PathVariable("qtd-vacinas") int qtdVacinas){
 
         try{
-            vacinaService.fetchVacina(nomeFabricante);
-            List<Lote> loteList = loteService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
+            List<Lote> loteList = funcionarioService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
             return new ResponseEntity<>(loteList,HttpStatus.CREATED);
         } catch (NullPointerException e){
             return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);

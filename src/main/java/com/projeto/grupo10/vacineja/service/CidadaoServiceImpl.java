@@ -15,7 +15,6 @@ import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.email.Email;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -202,7 +201,30 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
 
+    /**
+     * Metodo responsavel por cadastrar um Cidadao. Verificas-se quais informacoes deseja-se colocar no Cidadao, de acordo
+     * com as informacoes que vem do DTO.
+     * @param cidadaoDTO - DTO contendo as informacoes desejadas para o Cidadao.
+     * @throws ServletException
+     */
     public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+        analisaEntradasDoCadastraCidadao(cidadaoDTO);
+        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
+        this.cartaoVacinaRepository.save(cartaoVacina);
+      
+    	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
+    			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
+    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
+    	this.salvarCidadao(cidadao);
+    }
+
+    /**
+     * Metodo privado responsavel por verificar se os atributos de email, cartao do sus, data de nascimento e senha
+     * são valores validos. Tambem verifica se ja existe um cpf igual ao que deseja cadastrar.
+     * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @throws ServletException
+     */
+    private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if (cidadaoOpt.isPresent()) {
             throw new IllegalArgumentException("Cidadao cadastrado");
@@ -231,6 +253,7 @@ public class CidadaoServiceImpl implements CidadaoService {
                 cidadaoDTO.getCartaoSus(), cidadaoDTO.getEmail(), cidadaoDTO.getData_nascimento(), cidadaoDTO.getTelefone(),
                 padronizaSetsDeString(cidadaoDTO.getProfissoes()), padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
         this.salvarCidadao(cidadao);
+
     }
 
     /**
@@ -240,30 +263,62 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @param headerToken      - token do Cidadao que tera seus dados alterardos
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
      * @param cidadao          - O cidadao que tera seus dados alterados
+
      * @throws ServletException
      */
     @Override
-    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException{
 
+        Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
+        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
+
+        cidadao.get().setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.get().getCartaoSus());
+        cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
+        cidadao.get().setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.get().getData_nascimento());
+        cidadao.get().setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.get().getEmail());
+        cidadao.get().setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.get().getEndereco());
+        cidadao.get().setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.get().getSenha());
+        cidadao.get().setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.get().getNome());
+        cidadao.get().setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.get().getTelefone());
+        cidadao.get().setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.get().getProfissoes());
+        this.salvarCidadao(cidadao.get());
+        return cidadao.get();
+    }
+
+    /**
+     * Metodo privado responsavel por verificar se os novos atributos de email, cartao do sus, data de nascimento e senha
+     * são valores validos.
+     * @param headerToken - token do Cidadao que tera seus dados alterardos
+     * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @throws ServletException
+     */
+    private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
-
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
+        if (cidadaoOpt.isEmpty()){
 
-        if (cidadaoOpt.isEmpty()) {
             throw new IllegalArgumentException();
         }
-
-        cidadao.setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.getCartaoSus());
-        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
-        cidadao.setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.getData_nascimento());
-        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
-        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
-        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
-        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
-        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
-        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
-        this.salvarCidadao(cidadao);
-        return cidadao;
+        if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
+            if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
+                throw new IllegalArgumentException("Novo Email invalido");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getCartaoSus())) {
+            if (ErroCidadao.erroCartaoSUSInvalido(cidadaoUpdateDTO.getCartaoSus())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com esse numero de cartao do SUS");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getData_nascimento())) {
+            if (ErroCidadao.erroDataInvalida(cidadaoUpdateDTO.getData_nascimento())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa data de nascimento");
+            }
+        }
+        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())) {
+            if (ErroCidadao.erroSenhaInvalida(cidadaoUpdateDTO.getSenha())) {
+                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa senha");
+            }
+        }
     }
 
     /**
@@ -410,10 +465,18 @@ public class CidadaoServiceImpl implements CidadaoService {
         Integer idadeRequisito = requisito.getIdade();
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
-        for (Cidadao cidadao : cidadaos) {
+        String emails = "";
+
+        for(Cidadao cidadao: cidadaos){
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
-            if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+            if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                 cidadao.avancarSituacaoVacina();
+                emails += (cidadao.getEmail() + ", ");
+            }
+        }
+        if (!emails.equals("")) {
+            emails = emails.substring(0, emails.length() -2);
+            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
         }
     }
 
@@ -427,6 +490,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         String requisitoPodeHabilitar = requisito.getRequisito();
         Integer idadeRequisito = requisito.getIdade();
 
+        String emails = "";
+
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
         for (Cidadao cidadao : cidadaos) {
@@ -435,12 +500,18 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
             if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
-                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
+                    emails += (cidadao.getEmail() + ", ");
+                }
             }
         }
-
+        if (!emails.equals("")) {
+            emails = emails.substring(0, emails.length() -2);
+            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+        }
     }
+
     /**
      * Isso n faz a msm coisa q o outro lá em cima n ?
      */
