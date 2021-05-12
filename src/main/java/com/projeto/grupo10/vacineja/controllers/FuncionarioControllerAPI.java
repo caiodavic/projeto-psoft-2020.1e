@@ -9,7 +9,6 @@ import com.projeto.grupo10.vacineja.service.*;
 import com.projeto.grupo10.vacineja.util.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -308,4 +306,19 @@ public class FuncionarioControllerAPI {
         return new ResponseEntity<Integer>(qtdCidadaosAcimadeIdade,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/funcionario/cidadao-habilitados", method = RequestMethod.GET)
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<?> listaCidadaosHabilitados(@RequestHeader("Authorization") String headerToken){
+        List<String> cpfsAutorizados = new ArrayList<String>();
+
+        try{
+            cpfsAutorizados = this.funcionarioService.listarCidadaosHabilitados(headerToken);
+        } catch (IllegalArgumentException iae){
+            ErroRequisito.nenhumRequisitoCadastrado();
+        } catch (ServletException e){
+            ErroLogin.erroTokenInvalido();
+        }
+
+        return new ResponseEntity<List<String>>(cpfsAutorizados,HttpStatus.OK);
+    }
 }

@@ -32,15 +32,10 @@ import java.util.*;
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService {
-    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE1 = "Ola %s" +
-            "\nVocê esta apto para receber a 1ª dose da vacina! " +
-            "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL_ALERTA_DOSE1 = "Vacinação primeira dose";
 
-    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE2 = "Ola %s" +
-            "\nVocê esta apto para receber a 2ª dose da vacina! " +
+    private static final String MENSSAGEM_EMAIL_ALERTA = "Ola! \nVocê esta apto para receber a %dª dose da vacina! " +
             "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL_ALERTA_DOSE2 = "Vacinação segunda dose";
+    private static final String ASSUNTO_EMAIL_ALERTA = "Vacinação %s dose";
 
     @Autowired
     private CidadaoRepository cidadaoRepository;
@@ -359,7 +354,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() - 2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "segunda"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 2), emails);
         }
     }
 
@@ -477,7 +473,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
         }
     }
 
@@ -510,7 +507,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
         }
     }
 
@@ -615,6 +613,20 @@ public class CidadaoServiceImpl implements CidadaoService {
             }
         }
         return qtdCidadaosMaisVelhos;
+    }
+
+    @Override
+    public List<String> listarCidadaosHabilitados() {
+        List<String> cidadaosHabilitados = new ArrayList<>();
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+
+        for (Cidadao cidadao : cidadaos){
+            if (cidadao.getSituacao() instanceof Habilitado1Dose || cidadao.getSituacao() instanceof Habilitado2Dose){
+                cidadaosHabilitados.add(cidadao.getCpf());
+            }
+        }
+
+        return cidadaosHabilitados;
     }
 
 }
