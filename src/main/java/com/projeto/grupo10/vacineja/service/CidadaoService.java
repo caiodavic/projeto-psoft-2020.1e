@@ -27,7 +27,7 @@ public interface CidadaoService extends Subscriber {
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
     public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
-    public boolean podeAlterarIdade(RequisitoDTO requisito);
+    public boolean podeAlterarIdade(int idade);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
     public Situacao getSituacao(String cpf);
     public void habilitaPelaIdade(Requisito requisito);

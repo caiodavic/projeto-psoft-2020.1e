@@ -17,5 +17,7 @@ public class RequisitoDTO {
         return requisito;
     }
 
-
+    public void setRequisito(String requisito) {
+        this.requisito = requisito;
+    }
 }

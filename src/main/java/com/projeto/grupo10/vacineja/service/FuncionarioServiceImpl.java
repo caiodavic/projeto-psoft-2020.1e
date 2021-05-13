@@ -39,13 +39,13 @@ public class FuncionarioServiceImpl implements FuncionarioService {
      * @throws IllegalCallerException  lança caso tenha mais pessoas a serem habilitadas do que doses disponiveis
      */
     @Override
-    public void alteraIdadeGeral(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException, IllegalCallerException {
+    public void alteraIdadeGeral(int idade, String headerToken) throws ServletException, IllegalArgumentException, IllegalCallerException {
         cidadaoService.verificaTokenFuncionario(headerToken);
-        if(!cidadaoService.podeAlterarIdade(requisito))
+        if(!cidadaoService.podeAlterarIdade(idade))
             throw new IllegalCallerException("Impossivel habilitar a idade");
 
-        requisitoService.setIdade(requisito);
-        Optional<Requisito> requisitoOptional = requisitoService.getRequisitoById(requisito.getRequisito());
+        requisitoService.setIdade(idade);
+        Optional<Requisito> requisitoOptional = requisitoService.getRequisitoById("idade");
         if(requisitoOptional.isEmpty())
             throw new IllegalCallerException("Ocorreu algum erro com o requisito");
 
@@ -61,7 +61,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
      * @throws IllegalCallerException  lança caso tenha mais pessoas a serem habilitadas do que doses disponiveis
      */
     @Override
-    public void setComorbidadeHabilitada(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException, IllegalCallerException {
+    public void setRequisitoHabilitado(RequisitoDTO requisito, String headerToken) throws ServletException, IllegalArgumentException, IllegalCallerException {
+        requisito.setRequisito(PadronizaString.padronizaString(requisito.getRequisito()));
         cidadaoService.verificaTokenFuncionario(headerToken);
         if(!cidadaoService.podeHabilitarRequisito(requisito))
             throw new IllegalCallerException("Impossível habilitar tal requisito");

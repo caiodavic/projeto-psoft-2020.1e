@@ -4,6 +4,7 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
 import com.projeto.grupo10.vacineja.repository.VacinaRepository;
+import com.projeto.grupo10.vacineja.util.PadronizaString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,7 @@ public class VacinaServiceImpl implements VacinaService {
             validaDiasEntreDoses(vacinaDTO.getDiasEntreDoses());
         }
 
-        Vacina vacina = new Vacina(vacinaDTO.getNomeFabricante(), vacinaDTO.getNumDosesNecessarias(),
+        Vacina vacina = new Vacina(PadronizaString.padronizaString(vacinaDTO.getNomeFabricante()), vacinaDTO.getNumDosesNecessarias(),
                 vacinaDTO.getDiasEntreDoses());
 
         vacinaRepository.save(vacina);

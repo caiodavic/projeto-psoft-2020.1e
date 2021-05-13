@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface RequisitoService {
 
-    public void setIdade(RequisitoDTO requisito);
+    public void setIdade(int idade);
     public Requisito setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException;
     public Requisito setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException;
     public Optional<Requisito> getRequisitoById(String requisito);
