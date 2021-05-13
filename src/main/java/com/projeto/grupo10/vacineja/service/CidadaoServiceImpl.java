@@ -186,6 +186,7 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     private boolean loginAsAdmin(String tipoLogin) {
         return tipoLogin.equals("administrador");
+
     }
 
 

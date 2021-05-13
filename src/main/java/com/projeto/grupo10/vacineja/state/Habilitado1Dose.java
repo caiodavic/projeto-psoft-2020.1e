@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.state;
 import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public class Habilitado1Dose implements Situacao{
     public Habilitado1Dose() { }
 
     @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
+    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
         cartaoVacina.setDataAgendamento(data);
     }
 
@@ -25,7 +26,7 @@ public class Habilitado1Dose implements Situacao{
     public void proximaSituacao(CartaoVacina cartaoVacina) {}
 
     @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {
+    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, LocalDate data) {
         cartaoVacina.setDataPrimeiraDose(data);
         cartaoVacina.setVacina(vacina);
 
@@ -34,7 +35,7 @@ public class Habilitado1Dose implements Situacao{
         } else {
             cartaoVacina.setSituacao(SituacaoEnum.TOMOU1DOSE);
 
-            Date dataSegundaDose = this.diaPropostoSegundaDose(cartaoVacina.getDataPrimeiraDose(),
+            LocalDate dataSegundaDose = this.diaPropostoSegundaDose(cartaoVacina.getDataPrimeiraDose(),
                     cartaoVacina.getIntervaloVacina());
 
             cartaoVacina.setDataPrevistaSegundaDose(dataSegundaDose);
@@ -43,11 +44,8 @@ public class Habilitado1Dose implements Situacao{
 
     }
 
-    private Date diaPropostoSegundaDose(Date primeiraDose, int diasEntreDoses){
-        Calendar calendarioSegundaDose = new Calendar.Builder().build();
-        calendarioSegundaDose.setTime(primeiraDose);
-        calendarioSegundaDose.add(Calendar.DAY_OF_MONTH, diasEntreDoses);
-        return calendarioSegundaDose.getTime();
+    private LocalDate diaPropostoSegundaDose(LocalDate primeiraDose, int diasEntreDoses){
+        return primeiraDose.plusDays(diasEntreDoses);
     }
 
     @Override

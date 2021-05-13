@@ -4,6 +4,7 @@ import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class NaoHabilitado implements Situacao{
@@ -16,7 +17,7 @@ public class NaoHabilitado implements Situacao{
 
 
     @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
+    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
         throw new IllegalArgumentException(MENSSAGEM_ERRO_AGENDAR_VACINACAO);
     }
 
@@ -26,7 +27,7 @@ public class NaoHabilitado implements Situacao{
     }
 
     @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {
+    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, LocalDate data) {
         throw new IllegalArgumentException(this.MENSSAGEM_ERRO_TENTATIVA_VACINACAO);
     }
 

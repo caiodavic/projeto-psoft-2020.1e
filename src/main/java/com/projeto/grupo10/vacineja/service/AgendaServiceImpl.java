@@ -35,7 +35,7 @@ public class AgendaServiceImpl implements AgendaService{
     public Agenda agendaVacinação(String headerToken, AgendaDTO agendaDTO) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
-
+        String retorno = "";
         if(!cidadaoService.getCidadaoById(cpf_cidadao).isPresent())
             throw new IllegalArgumentException("Cidadao nao cadastrado");
         if(agendaDTO.getData().isBefore(LocalDate.now()))
@@ -51,7 +51,8 @@ public class AgendaServiceImpl implements AgendaService{
         }else{
             throw new IllegalArgumentException("Cidadao nao habilitado");
         }
-        return agendaRepository.findByCpf(cpf_cidadao);
+
+        return agendaRepository.findById(cpf_cidadao).get();
     }
 
 
@@ -65,9 +66,14 @@ public class AgendaServiceImpl implements AgendaService{
      */
 
     @Override
-    public List<Agenda> getAgendamentobyCpf(String headerToken) throws ServletException {
+    public Agenda getAgendamentobyCpf(String headerToken) throws ServletException {
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         String id = jwtService.getCidadaoDoToken(headerToken);
-        return agendaRepository.findAllByCpf(cpf_cidadao);
+        return agendaRepository.findById(cpf_cidadao).get();
+    }
+
+    @Override
+    public Agenda getAgendamentoPorCpf(String cpf) {
+        return agendaRepository.findById(cpf).get();
     }
 }

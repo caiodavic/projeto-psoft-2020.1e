@@ -1,4 +1,5 @@
 
+
 -- Criando algumas Vacinas
 
 INSERT INTO vacina VALUES ('coronavac', 28, 2);

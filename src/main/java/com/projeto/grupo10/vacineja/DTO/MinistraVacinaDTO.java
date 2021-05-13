@@ -1,11 +1,14 @@
 package com.projeto.grupo10.vacineja.DTO;
 
+import org.apache.tomcat.jni.Local;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 public class MinistraVacinaDTO {
 
     private String cpf;
-    private Date dataVacinacao;
+    private LocalDate dataVacinacao;
     private long loteVacina;
     private String tipoVacina;
 
@@ -13,7 +16,7 @@ public class MinistraVacinaDTO {
         return this.cpf;
     }
 
-    public Date getDataVacinacao() {
+    public LocalDate getDataVacinacao() {
         return dataVacinacao;
     }
 

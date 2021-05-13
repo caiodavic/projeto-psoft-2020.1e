@@ -5,6 +5,7 @@ import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.util.email.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Habilitado2Dose implements Situacao {
@@ -13,7 +14,7 @@ public class Habilitado2Dose implements Situacao {
     public Habilitado2Dose() {}
 
     @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
+    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
         cartaoVacina.setDataAgendamento(data);
     }
 
@@ -23,7 +24,7 @@ public class Habilitado2Dose implements Situacao {
     }
 
     @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {
+    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, LocalDate data) {
         cartaoVacina.setDataSegundaDose(data);
         this.proximaSituacao(cartaoVacina);
     }

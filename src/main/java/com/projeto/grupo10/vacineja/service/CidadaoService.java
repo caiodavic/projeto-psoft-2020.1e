@@ -36,4 +36,5 @@ public interface CidadaoService {
     int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
     List<String> listarCidadaosHabilitados();
     void verificaDataSegundaDose();
+
 }
