@@ -36,8 +36,7 @@ public class AgendaServiceImpl implements AgendaService{
         String id = jwtService.getCidadaoDoToken(headerToken);
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         String retorno = "";
-        if(!cidadaoService.getCidadaoById(cpf_cidadao).isPresent())
-            throw new IllegalArgumentException("Cidadao nao cadastrado");
+        cidadaoService.getCidadaoById(cpf_cidadao);
         if(agendaDTO.getData().isBefore(LocalDate.now()))
             throw new IllegalArgumentException("Data invalida");
         if(agendaDTO.getData().isAfter(loteService.getMaiorValidadeLotes()))

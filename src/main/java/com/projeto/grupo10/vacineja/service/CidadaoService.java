@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CidadaoService {
-    Optional<Cidadao> getCidadaoById(String cpf);
+    Cidadao getCidadaoById(String cpf);
     boolean validaCidadaoSenha (CidadaoLoginDTO cidadaoLogin);
     boolean validaLoginComoFuncionario (CidadaoLoginDTO cidadaoLogin);
     boolean validaLoginComoAdministrador (CidadaoLoginDTO cidadaoLogin);

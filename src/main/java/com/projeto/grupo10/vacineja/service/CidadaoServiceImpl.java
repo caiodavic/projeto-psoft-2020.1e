@@ -4,33 +4,26 @@ import com.projeto.grupo10.vacineja.DTO.*;
 import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
-import com.projeto.grupo10.vacineja.model.usuario.*;
+import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
+import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
+import com.projeto.grupo10.vacineja.model.usuario.FuncionarioGoverno;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.repository.CartaoVacinaRepository;
 import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.*;
-import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
-import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
-import com.projeto.grupo10.vacineja.state.NaoHabilitado;
-import com.projeto.grupo10.vacineja.state.Tomou1Dose;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
+import com.projeto.grupo10.vacineja.util.ErroCidadao;
 import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.email.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
-
 import javax.servlet.ServletException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.*;
+
+import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 
 
 @Service
@@ -63,8 +56,8 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 
     @Override
-    public Optional<Cidadao> getCidadaoById(String cpf) {
-        return this.cidadaoRepository.findById(cpf);
+    public Cidadao getCidadaoById(String cpf) {
+        return this.cidadaoRepository.findById(cpf).orElseThrow(() -> new IllegalArgumentException("Cidadao nao cadastrado"));
     }
 
     /**
@@ -88,15 +81,11 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     @Override
     public boolean validaCidadaoSenha(CidadaoLoginDTO cidadaoLogin) {
-        boolean result = false;
-
-        Optional<Cidadao> cidadao = this.getCidadaoById(cidadaoLogin.getCpfLogin());
-
-        if (cidadao.isPresent()) {
-            result = cidadao.get().getSenha().equals(cidadaoLogin.getSenhaLogin());
+        try {
+            return getCidadaoById(cidadaoLogin.getCpfLogin()).getSenha().equals(cidadaoLogin.getSenhaLogin());
+        } catch (Exception e) {
+            return false;
         }
-
-        return result;
     }
 
     public boolean validaLoginComoFuncionario(CidadaoLoginDTO cidadaoLogin) {
@@ -108,15 +97,11 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     private boolean isFuncionario(String id) {
-        boolean result = false;
-
-        Optional<Cidadao> cidadao = this.getCidadaoById(id);
-
-        if (cidadao.isPresent()) {
-            result = cidadao.get().isFuncionario();
+        try {
+            return getCidadaoById(id).isFuncionario();
+        } catch (Exception e) {
+            return false;
         }
-
-        return result;
     }
 
     /**
@@ -129,17 +114,8 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @author Caetano Albuquerque
      */
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException {
-
         String id = jwtService.getCidadaoDoToken(headerToken);
-
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
-
-        if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Usuario não encontrado");
-        }
-
-        Cidadao cidadao;
-        cidadao = cidadaoOpt.get();
+        Cidadao cidadao = this.getCidadaoById(id);
         cidadao.setFuncionarioGoverno(this.adicionarFuncionarioGoverno(cadastroFuncionario, id));
         this.salvarCidadao(cidadao);
     }
@@ -166,21 +142,14 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo responsavel por autorixar o cadastro de um funcionario
      *
      * @param cpfFuncionario - Cpf do funcionario que tera seu cadastro aprovado
-     * @throws ServletException
      * @author Caetano Albuquerque
      */
-    public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException {
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfFuncionario);
-
-        if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Usuario não cadastrado");
-        }if(!cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
-            throw new IllegalArgumentException("Usuario não é um funcionario não autorizado");
+    public void autorizarCadastroFuncionario(String cpfFuncionario) {
+        Cidadao cidadao = getCidadaoById(cpfFuncionario);
+        if (!cidadao.aguardandoAutorizacaoFuncionario()) {
+            throw new IllegalArgumentException();
         }
-
-        Cidadao cidadao = cidadaoOpt.get();
         cidadao.autorizaCadastroFuncionario();
-
         this.funcionarioGovernoRepository.save(cidadao.getFuncionarioGoverno());
     }
 
@@ -212,31 +181,28 @@ public class CidadaoServiceImpl implements CidadaoService {
      */
 
     public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
+        Cidadao cidadao = new Cidadao();
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
-
-        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
-        this.cartaoVacinaRepository.save(cartaoVacina);
-      
-    	Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
-    			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
-    			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
-    	this.salvarCidadao(cidadao);
-
+        copyDTOCidadaoToEntity(cidadaoDTO, cidadao);
+        this.salvarCidadao(cidadao);
     	return this.cidadaoRepository.findById(cidadaoDTO.getCpf()).get();
-
     }
+
 
     /**
      * Metodo privado responsavel por verificar se os atributos de email, cartao do sus, data de nascimento e senha
      * são valores validos. Tambem verifica se ja existe um cpf igual ao que deseja cadastrar.
+     *
      * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @throws ServletException
+     * @throws IllegalArgumentException
      */
     private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
-        if (cidadaoOpt.isPresent()) {
+
+        Optional<Cidadao> cidadaoOptional = this.cidadaoRepository.findById(cidadaoDTO.getCpf());
+        if (cidadaoOptional.isPresent()) {
             throw new IllegalArgumentException("Cidadao cadastrado");
         }
+
         if (!ErroEmail.validarEmail(cidadaoDTO.getEmail())) {
             throw new IllegalArgumentException("Email invalido");
         }
@@ -257,29 +223,46 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     /**
+     * Metodo privado responsavel por passar os valores do cidadaoDTO para um cidadao.
+     * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario.
+     * @param cidadao - cidadao que tera seus valores setados para os valores do cidadaoDTO.
+     * @throws IllegalArgumentException
+     */
+    private void copyDTOCidadaoToEntity(CidadaoDTO cidadaoDTO, Cidadao cidadao) {
+
+        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
+        this.cartaoVacinaRepository.save(cartaoVacina);
+
+        cidadao.setNome(cidadaoDTO.getNome());
+        cidadao.setCpf(cidadaoDTO.getCpf());
+        cidadao.setEndereco(cidadaoDTO.getEndereco());
+        cidadao.setCartaoSus(cidadaoDTO.getCartaoSus());
+        cidadao.setEmail(cidadaoDTO.getEmail());
+        cidadao.setData_nascimento(cidadaoDTO.getData_nascimento());
+        cidadao.setTelefone(cidadaoDTO.getTelefone());
+        cidadao.setProfissoes(padronizaSetsDeString(cidadaoDTO.getProfissoes()));
+        cidadao.setComorbidades(padronizaSetsDeString(cidadaoDTO.getComorbidades()));
+        cidadao.setSenha(cidadaoDTO.getSenha());
+        cidadao.setCartaoVacina(cartaoVacina);
+    }
+
+    /**
      * Metodo responsavel por alterar os atributos de Cidadao. Verificas-se quais informacoes deseja-se mudar, de acordo
      * com as informacoes que vem do DTO.
      *
      * @param headerToken      - token do Cidadao que tera seus dados alterardos
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
      * @throws ServletException
+     * @throws IllegalArgumentException
      */
     @Override
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException, IllegalArgumentException{
 
-        Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
-        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
-
-        cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
-        cidadao.get().setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.get().getEmail());
-        cidadao.get().setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.get().getEndereco());
-        cidadao.get().setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.get().getSenha());
-        cidadao.get().setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.get().getNome());
-        cidadao.get().setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.get().getTelefone());
-        cidadao.get().setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.get().getProfissoes());
-
-        this.salvarCidadao(cidadao.get());
-        return cidadao.get();
+        var cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
+        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO);
+        copyDTOCidadaoUpdateToEntity(cidadaoUpdateDTO, cidadao);
+        this.salvarCidadao(cidadao);
+        return cidadao;
     }
 
     /**
@@ -289,12 +272,9 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
      * @throws ServletException
      */
-    private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws ServletException {
+    private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
-        if (cidadaoOpt.isEmpty()){
-            throw new IllegalArgumentException("Cidadao não existe");
-        }
+        getCidadaoById(id);
         if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
             if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
                 throw new IllegalArgumentException("Novo Email invalido");
@@ -308,6 +288,22 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     /**
+     * Metodo privado responsavel por verificar os atributos do DTO e trocar com os de Cidadao, se nescessário.
+     * @param cidadao - cidadao verificado que desejasse alterar informações
+     * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
+     * @throws ServletException
+     */
+    private void copyDTOCidadaoUpdateToEntity(CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws IllegalArgumentException {
+        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
+        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
+        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
+        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
+        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
+        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
+        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
+    }
+
+    /**
      * Metodo responsavel por adicionar uma vacina no cartão de vacinação do cidadão e avaçar o estado de vacinação
      *
      * @param cpfCidadao - Cpf do Cidadão que deve receber a dose da vacina
@@ -316,14 +312,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @author Caetano Albuquerque
      */
     public void recebeVacina(String cpfCidadao, Vacina vacina, LocalDate dataVacina) {
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfCidadao);
-
-        if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Cidadão não cadastrado no sistema");
-        }
-
-        Cidadao cidadao = cidadaoOpt.get();
-
+        Cidadao cidadao = this.getCidadaoById(cpfCidadao);
         cidadao.receberVacina(vacina, dataVacina);
         this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
     }
@@ -448,7 +437,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      */
     @Override
     public Situacao getSituacao(String cpf){
-        return this.getCidadaoById(cpf).get().getSituacao();
+        return this.getCidadaoById(cpf).getSituacao();
     }
 
      /** Método que habilita cidadaos utilizando a idade como requisito
@@ -553,14 +542,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     @Override
     public String getEstadoVacinacao(String headerToken) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
-
-        Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
-
-        if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Usuario não encontrado");
-        }
-
-        Cidadao cidadao = cidadaoOpt.get();
+        Cidadao cidadao = this.getCidadaoById(id);
         return cidadao.getSituacao().toString();
     }
 
@@ -611,6 +593,10 @@ public class CidadaoServiceImpl implements CidadaoService {
         return qtdCidadaosMaisVelhos;
     }
 
+    /**
+     * Método que coloca em uma lista todos os cidadões que estão habilitados.
+     * @return uma lista dos cidadões que estão habilitados
+     */
     @Override
     public List<String> listarCidadaosHabilitados() {
         List<String> cidadaosHabilitados = new ArrayList<>();
