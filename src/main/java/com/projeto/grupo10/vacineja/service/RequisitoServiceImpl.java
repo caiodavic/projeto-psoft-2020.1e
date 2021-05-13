@@ -20,19 +20,16 @@ public class RequisitoServiceImpl implements RequisitoService{
     RequisitoRepository requisitoRepository;
 
     @Override
-    public void setIdade(RequisitoDTO requisito) {
-        if(!requisito.getRequisito().equals("idade"))
-            throw new IllegalArgumentException("Requisito inválido");
-
+    public void setIdade(int idade) {
         Optional<Requisito> idadeRequisito = getRequisitoById("idade");
-        Requisito idade;
+        Requisito idadeRequisitoNovo;
         if(idadeRequisito.isEmpty()){
-            idade = new Requisito("idade",requisito.getIdade(),TipoRequisito.IDADE);
+            idadeRequisitoNovo = new Requisito("idade",idade,TipoRequisito.IDADE);
         } else {
-            idade = idadeRequisito.get();
-            idade.setIdade(requisito.getIdade());
+            idadeRequisitoNovo = idadeRequisito.get();
+            idadeRequisitoNovo.setIdade(idade);
         }
-        requisitoRepository.save(idade);
+        requisitoRepository.save(idadeRequisitoNovo);
     }
 
     @Override

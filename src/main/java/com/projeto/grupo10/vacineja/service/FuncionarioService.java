@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface FuncionarioService {
 
-    public void alteraIdadeGeral(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
-    public void setComorbidadeHabilitada(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
+    public void alteraIdadeGeral(int idade, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
+    public void setRequisitoHabilitado(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
     public void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException;
     public List<String> listaComorbidadesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;
     public List<String> listaProfissoesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;

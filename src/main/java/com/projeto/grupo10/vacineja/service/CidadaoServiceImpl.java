@@ -407,14 +407,13 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @return true caso tenhamos mais doses do que pessoas a serem habilitadas, false caso contrario
      * @author Caio Silva
      */
-    public boolean podeAlterarIdade(RequisitoDTO requisito) {
-        Integer idadeRequisito = requisito.getIdade();
+    public boolean podeAlterarIdade(int idade) {
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
         int contProvaveisHabilitados = 0;
 
         for (Cidadao cidadao : cidadaos) {
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
-            if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
+            if (idadeCidadao >= idade && cidadao.getSituacao() instanceof NaoHabilitado)
                 contProvaveisHabilitados++;
         }
 

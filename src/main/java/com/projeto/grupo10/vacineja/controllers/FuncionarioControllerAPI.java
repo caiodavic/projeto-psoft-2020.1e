@@ -9,7 +9,6 @@ import com.projeto.grupo10.vacineja.service.*;
 import com.projeto.grupo10.vacineja.util.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -200,19 +198,19 @@ public class FuncionarioControllerAPI {
     @RequestMapping(value = "/funcionario/habilita-idade", method = RequestMethod.PUT)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> habilitaIdade(@RequestHeader("Authorization") String headerToken,
-                                           @RequestBody RequisitoDTO requisito){
+                                           @RequestParam Integer idade){
 
         try{
-            this.funcionarioService.alteraIdadeGeral(requisito,headerToken);
+            this.funcionarioService.alteraIdadeGeral(idade,headerToken);
         } catch (ServletException e){
             ErroLogin.erroTokenInvalido();
         } catch (IllegalCallerException ice){
-            ErroRequisito.requisitoNaoPodeHabilitar(requisito);
+            ErroRequisito.requisitoNaoPodeHabilitar(new RequisitoDTO(idade,"idade"));
         } catch (IllegalArgumentException iae){
-            ErroRequisito.requisitoNaoCadastrado(requisito.getRequisito());
+            ErroRequisito.requisitoNaoCadastrado("idade");
         }
 
-        return new ResponseEntity<String>(String.format("A partir de agora pessoas com %d ou mais poderão se vacinar",requisito.getIdade()),HttpStatus.OK);
+        return new ResponseEntity<String>(String.format("A partir de agora pessoas com %d ou mais poderão se vacinar",idade),HttpStatus.OK);
     }
 
     @RequestMapping(value = "/funcionario/habilita-requisito", method = RequestMethod.PUT)
@@ -221,7 +219,7 @@ public class FuncionarioControllerAPI {
                                                @RequestBody RequisitoDTO requisito){
 
         try{
-            this.funcionarioService.setComorbidadeHabilitada(requisito,headerToken);
+            this.funcionarioService.setRequisitoHabilitado(requisito,headerToken);
         } catch (ServletException e){
             ErroLogin.erroTokenInvalido();
         } catch (IllegalCallerException ice){
@@ -254,7 +252,7 @@ public class FuncionarioControllerAPI {
         List<String> listaProfissoes = new ArrayList<String>();
 
         try{
-            listaProfissoes = this.funcionarioService.listaComorbidadesCadastradas(headerToken);
+            listaProfissoes = this.funcionarioService.listaProfissoesCadastradas(headerToken);
         } catch (IllegalArgumentException iae){
             ErroRequisito.nenhumRequisitoCadastrado();
         } catch (ServletException e){
