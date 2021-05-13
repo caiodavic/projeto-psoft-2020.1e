@@ -26,9 +26,15 @@ public class AdministradorServiceImpl implements AdministradorService{
         return this.cidadaoService.getUsuariosNaoAutorizados();
     }
 
+    /**
+     * Metodo responsavel por autorizar o cadastro de um funcionario do governo
+     * @param headerToken - token do adimin que esta tentando autorizar o cadastro
+     * @param cpfFuncionario - cpf do funcionario que tera o seu cadastro aprovado
+     * @throws ServletException
+     * @author Caetano Albuquerque
+     */
     public void autorizarCadastroFuncionario(String headerToken, String cpfFuncionario) throws ServletException{
         verificaLoginAdmin(headerToken);
-
         this.cidadaoService.autorizarCadastroFuncionario(cpfFuncionario);
     }
 

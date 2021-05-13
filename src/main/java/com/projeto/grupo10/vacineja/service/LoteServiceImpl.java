@@ -9,8 +9,6 @@ import com.projeto.grupo10.vacineja.util.OrdenarPorData;
 import com.projeto.grupo10.vacineja.util.PadronizaString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.ServletException;
 import java.time.LocalDate;
 import java.util.*;
 

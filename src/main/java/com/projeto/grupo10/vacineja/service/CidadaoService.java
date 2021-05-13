@@ -20,7 +20,7 @@ public interface CidadaoService {
     boolean validaLoginComoFuncionario (CidadaoLoginDTO cidadaoLogin);
     boolean validaLoginComoAdministrador (CidadaoLoginDTO cidadaoLogin);
     void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException;
-    ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
+    ArrayList<String> getUsuariosNaoAutorizados();
     void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
     Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException;
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException, IllegalArgumentException;
