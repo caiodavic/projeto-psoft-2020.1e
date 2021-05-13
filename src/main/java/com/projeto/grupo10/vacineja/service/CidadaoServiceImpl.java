@@ -91,11 +91,11 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     public boolean validaLoginComoFuncionario(CidadaoLoginDTO cidadaoLogin) {
-        return cidadaoLogin.getTipoLogin().equals("Funcionario") && !this.isFuncionario(cidadaoLogin.getCpfLogin());
+        return cidadaoLogin.getTipoLogin().equals("funcionario") && !this.isFuncionario(cidadaoLogin.getCpfLogin());
     }
 
     public boolean validaLoginComoAdministrador(CidadaoLoginDTO cidadaoLogin) {
-        return cidadaoLogin.getTipoLogin().equals("Administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
+        return cidadaoLogin.getTipoLogin().equals("administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
     }
 
     private boolean isFuncionario(String id) {
@@ -179,7 +179,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     private boolean loginAsAdmin(String tipoLogin) {
-        return tipoLogin.equals("Administrador");
+        return tipoLogin.equals("administrador");
     }
 
     public String teste(String authorizationHeader) throws ServletException {
@@ -197,7 +197,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         String id = jwtService.getCidadaoDoToken(authHeader);
         String tipoLogin = jwtService.getTipoLogin(authHeader);
 
-        if (!isFuncionario(id) && tipoLogin.equals("Funcionario"))
+        if (!isFuncionario(id) && tipoLogin.equals("funcionario"))
             throw new ServletException("Usuario não é um Funcionário cadastrado!");
 
     }
