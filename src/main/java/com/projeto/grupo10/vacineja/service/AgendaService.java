@@ -9,4 +9,5 @@ import java.util.List;
 public interface AgendaService {
     public Agenda agendaVacinação(String headerToken, AgendaDTO agendaDTO) throws ServletException;
     public List<Agenda> getAgendamentobyCpf(String headerToken) throws ServletException;
+    public List<Agenda> getAgendamentoPorCpf(String cpf);
 }

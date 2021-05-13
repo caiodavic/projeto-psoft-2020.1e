@@ -253,14 +253,6 @@ public class CidadaoServiceImpl implements CidadaoService {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
         }
 
-        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
-        this.cartaoVacinaRepository.save(cartaoVacina);
-
-        Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
-                cidadaoDTO.getCartaoSus(), cidadaoDTO.getEmail(), cidadaoDTO.getData_nascimento(), cidadaoDTO.getTelefone(),
-                padronizaSetsDeString(cidadaoDTO.getProfissoes()), padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
-        this.salvarCidadao(cidadao);
-
     }
 
     /**
@@ -505,7 +497,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> profissoesCidadao = cidadao.getProfissoes();
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
                     cartaoVacinaRepository.save(cidadao.getCartaoVacina());

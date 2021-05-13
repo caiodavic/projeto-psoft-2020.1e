@@ -70,4 +70,9 @@ public class AgendaServiceImpl implements AgendaService{
         String id = jwtService.getCidadaoDoToken(headerToken);
         return agendaRepository.findAllByCpf(cpf_cidadao);
     }
+
+    @Override
+    public List<Agenda> getAgendamentoPorCpf(String cpf) {
+        return agendaRepository.findAllByCpf(cpf);
+    }
 }
