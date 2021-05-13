@@ -4,6 +4,13 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
+/**
+ * Entidade que representa um requisito. Com o decorrer do processo de vacinação, requisitos vão ser utilizados para
+ * habilitar pessoas a se vacinarem. Os requisitos podem ser idade, uma profissão ou uma comorbidade. Caso um cidadão
+ * tenha algum desses requisitos e/ou esteja na faixa da idade habilitada para poder se vacinar, o state dele muda
+ * automaticamente para podeVacinar.
+ * @author Caio Silva
+ */
 @Entity
 public class Requisito{
 
