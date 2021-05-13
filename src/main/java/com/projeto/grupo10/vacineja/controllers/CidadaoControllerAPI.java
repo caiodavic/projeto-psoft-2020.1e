@@ -156,8 +156,10 @@ public class CidadaoControllerAPI {
             LocalDate data_limite = loteService.getMaiorValidadeLotes();
             String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
             Agenda agenda = new Agenda();
+            String response = "";
             try {
                 agenda = agendaService.agendaVacinação(headerToken, agendaDTO);
+                response = "Você agendou sua vacinação para o dia " + agenda.getData() + " no local: " + agenda.getLocal();
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().toString() == "Cidadao nao cadastrado")
                     return ErroCidadao.erroCidadaoNaoCadastrado(cpf_cidadao);
@@ -170,7 +172,7 @@ public class CidadaoControllerAPI {
             } catch (ServletException e) {
                 return ErroLogin.erroTokenInvalido();
             }
-            return new ResponseEntity<Agenda>(agenda, HttpStatus.CREATED);
+            return new ResponseEntity<String>(response, HttpStatus.CREATED);
         }
 
         /**
@@ -183,14 +185,16 @@ public class CidadaoControllerAPI {
         public ResponseEntity<?> listaAgendamentoCidadao (@RequestHeader("Authorization") String headerToken) throws
         ServletException {
             String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
-            List<Agenda> agenda;
+            Agenda agenda;
+            String response = "";
             try {
                 agenda = agendaService.getAgendamentobyCpf(headerToken);
+                response = "Sua vacinação está marcada para o dia " + agenda.getData() + " no local: " + agenda.getLocal();
 
             } catch (ServletException e) {
                 return ErroLogin.erroTokenInvalido();
             }
-            return new ResponseEntity<List<Agenda> >(agenda, HttpStatus.OK);
+            return new ResponseEntity<String>(response, HttpStatus.OK);
         }
 
         /**
