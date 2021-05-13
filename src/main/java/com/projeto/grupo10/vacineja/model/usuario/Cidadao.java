@@ -6,7 +6,6 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 
@@ -80,8 +79,16 @@ public class Cidadao {
         return this.cpf;
     }
 
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public boolean isFuncionario (){
         return this.funcionarioGoverno != null && this.funcionarioGoverno.isAprovado();
+    }
+
+    public void setCartaoVacina(CartaoVacina cartaoVacina) {
+        this.cartaoVacina = cartaoVacina;
     }
 
     public boolean isCidadao (){

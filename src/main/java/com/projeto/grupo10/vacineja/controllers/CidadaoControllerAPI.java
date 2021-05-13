@@ -136,6 +136,9 @@ public class CidadaoControllerAPI {
                 if (iae.getMessage().equals("Novo Email invalido")) {
                     return ErroCidadao.erroEmailInvalido();
                 }
+                if (iae.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa senha") {
+                    return ErroCidadao.erroSenhaInvalida();
+                }
                 return ErroCidadao.erroUsuarioNaoEncontrado();
             } catch (ServletException e) {
                 return ErroLogin.erroTokenInvalido();
