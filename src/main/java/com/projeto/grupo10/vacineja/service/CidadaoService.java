@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
+import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
@@ -36,5 +37,5 @@ public interface CidadaoService {
     int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
     List<String> listarCidadaosHabilitados();
     void verificaDataSegundaDose();
-
+    Agenda getAgendamentobyCpf(String headerToken) throws ServletException;
 }

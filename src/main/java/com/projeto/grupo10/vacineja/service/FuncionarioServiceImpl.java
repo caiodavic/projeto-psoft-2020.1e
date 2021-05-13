@@ -38,7 +38,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     /**
      * Método responsável por chamar o método de requisitoService que altera a idade geral das pessoas que podem vacinar
-     * @param requisito idade a ser habilitada para vacina
      * @param headerToken token do funcionário que está executando a operação
      * @throws ServletException lança caso o token seja inválido
      * @throws IllegalArgumentException lança caso o requisito esteja errado
@@ -100,13 +99,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         LocalDate dataVacina = ministraVacinaDTO.getDataVacinacao();
         String Tipovacina = ministraVacinaDTO.getTipoVacina();
 
-        boolean podeVacinar = false;
-        Agenda agenda = this.agendaService.getAgendamentoPorCpf(cpfCidadao);
-            if (agenda.getData().equals(dataVacina)){
-                podeVacinar = true;
-            }
+        Agenda agenda = this.agendaService.getAgendamentobyCpf(cpfCidadao);
 
-        if (!podeVacinar){
+        if (!agenda.getData().equals(dataVacina)){
             throw new IllegalArgumentException("Sem agendamento marcado");
         }
         Vacina vacina = this.loteService.retirarVacinaValidadeProxima(Tipovacina);

@@ -2,6 +2,7 @@ package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
 import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
+import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
@@ -56,6 +57,9 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     @Autowired
     private VerificadorDataSegundaDose verificador;
+
+    @Autowired
+    private AgendaService agendaService;
 
 
     @Override
@@ -606,6 +610,13 @@ public class CidadaoServiceImpl implements CidadaoService {
                 }
             }
         }
+    }
+
+    @Override
+    public Agenda getAgendamentobyCpf(String headerToken) throws ServletException {
+        String cpf = jwtService.getCidadaoDoToken(headerToken);
+
+        return this.agendaService.getAgendamentobyCpf(cpf);
     }
 
 }
