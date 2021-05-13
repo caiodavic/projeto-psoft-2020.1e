@@ -73,7 +73,7 @@ public class AgendaServiceImpl implements AgendaService{
     }
 
     @Override
-    public List<Agenda> getAgendamentoPorCpf(String cpf) {
-        return agendaRepository.findAllByCpf(cpf);
+    public Agenda getAgendamentoPorCpf(String cpf) {
+        return agendaRepository.findById(cpf).get();
     }
 }

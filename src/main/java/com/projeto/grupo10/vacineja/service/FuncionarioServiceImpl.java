@@ -101,11 +101,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         String Tipovacina = ministraVacinaDTO.getTipoVacina();
 
         boolean podeVacinar = false;
-        for (Agenda agenda : this.agendaService.getAgendamentoPorCpf(cpfCidadao)) {
+        Agenda agenda = this.agendaService.getAgendamentoPorCpf(cpfCidadao);
             if (agenda.getData().equals(dataVacina)){
                 podeVacinar = true;
             }
-        }
+
         if (!podeVacinar){
             throw new IllegalArgumentException("Sem agendamento marcado");
         }

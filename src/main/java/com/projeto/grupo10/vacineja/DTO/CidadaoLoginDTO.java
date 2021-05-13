@@ -1,5 +1,7 @@
 package com.projeto.grupo10.vacineja.DTO;
 
+import com.projeto.grupo10.vacineja.util.PadronizaString;
+
 public class CidadaoLoginDTO {
 
     private String cpfLogin;
@@ -15,6 +17,6 @@ public class CidadaoLoginDTO {
     }
 
     public String getTipoLogin(){
-        return this.tipoLogin;
+        return PadronizaString.padronizaString(this.tipoLogin);
     }
 }
