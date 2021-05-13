@@ -10,6 +10,7 @@ import com.projeto.grupo10.vacineja.state.Situacao;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface CidadaoService extends Subscriber {
@@ -34,5 +35,5 @@ public interface CidadaoService extends Subscriber {
     public String getEstadoVacinacao(String headerToken) throws ServletException;
     public int contaCidadaosAcimaIdade(int idade);
     public int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
-
+    public List<String> listarCidadaosHabilitados();
 }

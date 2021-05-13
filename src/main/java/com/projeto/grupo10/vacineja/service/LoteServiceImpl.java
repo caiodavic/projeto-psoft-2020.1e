@@ -246,12 +246,13 @@ public class LoteServiceImpl implements LoteService {
         return result;
     }
 
-//    @Override
-//    public LocalDate getMaiorValidadeLotes() {
-//        List<Lote> lotes = loteRepository.findAll();
-//        Collections.sort(lotes, new OrdenarPorData());
-//
-//    }
+    @Override
+    public LocalDate getMaiorValidadeLotes() {
+        List<Lote> lotes = listaLotes();
+        Collections.sort(lotes, new OrdenarPorData());
+
+        return lotes.get(lotes.size()).getDataDeValidade() ;
+    }
 
     /**
      * Metodo responsavel por retirar uma dose de um lote que contenha a vacina requisitada

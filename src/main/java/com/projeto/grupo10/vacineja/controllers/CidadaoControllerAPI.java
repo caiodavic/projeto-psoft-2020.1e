@@ -56,14 +56,14 @@ public class CidadaoControllerAPI {
      * @param cidadaoDTO
      * @return retorna o cidadaoDTO
      */
-
-    @RequestMapping(value = "/usuario/cadastra-cidadao", method = RequestMethod.POST)
+    @RequestMapping(value = "/cidadao/cadastra-cidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
         Cidadao cidadao = new Cidadao();
         String emailCidadao = cidadaoDTO.getEmail();
 
         try{
+
             cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);
         } catch (IllegalArgumentException e){
             if(e.getMessage().toString() == "Email invalido"){
@@ -85,8 +85,10 @@ public class CidadaoControllerAPI {
                 return ErroCidadao.erroDataInvalida();
             }
 
-        }
+
         return new ResponseEntity<String>(String.format("O cidadao com o cpf %s foi cadastrado", cidadao.getCpf()), HttpStatus.CREATED);
+
+
     }
 
     /**
@@ -161,7 +163,7 @@ public class CidadaoControllerAPI {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> AgendamentoVacina(@RequestHeader("Authorization") String headerToken,
                                            @RequestBody AgendaDTO agendaDTO) throws ServletException {
-
+        LocalDate data_limite = loteService.getMaiorValidadeLotes();
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
         try {
             agendaService.agendaVacinação(headerToken, agendaDTO);
@@ -171,9 +173,10 @@ public class CidadaoControllerAPI {
                 return ErroCidadao.erroCidadaoNaoCadastrado(cpf_cidadao);
             else if(e.getMessage().toString() == "Cidadao nao habilitado")
                 return ErroCidadao.erroCidadaoNaoHabilitado();
-            else if(e.getMessage().toString() == "Data invalida"){
+            else if(e.getMessage().toString() == "Data invalida")
                 return ErroAgenda.erroDataInvalida(LocalDate.now());
-            }
+            else if(e.getMessage().toString() == "Data maior que a validade dos lotes")
+                return ErroAgenda.erroDataMaior(data_limite);
         }
         catch (ServletException e) {
             return ErroLogin.erroTokenInvalido();
