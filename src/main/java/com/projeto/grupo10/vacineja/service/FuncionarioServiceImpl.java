@@ -205,21 +205,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     /**
-     * Remove qtdVacinas dose(s) de Vacina dentro de Lotes. Realiza verifição jwt para ver se o dono do Token passado é um funcionário.
-     * Se a data de validade de algum lote encontrado estiver vencida, o lote é removido e uma exceção é lançada (IllegalArgument).
-     * @param headerToken - toke do funcionario
-     * @param nomeFabricante eh o nome da fabricante da vacina
-     * @param qtdVacinas eh
-     * @return a lista de lotes validos (???) TODO mudar isso
-     * @throws ServletException se houver algum problema na verificacao jwt
-     */
-    @Override
-    public List<Lote> removeDoseLotes(String nomeFabricante, int qtdVacinas, String headerToken) throws ServletException {
-        this.cidadaoService.verificaTokenFuncionario(headerToken);
-        return this.loteService.removeDoseLotes(nomeFabricante, qtdVacinas);
-    }
-
-    /**
      * Pega uma lista com todos os cpfs dos cidadãos que estão autorizados a tomar primeira ou segunda dose
      * @param headerToken - token do funcionario
      * @return uma lista com os cpfs autorizados para tomar alguma dose
