@@ -76,6 +76,14 @@ public class Cidadao {
         return this.senha;
     }
 
+    public void setData_nascimento(LocalDate data_nascimento) {
+        this.data_nascimento = data_nascimento;
+    }
+
+    public void setCartaoSus(String cartaoSus) {
+        this.cartaoSus = cartaoSus;
+    }
+
     public String getCpf(){
         return this.cpf;
     }

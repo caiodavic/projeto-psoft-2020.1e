@@ -125,10 +125,9 @@ public class CidadaoServiceImpl implements CidadaoService {
      * virarem funcionarios
      *
      * @return - Um ArrayList com todos os funcionarios com o cadastro pendente
-     * @throws ServletException
      * @author Caetano Albuquerque
      */
-    public ArrayList<String> getUsuariosNaoAutorizados() throws ServletException {
+    public ArrayList<String> getUsuariosNaoAutorizados() {
         ArrayList<String> funcionariosNaoAutorizados = new ArrayList<String>();
         for (Cidadao cidadao : this.cidadaoRepository.findAll()) {
             if (cidadao.aguardandoAutorizacaoFuncionario()) {
@@ -410,22 +409,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @author Caio Silva
      */
     public boolean podeHabilitarRequisito(RequisitoDTO requisito) {
-        String requisitoPodeHabilitar = requisito.getRequisito();
-        Integer idadeRequisito = requisito.getIdade();
-
-        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
-        int contProvaveisHabilitados = 0;
-
-        for (Cidadao cidadao : cidadaos) {
-            Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
-            Set<String> profissoesCidadao = cidadao.getProfissoes();
-            Set<String> comorbidadesCidadao = cidadao.getComorbidades();
-
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
-                if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
-                    contProvaveisHabilitados++;
-            }
-        }
+        int contProvaveisHabilitados = this.contaCidadaosAtendeRequisito(requisito);
         return this.getQtdDosesSemDependencia() >= contProvaveisHabilitados + this.getQtdHabilitados();
     }
 
@@ -461,7 +445,7 @@ public class CidadaoServiceImpl implements CidadaoService {
                 telefones.append(cidadao.getTelefone()).append(", ");
             }
         }
-        this.enviaAlertaVacinacao(emails.toString().toString(), telefones.toString(), "primeira");
+        this.enviaAlertaVacinacao(emails.toString(), telefones.toString(), "primeira");
     }
 
     /**
@@ -574,7 +558,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      */
     @Override
     public int contaCidadaosAtendeRequisito(RequisitoDTO requisito) {
-        int qtdCidadaosMaisVelhos = 0;
+        int contProvaveisHabilitados = 0;
         String requisitoPodeHabilitar = requisito.getRequisito();
         Integer idadeRequisito = requisito.getIdade();
 
@@ -587,10 +571,10 @@ public class CidadaoServiceImpl implements CidadaoService {
 
             if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
-                    qtdCidadaosMaisVelhos++;
+                    contProvaveisHabilitados++;
             }
         }
-        return qtdCidadaosMaisVelhos;
+        return contProvaveisHabilitados;
     }
 
     /**
@@ -635,5 +619,4 @@ public class CidadaoServiceImpl implements CidadaoService {
 
         return this.agendaService.getAgendamentobyCpf(cpf);
     }
-
 }
