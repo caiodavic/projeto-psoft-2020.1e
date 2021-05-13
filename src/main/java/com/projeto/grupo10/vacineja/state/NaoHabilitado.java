@@ -10,16 +10,10 @@ import java.util.Date;
 public class NaoHabilitado implements Situacao{
     private static final String SITUACAO_ATUAL = "Não habilitado para tomar a vacina";
     private static final String MENSSAGEM_ERRO_TENTATIVA_VACINACAO = "Cidadão não habilitado para tomar a vacina";
-    private static final String MENSSAGEM_ERRO_AGENDAR_VACINACAO = "Cidadão não pode marcar vacinação";
 
     public NaoHabilitado() {
     }
 
-
-    @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
-        throw new IllegalArgumentException(MENSSAGEM_ERRO_AGENDAR_VACINACAO);
-    }
 
     @Override
     public void proximaSituacao(CartaoVacina cartaoVacina) {

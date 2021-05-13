@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public interface Situacao {
-    void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data);
     void proximaSituacao(CartaoVacina cartaoVacina);
     void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, LocalDate data);
     String toString();
