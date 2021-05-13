@@ -67,6 +67,10 @@ public class Lote {
         return qtdDosesDisponiveis;
     }
 
+    public String getNomeFabricante() {
+        return nomeFabricanteVacina;
+    }
+
     public LocalDate getDataDeValidade() {
         return dataDeValidade;
     }

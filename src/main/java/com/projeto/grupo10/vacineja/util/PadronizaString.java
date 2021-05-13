@@ -39,6 +39,12 @@ public class PadronizaString {
         return false;
     }
 
+    /**
+     * Metodo que verifica se o parametro é vazio
+     *
+     * @param parametro eh a string que desejasse analisar.
+     * @return o boolean com true caso ela seja vazia, e false caso não seja.
+     */
     public static boolean validaStringVazia(String parametro) {
         if (parametro.trim().equals("")) {
             return true;
@@ -46,6 +52,13 @@ public class PadronizaString {
         return false;
     }
 
+    /**
+     * Metodo que verifica se o parametro possui apenas caracteres.
+     *
+     * @param parametro eh a string que desejasse analisar.
+     * @param tamanho eh o tamanho que desejasse verificar se a string possui.
+     * @return o boolean com true caso seja do tamanho desejado, e false caso não seja.
+     */
     public static boolean validaTamanhoString(String parametro, int tamanho ) {
         if (parametro.length() == tamanho){
             return true;
@@ -53,6 +66,12 @@ public class PadronizaString {
         return false;
     }
 
+    /**
+     * Metodo que verifica se o parametro possui apenas numerais.
+     *
+     * @param parametro eh o conjunto de strings que se deseja padronizar.
+     * @return o boolean com true contenha apenas numeros, e false caso não.
+     */
     public static boolean validaApenasNumeroString(String parametro) {
         if (parametro.matches("[0-9]+")) {
             return true;
@@ -60,6 +79,12 @@ public class PadronizaString {
         return false;
     }
 
+    /**
+     * Metodo que verifica se o parametro possui apenas caracteres.
+     *
+     * @param parametro eh o conjunto de strings que se deseja padronizar.
+     * @return o boolean com true contenha apenas letras, e false caso não.
+     */
     public static boolean validaApenasLetrasString(String parametro) {
         if (parametro.matches("[a-zA-Z_]+")) {
             return true;
