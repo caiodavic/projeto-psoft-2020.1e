@@ -8,8 +8,6 @@ import java.util.Date;
 @Entity
 public class Agenda {
     @Id
-    @GeneratedValue
-    private Long id;
     private String cpf;
     private LocalDate data;
     private String horario;
@@ -21,10 +19,6 @@ public class Agenda {
         this.data = data;
         this.horario = horario;
         this.local = local;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getCpf() {

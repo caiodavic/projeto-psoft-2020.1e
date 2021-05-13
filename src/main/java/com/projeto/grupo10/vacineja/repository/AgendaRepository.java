@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface AgendaRepository extends JpaRepository<Agenda, Long> {
-    List<Agenda> findAllByCpf(String cpf);
-    Agenda findByCpf(String cpf);
+public interface AgendaRepository extends JpaRepository<Agenda, String> {
+
 }
