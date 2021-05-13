@@ -144,9 +144,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     /**
-     * Retorna a quantidade de cidadaos não habilitados com idade igual ou superior a idade passada como parametro
-     * @param headerToken token do usuario logado
-     * @param idade idade a ser usada para o calcul
+     * Retorna a quantidade de cidadaos não habilitados com idade igual ou superior a idade passada como parametro.
+     * Método pode ser utilizado para o funcionário saber se pode ou não habilitar tal idade, visto que uma idade so
+     * pode ter podeVacinar = true caso tenha doses suficientes para vacinar todos que têm aquela idade ou mais.
+     * @param headerToken token do funcionario logado
+     * @param idade idade a ser usada para o calculo
      * @return quantidade de cidadaos nao habilitados com idade igual ou superior a idade passada
      * @throws ServletException lança caso o token seja inválido
      * @author Caio Silva
@@ -157,6 +159,16 @@ public class FuncionarioServiceImpl implements FuncionarioService {
        return cidadaoService.contaCidadaosAcimaIdade(idade);
     }
 
+    /**
+     * Retorna a quantidade de cidadaos não habilitados que atendem ao requisito passado como parametro. Método pode ser
+     * utilizado para o funcionário saber se pode ou não habilitar tal requisito, visto que um requisito so pode ter
+     * podeVacinar = true caso tenha doses suficientes para vacinar todos que têm aquele requisito.
+     * @param headerToken token do funcionario logado
+     * @param requisito requisito a ser utilizado para o calculo
+     * @return quantidade de cidadaos nao habilitados que se encaixam naquele requisito
+     * @throws ServletException lança caso o token seja inválido
+     * @throws IllegalArgumentException caso o requisito não esteja cadastrado no sistema
+     */
     public int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException{
         cidadaoService.verificaTokenFuncionario(headerToken);
         return cidadaoService.contaCidadaosAtendeRequisito(requisito);

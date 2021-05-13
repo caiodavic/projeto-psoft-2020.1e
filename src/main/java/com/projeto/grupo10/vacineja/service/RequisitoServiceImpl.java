@@ -19,19 +19,33 @@ public class RequisitoServiceImpl implements RequisitoService{
     @Autowired
     RequisitoRepository requisitoRepository;
 
+    /**
+     * Método responsável por setar true o podeVacinar da idade passada por parametro
+     * @param idade idade que poderá habilitar cidadãos
+     * @author Caio Silva
+     */
     @Override
     public void setIdade(int idade) {
         Optional<Requisito> idadeRequisito = getRequisitoById("idade");
         Requisito idadeRequisitoNovo;
         if(idadeRequisito.isEmpty()){
             idadeRequisitoNovo = new Requisito("idade",idade,TipoRequisito.IDADE);
+            idadeRequisitoNovo.setPodeVacinar();
         } else {
             idadeRequisitoNovo = idadeRequisito.get();
             idadeRequisitoNovo.setIdade(idade);
+            idadeRequisitoNovo.setPodeVacinar();
         }
         requisitoRepository.save(idadeRequisitoNovo);
     }
 
+    /**
+     * Método responsável por criar um novo requisito que seja uma comorbidade. Um requisito só pode ser criado por um administrador, e sempre será iniciado com a variável podeVacinar = false
+     * @param requisito Um DTO do Requisito, com o nome do requisito e a idade mínima
+     * @return O requisito que foi criado e armazenado no repository
+     * @throws IllegalArgumentException caso a comorbidade já exista como requisito
+     * @author Caio Silva
+     */
     @Override
     public Requisito setNovaComorbidade(RequisitoDTO requisito) throws IllegalArgumentException{
 
@@ -45,6 +59,13 @@ public class RequisitoServiceImpl implements RequisitoService{
         return getRequisitoById(PadronizaString.padronizaString(requisito.getRequisito())).get();
     }
 
+    /**
+     * Método responsável por criar um novo requisito que seja uma profissão. Um requisito só pode ser criado por um administrador, e sempre será iniciado com a variável podeVacinar = false
+     * @param requisito Um DTO do Requisito, com o nome do requisito e a idade mínima
+     * @return O requisito que foi criado e armazenado no repository
+     * @throws IllegalArgumentException caso a profissão já exista como comorbidade
+     * @author Caio Silva
+     */
     @Override
     public Requisito setNovaProfissao(RequisitoDTO requisito) throws IllegalArgumentException{
 
@@ -58,12 +79,23 @@ public class RequisitoServiceImpl implements RequisitoService{
         return getRequisitoById(PadronizaString.padronizaString(requisito.getRequisito())).get();
     }
 
+    /**
+     * Método responsável por retornar o requisito utilizando o id, que é o nome do requisito
+     * @param requisito nome do requisito a ser retornado
+     * @return um Optional do requisito, caso esse requisito não exista no repository será empty
+     * @author Caio Silva
+     */
     @Override
     public Optional<Requisito> getRequisitoById(String requisito){
         Optional<Requisito> requisitoExistente = requisitoRepository.findById(PadronizaString.padronizaString(requisito));
         return requisitoExistente;
     }
 
+    /**
+     * Método responsável por listar uma representação de todas as comorbidades existentes no sistema
+     * @return Uma lista com representações em String de todas as comorbidades
+     * @throws IllegalArgumentException caso não exista nenhuma comorbidade cadastrada
+     */
     @Override
     public List<String> getTodasComorbidades() throws IllegalArgumentException{
         List<Requisito> requisitos = requisitoRepository.findAll();
@@ -80,8 +112,13 @@ public class RequisitoServiceImpl implements RequisitoService{
         return requisitoComorbidades;
     }
 
+    /**
+     * Método reponsável por retornar a idade que pode se vacinar
+     * @return idade mínima cadastrada para poder se vacinar
+     * @throws IllegalArgumentException caso não tenhuma nenhuma idade cadastrada
+     */
     @Override
-    public Requisito getIdade() {
+    public Requisito getIdade()throws IllegalArgumentException {
         Optional<Requisito> idadeRequisito = getRequisitoById("idade");
 
         if(idadeRequisito.isEmpty())
@@ -90,8 +127,13 @@ public class RequisitoServiceImpl implements RequisitoService{
         return idadeRequisito.get();
     }
 
+    /**
+     * Método responsável por listar uma representação de todas as profissões existentes no sistema
+     * @return Uma lista com representações em String de todas as profissões
+     * @throws IllegalArgumentException caso não exista nenhuma profissão cadastrada
+     */
     @Override
-    public List<String> getTodasProfissoes() {
+    public List<String> getTodasProfissoes() throws IllegalArgumentException{
         List<Requisito> requisitos = requisitoRepository.findAll();
         List<String> requisitoProfissoes = new ArrayList<>();
 
@@ -106,6 +148,13 @@ public class RequisitoServiceImpl implements RequisitoService{
         return requisitoProfissoes;
     }
 
+    /**
+     * Torna a variável podeVacinar de um determinado requisito true, assim podendo hablitar pessoas a vacina que têm
+     * aquele determinado requisito
+     * @param requisito um DTO do requisito a ser alterado
+     * @return Um DTO do requisitlo alterado
+     * @throws IllegalArgumentException caso o requisito não esteja cadastrado no sistema
+     */
     @Override
     public RequisitoDTO setPodeVacinar(RequisitoDTO requisito) throws IllegalArgumentException{
         Optional<Requisito> requisitoPodeVacinar = requisitoRepository.findById(requisito.getRequisito());
@@ -122,6 +171,11 @@ public class RequisitoServiceImpl implements RequisitoService{
         return new RequisitoDTO(requisitoAlterado.getIdade(),requisitoAlterado.getRequisito());
     }
 
+    /**
+     * Método responsável por montar uma lista com representações em String de todos os requisitos com podeVacinar = true
+     * @return uma lista de representações em String de requisitos com podeVacinar = true
+     * @throws IllegalArgumentException caso não existe nenhum requisito com podeVacinar = true
+     */
     @Override
     public List<String> requisitosHabilitados() throws IllegalArgumentException {
         List<String> requisitosString = new ArrayList<>();
