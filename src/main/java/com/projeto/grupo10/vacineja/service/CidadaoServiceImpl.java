@@ -208,8 +208,9 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
      * @param cidadaoDTO
      * @author Holliver Costa
+     * @return
      */
-    public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+    public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
         CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
         this.cartaoVacinaRepository.save(cartaoVacina);
@@ -218,6 +219,8 @@ public class CidadaoServiceImpl implements CidadaoService {
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
     	this.salvarCidadao(cidadao);
+
+    	return this.cidadaoRepository.findById(cidadaoDTO.getCpf()).get();
     }
 
     /**
@@ -226,7 +229,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario
      * @throws ServletException
      */
-    private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) {
+    private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cidadaoDTO.getCpf());
         if (cidadaoOpt.isPresent()) {
             throw new IllegalArgumentException("Cidadao cadastrado");
