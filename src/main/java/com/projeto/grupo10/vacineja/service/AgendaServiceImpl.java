@@ -59,21 +59,15 @@ public class AgendaServiceImpl implements AgendaService{
 
     /**
      * Metodo que pega os agendamentos de um cidadao
-     * @param headerToken
-     * @return retorna todos os agendamentos do cidadao
-     * @throws ServletException
+     * @param cpf - cpf do cidadao que deseja recuperar a sua agenda
+     * @return retorna o agendamento do cidadao
      * @author Holliver Costa
      */
-
     @Override
-    public Agenda getAgendamentobyCpf(String headerToken) throws ServletException {
-        String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
-        String id = jwtService.getCidadaoDoToken(headerToken);
-        return agendaRepository.findById(cpf_cidadao).get();
-    }
-
-    @Override
-    public Agenda getAgendamentoPorCpf(String cpf) {
+    public Agenda getAgendamentobyCpf(String cpf) {
+        if (this.agendaRepository.findById(cpf).isEmpty()){
+            throw new IllegalArgumentException("Sem agendamento para esse cpf");
+        }
         return agendaRepository.findById(cpf).get();
     }
 }

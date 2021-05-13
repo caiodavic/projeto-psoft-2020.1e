@@ -184,15 +184,16 @@ public class CidadaoControllerAPI {
         @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
         public ResponseEntity<?> listaAgendamentoCidadao (@RequestHeader("Authorization") String headerToken) throws
         ServletException {
-            String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
             Agenda agenda;
             String response = "";
             try {
-                agenda = agendaService.getAgendamentobyCpf(headerToken);
+                agenda = cidadaoService.getAgendamentobyCpf(headerToken);
                 response = "Sua vacinação está marcada para o dia " + agenda.getData() + " no local: " + agenda.getLocal();
 
             } catch (ServletException e) {
                 return ErroLogin.erroTokenInvalido();
+            }catch (IllegalArgumentException iae){
+                return ErroAgenda.erroNenhumaVacinaMarcada();
             }
             return new ResponseEntity<String>(response, HttpStatus.OK);
         }
