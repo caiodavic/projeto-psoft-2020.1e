@@ -1,22 +1,22 @@
 --
 --
 -- -- Criando algumas Vacinas
--- INSERT INTO vacina VALUES ('CoronaVac', 28, 2);
--- INSERT INTO vacina VALUES ('Moderna', 28, 2);
--- INSERT INTO vacina VALUES ('Pfizer', 28, 2);
--- INSERT INTO vacina VALUES ('Sputnik V', 21, 1);
--- INSERT INTO vacina VALUES ('AstraZeneca', 28, 2);
--- INSERT INTO vacina VALUES ('Janssen',0,1);
+-- INSERT INTO vacina VALUES ('coronavac', 28, 2);
+-- INSERT INTO vacina VALUES ('moderna', 28, 2);
+-- INSERT INTO vacina VALUES ('pfizer', 28, 2);
+-- INSERT INTO vacina VALUES ('sputnik v', 21, 1);
+-- INSERT INTO vacina VALUES ('astrazeneca', 28, 2);
+-- INSERT INTO vacina VALUES ('janssen',0,1);
 -- -- Vacina de teste ( com diasEntreDoses = 0)
 -- --TODO tirar essa vacina
 -- INSERT INTO vacina VALUES ('string',0,2);
 --
 -- -- Criando Lotes
 -- INSERT INTO lote (data_de_validade, nome_fabricante_vacina,qtd_doses_disponiveis, vacina_nome_fabricante)
--- VALUES (date'2021-12-31','Moderna',10,'Moderna');
+-- VALUES (date'2021-12-31','moderna',10,'moderna');
 --
 -- INSERT INTO lote (data_de_validade, nome_fabricante_vacina, qtd_doses_disponiveis, vacina_nome_fabricante)
--- VALUES (date'2021-12-31','Sputnik V',10,'Sputnik V');
+-- VALUES (date'2021-12-31','sputnik v',10,'sputnik v');
 --
 --
 -- --Criando o Administrador
@@ -133,10 +133,10 @@
 --
 --
 -- -- -- Vacinando alguns cidadãos
--- -- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-01',situacao = 'TOMOU1DOSE',vacina_nome_fabricante = 'Moderna' WHERE cartao_sus = '154789653256001';
--- -- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-02',situacao = 'TOMOU1DOSE',vacina_nome_fabricante = 'Sputnik V'  WHERE cartao_sus = '154789653256002';
+-- -- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-01',situacao = 'TOMOU1DOSE',vacina_nome_fabricante = 'moderna' WHERE cartao_sus = '154789653256001';
+-- -- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-02',situacao = 'TOMOU1DOSE',vacina_nome_fabricante = 'sputnik v'  WHERE cartao_sus = '154789653256002';
 --
--- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-01', data_segunda_dose = timestamp'2021-03-29',situacao = 'VACINACAOFINALIZADA',vacina_nome_fabricante = 'Moderna' WHERE cartao_sus = '154789653256005';
+-- UPDATE cartao_vacina SET data_primeira_dose = timestamp'2021-03-01', data_segunda_dose = timestamp'2021-03-29',situacao = 'VACINACAOFINALIZADA',vacina_nome_fabricante = 'moderna' WHERE cartao_sus = '154789653256005';
 --
 -- --Criando requisito
 --
@@ -144,4 +144,6 @@
 -- INSERT INTO requisito(requisito,idade,pode_vacinar,tipo_requisito) VALUES ('tcc',100,false,'COMORBIDADE');
 -- INSERT INTO requisito(requisito,idade,pode_vacinar,tipo_requisito) VALUES ('teacher',100,false,'PROFISSAO');
 -- INSERT INTO requisito(requisito,idade,pode_vacinar,tipo_requisito) VALUES ('cantor',10,false,'PROFISSAO');
+--
+--
 --

@@ -60,7 +60,7 @@ public class CidadaoControllerAPI {
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
         Cidadao cidadao = new Cidadao();
-        String emailCidadao = cidadaoDTO.getEmail();
+
 
         try {
             cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);

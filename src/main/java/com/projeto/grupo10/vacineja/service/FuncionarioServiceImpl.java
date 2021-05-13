@@ -101,7 +101,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         String Tipovacina = ministraVacinaDTO.getTipoVacina();
 
         boolean podeVacinar = false;
-        for (Agenda agenda : this.agendaService.getAgendamentobyCpf(cpfCidadao)) {
+        for (Agenda agenda : this.agendaService.getAgendamentoPorCpf(cpfCidadao)) {
             if (agenda.getData().equals(dataVacina)){
                 podeVacinar = true;
             }
