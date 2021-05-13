@@ -10,16 +10,15 @@ import java.util.List;
 
 public interface FuncionarioService {
 
-    public void alteraIdadeGeral(int idade, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
-    public void setRequisitoHabilitado(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
-    public void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException;
-    public List<String> listaComorbidadesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;
-    public List<String> listaProfissoesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;
-    public int getCidadaosAcimaIdade(String headerToken, int idade) throws ServletException;
-    public int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException;
-    public List<Lote> listaLotes(String headerToken) throws ServletException;
-    public Lote criarLote(String headerToken, String nomeFabricante, LoteDTO loteDTO) throws ServletException;
-    public List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException;
-    public List<Lote> removeDoseLotes(String nomeFabricante, int qtdVacinas, String headerToken) throws ServletException;
-    public List<String> listarCidadaosHabilitados(String headerToken) throws ServletException;
+    void alteraIdadeGeral(int idade, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
+    void setRequisitoHabilitado(RequisitoDTO requisito, String headerToken) throws ServletException,IllegalArgumentException, IllegalCallerException;
+    void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException;
+    List<String> listaComorbidadesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;
+    List<String> listaProfissoesCadastradas(String headerToken) throws ServletException, IllegalArgumentException;
+    int getCidadaosAcimaIdade(String headerToken, int idade) throws ServletException;
+    int getQtdCidadaosAtendeRequisito(String headerToken, RequisitoDTO requisito) throws ServletException, IllegalArgumentException;
+    List<Lote> listaLotes(String headerToken) throws ServletException;
+    Lote criarLote(String headerToken, String nomeFabricante, LoteDTO loteDTO) throws ServletException;
+    List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException;
+    List<String> listarCidadaosHabilitados(String headerToken) throws ServletException;
 }

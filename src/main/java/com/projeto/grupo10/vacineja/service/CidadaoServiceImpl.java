@@ -1,6 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
+import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.*;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -51,6 +53,10 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     @Autowired
     private LoteService loteService;
+
+    @Autowired
+    private VerificadorDataSegundaDose verificador;
+
 
     @Override
     public Optional<Cidadao> getCidadaoById(String cpf) {
@@ -90,11 +96,11 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     public boolean validaLoginComoFuncionario(CidadaoLoginDTO cidadaoLogin) {
-        return cidadaoLogin.getTipoLogin().equals("Funcionario") && !this.isFuncionario(cidadaoLogin.getCpfLogin());
+        return cidadaoLogin.getTipoLogin().equals("funcionario") && !this.isFuncionario(cidadaoLogin.getCpfLogin());
     }
 
     public boolean validaLoginComoAdministrador(CidadaoLoginDTO cidadaoLogin) {
-        return cidadaoLogin.getTipoLogin().equals("Administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
+        return cidadaoLogin.getTipoLogin().equals("administrador") && !this.isAdmin(cidadaoLogin.getCpfLogin());
     }
 
     private boolean isFuncionario(String id) {
@@ -119,6 +125,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @author Caetano Albuquerque
      */
     public void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException {
+
         String id = jwtService.getCidadaoDoToken(headerToken);
 
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
@@ -178,17 +185,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     }
 
     private boolean loginAsAdmin(String tipoLogin) {
-        return tipoLogin.equals("Administrador");
-    }
-
-    public String teste(String authorizationHeader) throws ServletException {
-        String id = jwtService.getCidadaoDoToken(authorizationHeader);
-        String tipoLogin = jwtService.getTipoLogin(authorizationHeader);
-
-        if (!isAdmin(id) || !loginAsAdmin(tipoLogin))
-            throw new ServletException("Usuario não é admin");
-
-        return "Oie deu certo";
+        return tipoLogin.equals("administrador");
     }
 
 
@@ -196,7 +193,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         String id = jwtService.getCidadaoDoToken(authHeader);
         String tipoLogin = jwtService.getTipoLogin(authHeader);
 
-        if (!isFuncionario(id) && tipoLogin.equals("Funcionario"))
+        if (!isFuncionario(id) && tipoLogin.equals("funcionario"))
             throw new ServletException("Usuario não é um Funcionário cadastrado!");
 
     }
@@ -209,7 +206,6 @@ public class CidadaoServiceImpl implements CidadaoService {
      */
 
     public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
-
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
 
         CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
@@ -251,14 +247,6 @@ public class CidadaoServiceImpl implements CidadaoService {
         if (ErroCidadao.dataInvalida(cidadaoDTO.getData_nascimento())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
         }
-
-        CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
-        this.cartaoVacinaRepository.save(cartaoVacina);
-
-        Cidadao cidadao = new Cidadao(cidadaoDTO.getNome(), cidadaoDTO.getCpf(), cidadaoDTO.getEndereco(),
-                cidadaoDTO.getCartaoSus(), cidadaoDTO.getEmail(), cidadaoDTO.getData_nascimento(), cidadaoDTO.getTelefone(),
-                padronizaSetsDeString(cidadaoDTO.getProfissoes()), padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
-        this.salvarCidadao(cidadao);
 
     }
 
@@ -323,7 +311,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @param dataVacina - A data em que a vacina foi aplicada
      * @author Caetano Albuquerque
      */
-    public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina) {
+    public void recebeVacina(String cpfCidadao, Vacina vacina, LocalDate dataVacina) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfCidadao);
 
         if (cidadaoOpt.isEmpty()) {
@@ -352,7 +340,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         String emails = "";
 
         for (Cidadao cidadao : cidadaos) {
-            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().before(new Date())) {
+            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().isBefore(LocalDate.now())) {
                 if (qtdCidadaosQuePossoLiberar > 0 && this.loteService.existeLoteDaVacina(cidadao.getTipoVacina())) {
                     cidadao.avancarSituacaoVacina();
                     this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
@@ -405,7 +393,6 @@ public class CidadaoServiceImpl implements CidadaoService {
     /**
      * Método que verifica se temos doses suficientes para todas as pessoas mais velhas do que a idade a ser habilitada
      *
-     * @param requisito idada a ser habilitada
      * @return true caso tenhamos mais doses do que pessoas a serem habilitadas, false caso contrario
      * @author Caio Silva
      */
@@ -460,7 +447,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         return this.getCidadaoById(cpf).get().getSituacao();
     }
 
-     /* Método que habilita cidadaos utilizando a idade como requisito
+     /** Método que habilita cidadaos utilizando a idade como requisito
      *
      * @param requisito idade a ser utilizada como requisito
      * @author Caio Silva
@@ -505,7 +492,7 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> profissoesCidadao = cidadao.getProfissoes();
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
                     cartaoVacinaRepository.save(cidadao.getCartaoVacina());
@@ -518,40 +505,6 @@ public class CidadaoServiceImpl implements CidadaoService {
             Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
                     String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
         }
-    }
-
-    /**
-     * Isso n faz a msm coisa q o outro lá em cima n ?
-     */
-    /**
-     * Atualiza automaticamente Cidadãos aguardando a chegada de SEGUNDA DOSE.
-     * TODO tirar os souts
-     */
-    private void habilitarAutoSegundaDoseCidadaos() {
-        int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
-
-        if (qtdCidadaosQuePossoLiberar <= 0) {
-            System.out.println("nenhum novo cidadao liberado");
-            return;
-        }
-        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
-
-        System.out.printf("%d cidadaos liberados:\n", qtdCidadaosQuePossoLiberar);
-
-        for (Cidadao cid : cidadaos) {
-            System.out.println(cid.getNome());
-            if (cid.getSituacao() instanceof Tomou1Dose) {
-                System.out.println(cid.getSituacao());
-                cid.avancarSituacaoVacina();
-                System.out.println(cid.getSituacao());
-                if (qtdCidadaosQuePossoLiberar-- == 0) break;
-            }
-        }
-    }
-
-    @Override
-    public void atualizaQtdDoses() {
-        habilitarAutoSegundaDoseCidadaos();
     }
 
     /**
@@ -635,6 +588,24 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
 
         return cidadaosHabilitados;
+    }
+
+    /**
+     * Método que verifica se a Data da segunda dose chegou
+     */
+    @Override
+    public void verificaDataSegundaDose() {
+
+        List<Cidadao> listaCidadaos = cidadaoRepository.findAll();
+        if(listaCidadaos.isEmpty()) return;
+
+        for (Cidadao cid : listaCidadaos) {
+            if (cid.getSituacao() instanceof Tomou1Dose) {
+                if ((cid.getDataPrevistaSegundaDose().compareTo(LocalDate.now())) < 1) {
+                    cid.avancarSituacaoVacina();
+                }
+            }
+        }
     }
 
 }

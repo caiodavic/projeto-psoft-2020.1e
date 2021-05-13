@@ -3,14 +3,17 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.DTO.LoteDTO;
 import com.projeto.grupo10.vacineja.DTO.MinistraVacinaDTO;
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
+import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.util.PadronizaString;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Autowired
     VacinaService vacinaService;
+
+    @Autowired
+    AgendaService agendaService;
 
     /**
      * Método responsável por chamar o método de requisitoService que altera a idade geral das pessoas que podem vacinar
@@ -81,7 +87,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
      * vacinação passa para finalizado e se for a primeira dose de uma vacina que tem duas doses o cidadão deve
      * ir para o estado de "tomou primeira dose"
      * @param headerToken - token do funcionario que deve ministrar a dose
-     * @param  ministraVacinaDTO - Objeto que contem todas as informações necessarias para testar a vacina
+     * @param  ministraVacinaDTO - Objeto que contem todas as informações necesLocalDatesarias para testar a vacina
      * @throws ServletException
      * @author Caetano Albuquerque
      */
@@ -91,12 +97,21 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         this.cidadaoService.verificaTokenFuncionario(headerToken);
 
         String cpfCidadao = ministraVacinaDTO.getCpf();
-        Date dataVacina = ministraVacinaDTO.getDataVacinacao();
+        LocalDate dataVacina = ministraVacinaDTO.getDataVacinacao();
         String Tipovacina = ministraVacinaDTO.getTipoVacina();
 
-        Vacina vacina = this.loteService.retirarVacinaValidadeProxima(Tipovacina);
+        boolean podeVacinar = false;
+        Agenda agenda = this.agendaService.getAgendamentoPorCpf(cpfCidadao);
+            if (agenda.getData().equals(dataVacina)){
+                podeVacinar = true;
+            }
 
+        if (!podeVacinar){
+            throw new IllegalArgumentException("Sem agendamento marcado");
+        }
+        Vacina vacina = this.loteService.retirarVacinaValidadeProxima(Tipovacina);
         this.cidadaoService.recebeVacina(cpfCidadao, vacina, dataVacina);
+
     }
 
     /**
@@ -187,21 +202,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException {
         this.cidadaoService.verificaTokenFuncionario(headerToken);
         return this.loteService.listaLotesPorFabricante(nomeFabricante);
-    }
-
-    /**
-     * Remove qtdVacinas dose(s) de Vacina dentro de Lotes. Realiza verifição jwt para ver se o dono do Token passado é um funcionário.
-     * Se a data de validade de algum lote encontrado estiver vencida, o lote é removido e uma exceção é lançada (IllegalArgument).
-     * @param headerToken - toke do funcionario
-     * @param nomeFabricante eh o nome da fabricante da vacina
-     * @param qtdVacinas eh
-     * @return a lista de lotes validos (???) TODO mudar isso
-     * @throws ServletException se houver algum problema na verificacao jwt
-     */
-    @Override
-    public List<Lote> removeDoseLotes(String nomeFabricante, int qtdVacinas, String headerToken) throws ServletException {
-        this.cidadaoService.verificaTokenFuncionario(headerToken);
-        return this.loteService.removeDoseLotes(nomeFabricante, qtdVacinas);
     }
 
     /**

@@ -52,6 +52,8 @@ public class FuncionarioControllerAPI {
                 return ErroLote.erroSemLoteDaVacina(ministraVacinaDTO.getTipoVacina());
             if (iae.getMessage().equals("Cidadão não cadastrado no sistema"))
                 return ErroCidadao.erroUsuarioNaoEncontrado();
+            if (iae.getMessage().equals("Sem agendamento marcado"))
+                return ErroAgenda.erroVacinaNaoMarcada();
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
@@ -177,24 +179,6 @@ public class FuncionarioControllerAPI {
         } catch (IllegalArgumentException | ServletException e){
             return ErroVacina.erroListarVacina(e.getMessage());
         }
-    }
-
-    /**
-     * TODO Esboço do método de retirada de Vacina, será removido (ou modificado) após definido a remoção somente de vacinas reservadas
-     */
-    @PostMapping("/funcionario/vacinas/{nome-fabricante}/{qtd-vacinas}")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> retiraVacina(@RequestHeader("Authorization") String headerToken, @PathVariable("nome-fabricante") String nomeFabricante, @PathVariable("qtd-vacinas") int qtdVacinas){
-
-        try{
-            List<Lote> loteList = funcionarioService.removeDoseLotes(nomeFabricante,qtdVacinas,headerToken);
-            return new ResponseEntity<>(loteList,HttpStatus.CREATED);
-        } catch (NullPointerException e){
-            return ErroVacina.erroVacinaNaoCadastrada(nomeFabricante);
-        } catch (IllegalArgumentException | ServletException e){
-            return ErroVacina.erroListarVacina(e.getMessage());
-        }
-
     }
 
     @RequestMapping(value = "/funcionario/habilita-idade", method = RequestMethod.PUT)
