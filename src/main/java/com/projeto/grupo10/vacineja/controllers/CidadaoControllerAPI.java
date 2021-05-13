@@ -59,12 +59,12 @@ public class CidadaoControllerAPI {
     @RequestMapping(value = "/cidadao/cadastra-cidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
-        Optional<Cidadao> cidadaos = cidadaoService.getCidadaoById(cidadaoDTO.getCpf());
+        Cidadao cidadao = new Cidadao();
         String emailCidadao = cidadaoDTO.getEmail();
 
         try{
-           Optional<Cidadao> cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);
-            return new ResponseEntity< Optional<Cidadao>>(cidadao, HttpStatus.CREATED);
+
+            cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);
         } catch (IllegalArgumentException e){
             if(e.getMessage().toString() == "Email invalido"){
                 return ErroCidadao.erroEmailInvalido();
@@ -85,8 +85,10 @@ public class CidadaoControllerAPI {
                 return ErroCidadao.erroDataInvalida();
             }
 
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<String>(String.format("O cidadao com o cpf %s foi cadastrado", cidadao.getCpf()), HttpStatus.CREATED);
+
+
     }
 
     /**

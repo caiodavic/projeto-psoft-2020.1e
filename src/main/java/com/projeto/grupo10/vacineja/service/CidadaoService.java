@@ -22,7 +22,7 @@ public interface CidadaoService extends Subscriber {
     void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException;
     ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
-    void cadastraCidadao(CidadaoDTO cidadaoDTO);
+    public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException;
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException, IllegalArgumentException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
