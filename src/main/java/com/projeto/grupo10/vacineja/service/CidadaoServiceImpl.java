@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeString;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -323,7 +324,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @param dataVacina - A data em que a vacina foi aplicada
      * @author Caetano Albuquerque
      */
-    public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina) {
+    public void recebeVacina(String cpfCidadao, Vacina vacina, LocalDate dataVacina) {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfCidadao);
 
         if (cidadaoOpt.isEmpty()) {
@@ -352,7 +353,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         String emails = "";
 
         for (Cidadao cidadao : cidadaos) {
-            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().before(new Date())) {
+            if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().isBefore(LocalDate.now())) {
                 if (qtdCidadaosQuePossoLiberar > 0 && this.loteService.existeLoteDaVacina(cidadao.getTipoVacina())) {
                     cidadao.avancarSituacaoVacina();
                     this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
@@ -405,7 +406,6 @@ public class CidadaoServiceImpl implements CidadaoService {
     /**
      * Método que verifica se temos doses suficientes para todas as pessoas mais velhas do que a idade a ser habilitada
      *
-     * @param requisito idada a ser habilitada
      * @return true caso tenhamos mais doses do que pessoas a serem habilitadas, false caso contrario
      * @author Caio Silva
      */

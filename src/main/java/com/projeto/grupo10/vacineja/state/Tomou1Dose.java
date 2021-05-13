@@ -4,6 +4,7 @@ import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
 import com.projeto.grupo10.vacineja.model.usuario.Cidadao;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Tomou1Dose implements Situacao {
@@ -22,8 +23,8 @@ public class Tomou1Dose implements Situacao {
      * @param data
      */
     @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, Date data) {
-        if (cartaoVacina.getDataPrevistaSegundaDose().after(data)) {
+    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
+        if (cartaoVacina.getDataPrevistaSegundaDose().isAfter(data)) {
             throw new IllegalArgumentException(MENSSAGEM_ERRO_AGENDAMENTO);
         }
         cartaoVacina.setDataAgendamento(data);
@@ -37,15 +38,15 @@ public class Tomou1Dose implements Situacao {
      */
     @Override
     public void proximaSituacao(CartaoVacina cartaoVacina) {
-        Date dataPrevistaSegundaDose = cartaoVacina.getDataPrevistaSegundaDose();
-        if (dataPrevistaSegundaDose.before(new Date())) {
+        LocalDate dataPrevistaSegundaDose = cartaoVacina.getDataPrevistaSegundaDose();
+        if (dataPrevistaSegundaDose.isBefore(LocalDate.now())) {
             cartaoVacina.setSituacao(SituacaoEnum.HABILITADO2DOSE);
         }
     }
 
    
     @Override
-    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, Date data) {}
+    public void proximaSituacao(CartaoVacina cartaoVacina, Vacina vacina, LocalDate data) {}
 
     @Override
     public String toString() {

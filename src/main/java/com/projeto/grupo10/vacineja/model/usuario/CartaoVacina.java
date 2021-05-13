@@ -6,6 +6,7 @@ import com.projeto.grupo10.vacineja.state.SituacaoEnum;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,11 +18,11 @@ public class CartaoVacina {
     @ManyToOne
     private Vacina vacina;
 
-    private Date dataPrimeiraDose;
-    private Date dataSegundaDose;
+    private LocalDate dataPrimeiraDose;
+    private LocalDate dataSegundaDose;
 
-    private Date dataPrevistaSegundaDose;
-    private Date dataAgendamento;
+    private LocalDate dataPrevistaSegundaDose;
+    private LocalDate dataAgendamento;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -39,19 +40,19 @@ public class CartaoVacina {
         this.getSituacaoAtual().proximaSituacao(this);
     }
 
-    public void proximaSituacao(Vacina vacina, Date dataVacina){
+    public void proximaSituacao(Vacina vacina, LocalDate dataVacina){
         if (this.vacina != null && !this.vacina.equals(vacina)){
             throw new IllegalArgumentException("As duas doses tomadas por um cidadão devem ser do mesmo tipo.");
         }
         this.getSituacaoAtual().proximaSituacao(this, vacina, dataVacina);
     }
 
-    public void agendarVacinacao(Date dataAgendamento){
+    public void agendarVacinacao(LocalDate dataAgendamento){
         this.getSituacaoAtual().agendarVacinacao(this, dataAgendamento);
     }
 
 
-    public void setDataSegundaDose(Date dataSegundaDose) {
+    public void setDataSegundaDose(LocalDate dataSegundaDose) {
         this.dataSegundaDose = dataSegundaDose;
     }
 
@@ -59,15 +60,15 @@ public class CartaoVacina {
         this.situacao = situacao;
     }
 
-    public void setDataPrimeiraDose(Date dataPrimeiraDose) {
+    public void setDataPrimeiraDose(LocalDate dataPrimeiraDose) {
         this.dataPrimeiraDose = dataPrimeiraDose;
     }
 
-    public void setDataPrevistaSegundaDose(Date dataPrevistaSegundaDoseSegundaDose) {
+    public void setDataPrevistaSegundaDose(LocalDate dataPrevistaSegundaDoseSegundaDose) {
         this.dataPrevistaSegundaDose = dataPrevistaSegundaDoseSegundaDose;
     }
 
-    public Date getDataPrevistaSegundaDose() {
+    public LocalDate getDataPrevistaSegundaDose() {
         return dataPrevistaSegundaDose;
     }
 
@@ -83,7 +84,7 @@ public class CartaoVacina {
         return this.vacina.getDiasEntreDoses();
     }
 
-    public Date getDataPrimeiraDose() {
+    public LocalDate getDataPrimeiraDose() {
         return dataPrimeiraDose;
     }
 
@@ -91,7 +92,7 @@ public class CartaoVacina {
         return this.situacao.getSituacao();
     }
 
-    public void setDataAgendamento(Date dataAgendamento){
+    public void setDataAgendamento(LocalDate dataAgendamento){
         this.dataAgendamento = dataAgendamento;
     }
 

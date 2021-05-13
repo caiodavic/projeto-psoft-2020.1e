@@ -101,11 +101,11 @@ public class Cidadao {
         this.cartaoVacina.proximaSituacao();
     }
 
-    public void receberVacina(Vacina vacina, Date dataVacina) {
+    public void receberVacina(Vacina vacina, LocalDate dataVacina) {
         this.cartaoVacina.proximaSituacao(vacina, dataVacina);
     }
 
-    public void agendarVacina(Date data){
+    public void agendarVacina(LocalDate data){
         this.cartaoVacina.agendarVacinacao(data);
     }
 
@@ -189,7 +189,7 @@ public class Cidadao {
         this.senha = senha;
     }
 
-    public Date getDataPrevistaSegundaDose (){
+    public LocalDate getDataPrevistaSegundaDose (){
         return this.cartaoVacina.getDataPrevistaSegundaDose();
     }
 

@@ -8,6 +8,7 @@ import com.projeto.grupo10.vacineja.observer.Subscriber;
 import com.projeto.grupo10.vacineja.state.Situacao;
 
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public interface CidadaoService extends Subscriber {
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException, IllegalArgumentException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
-    public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
+    public void recebeVacina(String cpfCidadao, Vacina vacina, LocalDate dataVacina);
     public boolean podeAlterarIdade(int idade);
     public boolean podeHabilitarRequisito(RequisitoDTO requisito);
     public Situacao getSituacao(String cpf);
