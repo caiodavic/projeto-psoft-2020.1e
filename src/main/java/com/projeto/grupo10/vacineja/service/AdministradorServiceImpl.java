@@ -36,7 +36,7 @@ public class AdministradorServiceImpl implements AdministradorService{
         return id.equals(CPF_ADM);
     }
 
-    private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("Administrador");}
+    private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("administrador");}
 
     /**
      * Verifica se o token passado é do administrador
