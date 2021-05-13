@@ -76,6 +76,7 @@ public class Cidadao {
     public String getSenha(){
         return this.senha;
     }
+
     public String getCpf(){
         return this.cpf;
     }
@@ -92,7 +93,6 @@ public class Cidadao {
         return this.funcionarioGoverno != null && !this.funcionarioGoverno.isAprovado();
     }
 
-
     public void autorizaCadastroFuncionario(){
         this.funcionarioGoverno.aprovaCadastro();
     }
@@ -103,10 +103,6 @@ public class Cidadao {
 
     public void receberVacina(Vacina vacina, LocalDate dataVacina) {
         this.cartaoVacina.proximaSituacao(vacina, dataVacina);
-    }
-
-    public void agendarVacina(LocalDate data){
-        this.cartaoVacina.agendarVacinacao(data);
     }
 
     public void setFuncionarioGoverno (FuncionarioGoverno funcionarioGoverno){
@@ -145,16 +141,8 @@ public class Cidadao {
         return cartaoSus;
     }
 
-    public void setCartaoSus(String cartaoSus) {
-        this.cartaoSus = cartaoSus;
-    }
-
     public LocalDate getData_nascimento() {
         return data_nascimento;
-    }
-
-    public void setData_nascimento(LocalDate data_nascimento) {
-        this.data_nascimento = data_nascimento;
     }
 
     public String getTelefone() {

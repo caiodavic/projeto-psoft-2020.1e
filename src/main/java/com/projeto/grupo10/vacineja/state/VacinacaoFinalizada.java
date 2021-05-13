@@ -8,14 +8,8 @@ import java.util.Date;
 
 public class VacinacaoFinalizada implements Situacao{
     private static final String SITUACAO_ATUAL = "Vacinação já finalizada.";
-    private static final String MENSSAGEM_ERRO_AGENDAR_VACINACAO = "Vacinação finalizada. Cidadão não pode marcar vacinação";
 
     public VacinacaoFinalizada() {
-    }
-
-    @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
-        throw new IllegalArgumentException(this.MENSSAGEM_ERRO_AGENDAR_VACINACAO);
     }
 
     @Override

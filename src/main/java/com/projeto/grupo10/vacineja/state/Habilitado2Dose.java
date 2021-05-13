@@ -14,11 +14,6 @@ public class Habilitado2Dose implements Situacao {
     public Habilitado2Dose() {}
 
     @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
-        cartaoVacina.setDataAgendamento(data);
-    }
-
-    @Override
     public void proximaSituacao(CartaoVacina cartaoVacina) {
         cartaoVacina.setSituacao(SituacaoEnum.VACINACAOFINALIZADA);
     }

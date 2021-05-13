@@ -12,11 +12,6 @@ public class Habilitado1Dose implements Situacao{
 
     public Habilitado1Dose() { }
 
-    @Override
-    public void agendarVacinacao(CartaoVacina cartaoVacina, LocalDate data) {
-        cartaoVacina.setDataAgendamento(data);
-    }
-
     /**
      * Ao passar para o proximo estado, caso o vacina escolhida para o cidadão seja de dose unica, a vacinação dele
      * sera considerada finalizada, caso não ele deve passar para o estado "tomou primeira dose"
@@ -39,7 +34,6 @@ public class Habilitado1Dose implements Situacao{
                     cartaoVacina.getIntervaloVacina());
 
             cartaoVacina.setDataPrevistaSegundaDose(dataSegundaDose);
-            cartaoVacina.setDataAgendamento(dataSegundaDose);
         }
 
     }
