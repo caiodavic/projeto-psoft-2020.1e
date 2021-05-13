@@ -25,4 +25,7 @@ public class MinistraVacinaDTO {
         return tipoVacina;
     }
 
+    public void setTipoVacina(String tipoVacina) {
+        this.tipoVacina = tipoVacina;
+    }
 }
