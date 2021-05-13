@@ -52,6 +52,8 @@ public class FuncionarioControllerAPI {
                 return ErroLote.erroSemLoteDaVacina(ministraVacinaDTO.getTipoVacina());
             if (iae.getMessage().equals("Cidadão não cadastrado no sistema"))
                 return ErroCidadao.erroUsuarioNaoEncontrado();
+            if (iae.getMessage().equals("Sem agendamento marcado"))
+                return ErroAgenda.erroVacinaNaoMarcada();
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
