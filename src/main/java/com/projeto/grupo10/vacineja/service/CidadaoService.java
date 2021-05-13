@@ -10,6 +10,7 @@ import com.projeto.grupo10.vacineja.state.Situacao;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface CidadaoService extends Subscriber {
@@ -21,8 +22,8 @@ public interface CidadaoService extends Subscriber {
     void cadastroFuncionario(String headerToken, FuncionarioCadastroDTO cadastroFuncionario) throws ServletException;
     ArrayList<String> getUsuariosNaoAutorizados() throws ServletException;
     void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException;
-    Optional<Cidadao> cadastraCidadao(CidadaoDTO cidadaoDTO);
-    Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException;
+    void cadastraCidadao(CidadaoDTO cidadaoDTO);
+    Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException, IllegalArgumentException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
     void habilitarSegundaDose(String headerToken) throws ServletException;
     public void recebeVacina(String cpfCidadao, Vacina vacina, Date dataVacina);
@@ -34,5 +35,5 @@ public interface CidadaoService extends Subscriber {
     public String getEstadoVacinacao(String headerToken) throws ServletException;
     public int contaCidadaosAcimaIdade(int idade);
     public int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
-
+    public List<String> listarCidadaosHabilitados();
 }

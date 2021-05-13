@@ -15,6 +15,7 @@ public class Agenda {
     private String horario;
     private String local;
 
+    public Agenda(){}
     public Agenda(String cpf, LocalDate data, String horario, String local){
         this.cpf = cpf;
         this.data = data;

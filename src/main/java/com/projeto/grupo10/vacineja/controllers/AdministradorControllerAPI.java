@@ -2,6 +2,7 @@ package com.projeto.grupo10.vacineja.controllers;
 
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.DTO.VacinaDTO;
+import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
 import com.projeto.grupo10.vacineja.service.AdministradorService;
 import com.projeto.grupo10.vacineja.service.CidadaoService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -36,20 +38,21 @@ public class AdministradorControllerAPI {
     @RequestMapping(value = "/admin/funcionarios-nao-cadastrados", method = RequestMethod.GET)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> getFuncionariosNaoAutorizados(@RequestHeader("Authorization") String headerToken){
-        ArrayList<String> usuariosNaoAutorizados;
+
+        List<String> usuariosNaoAutorizados = new ArrayList<>();
 
         try{
             usuariosNaoAutorizados = this.administradorService.getUsuariosNaoAutorizados(headerToken);
         }
 
         catch (IllegalArgumentException iae){
-            return ErroCidadao.erroSemPermissaoAdministrador();
+                return ErroCidadao.erroSemPermissaoAdministrador();
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<ArrayList<String>>(usuariosNaoAutorizados, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(usuariosNaoAutorizados, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/funcionarios", method = RequestMethod.POST)
@@ -62,7 +65,10 @@ public class AdministradorControllerAPI {
         }
 
         catch (IllegalArgumentException iae){
-            return ErroCidadao.erroUsuarioNaoEncontrado();
+            if (iae.getMessage().equals("Usuario não cadastrado"))
+                return ErroCidadao.erroUsuarioNaoEncontrado();
+            if (iae.getMessage().equals("Usuario não é um funcionario não autorizado"))
+                return ErroCidadao.erroUsuarioSemCadastroPendente(cpfFuncionario);
         }
         catch (ServletException e){
             return ErroLogin.erroTokenInvalido();
@@ -95,30 +101,32 @@ public class AdministradorControllerAPI {
 
     @RequestMapping(value = "/admin/novo-requisito-comorbidade", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> cadastraComorbidade(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+    public ResponseEntity<?> cadastraComorbidade(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
+        Requisito requisitoCadastrado = new Requisito();
         try{
-            administradorService.adicionaNovaComorbidade(requisito,headerToken);
+            requisitoCadastrado = administradorService.adicionaNovaComorbidade(requisito,headerToken);
         } catch (ServletException e){
             ErroCidadao.erroSemPermissaoAdministrador();
         } catch (IllegalArgumentException iae) {
             ErroRequisito.requisitoCadastrado(requisito);
         }
 
-        return new ResponseEntity<String>(String.format("Requisito comorbidade %s adicionado no sistema",requisito.getRequisito()),HttpStatus.OK);
+        return new ResponseEntity<String>(String.format("Requisito comorbidade %s adicionado no sistema",requisitoCadastrado.getRequisito()),HttpStatus.OK);
     }
 
     @RequestMapping(value = "/admin/novo-requisito-profissao", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<?> cadastraProfissao(@RequestHeader("Authorization") String headerToken, @RequestHeader RequisitoDTO requisito){
+    public ResponseEntity<?> cadastraProfissao(@RequestHeader("Authorization") String headerToken, @RequestBody RequisitoDTO requisito){
+        Requisito requisitoCadastrado = new Requisito();
         try{
-            administradorService.adicionaNovaProfissao(requisito,headerToken);
+            requisitoCadastrado = administradorService.adicionaNovaProfissao(requisito,headerToken);
         } catch (ServletException e){
             ErroCidadao.erroSemPermissaoAdministrador();
         } catch (IllegalArgumentException iae) {
             ErroRequisito.requisitoCadastrado(requisito);
         }
 
-        return new ResponseEntity<String>(String.format("Requisito profissao %s adicionado no sistema",requisito.getRequisito()),HttpStatus.OK);
+        return new ResponseEntity<String>(String.format("Requisito profissao %s adicionado no sistema",requisitoCadastrado.getRequisito()),HttpStatus.OK);
     }
 
 }

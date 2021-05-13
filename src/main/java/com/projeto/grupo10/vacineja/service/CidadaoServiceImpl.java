@@ -32,15 +32,10 @@ import java.util.*;
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService {
-    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE1 = "Ola %s" +
-            "\nVocê esta apto para receber a 1ª dose da vacina! " +
-            "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL_ALERTA_DOSE1 = "Vacinação primeira dose";
 
-    private static final String MENSSAGEM_EMAIL_ALERTA_DOSE2 = "Ola %s" +
-            "\nVocê esta apto para receber a 2ª dose da vacina! " +
+    private static final String MENSSAGEM_EMAIL_ALERTA = "Ola! \nVocê esta apto para receber a %dª dose da vacina! " +
             "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL_ALERTA_DOSE2 = "Vacinação segunda dose";
+    private static final String ASSUNTO_EMAIL_ALERTA = "Vacinação %s dose";
 
     @Autowired
     private CidadaoRepository cidadaoRepository;
@@ -129,7 +124,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
         if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Usuario não encontrado");
         }
 
         Cidadao cidadao;
@@ -166,8 +161,10 @@ public class CidadaoServiceImpl implements CidadaoService {
     public void autorizarCadastroFuncionario(String cpfFuncionario) throws ServletException {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(cpfFuncionario);
 
-        if (cidadaoOpt.isEmpty() || !cidadaoOpt.get().aguardandoAutorizacaoFuncionario()) {
-            throw new IllegalArgumentException();
+        if (cidadaoOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuario não cadastrado");
+        }if(!cidadaoOpt.get().aguardandoAutorizacaoFuncionario()){
+            throw new IllegalArgumentException("Usuario não é um funcionario não autorizado");
         }
 
         Cidadao cidadao = cidadaoOpt.get();
@@ -196,9 +193,8 @@ public class CidadaoServiceImpl implements CidadaoService {
 
 
     public void verificaTokenFuncionario(String authHeader) throws ServletException {
-        String token = "Bearer " + authHeader;
-        String id = jwtService.getCidadaoDoToken(token);
-        String tipoLogin = jwtService.getTipoLogin(token);
+        String id = jwtService.getCidadaoDoToken(authHeader);
+        String tipoLogin = jwtService.getTipoLogin(authHeader);
 
         if (!isFuncionario(id) && tipoLogin.equals("Funcionario"))
             throw new ServletException("Usuario não é um Funcionário cadastrado!");
@@ -239,16 +235,16 @@ public class CidadaoServiceImpl implements CidadaoService {
             throw new IllegalArgumentException("Email invalido");
         }
 
-        if (ErroCidadao.erroCPFInvalido(cidadaoDTO.getCpf())) {
+        if (ErroCidadao.CPFInvalido(cidadaoDTO.getCpf())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse cpf");
         }
-        if (ErroCidadao.erroCartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
+        if (ErroCidadao.cartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS");
         }
-        if (ErroCidadao.erroSenhaInvalida(cidadaoDTO.getSenha())) {
+        if (ErroCidadao.senhaInvalida(cidadaoDTO.getSenha())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
         }
-        if (ErroCidadao.erroDataInvalida(cidadaoDTO.getData_nascimento())) {
+        if (ErroCidadao.dataInvalida(cidadaoDTO.getData_nascimento())) {
             throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
         }
 
@@ -268,25 +264,22 @@ public class CidadaoServiceImpl implements CidadaoService {
      *
      * @param headerToken      - token do Cidadao que tera seus dados alterardos
      * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @param cidadao          - O cidadao que tera seus dados alterados
-
      * @throws ServletException
      */
     @Override
-    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException{
+    public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException, IllegalArgumentException{
 
         Optional<Cidadao> cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
         analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO, cidadao.get());
 
-        cidadao.get().setCartaoSus(Objects.nonNull(cidadaoUpdateDTO.getCartaoSus()) ? cidadaoUpdateDTO.getCartaoSus() : cidadao.get().getCartaoSus());
         cidadao.get().setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.get().getComorbidades());
-        cidadao.get().setData_nascimento(Objects.nonNull(cidadaoUpdateDTO.getData_nascimento()) ? cidadaoUpdateDTO.getData_nascimento() : cidadao.get().getData_nascimento());
         cidadao.get().setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.get().getEmail());
         cidadao.get().setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.get().getEndereco());
         cidadao.get().setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.get().getSenha());
         cidadao.get().setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.get().getNome());
         cidadao.get().setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.get().getTelefone());
         cidadao.get().setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.get().getProfissoes());
+
         this.salvarCidadao(cidadao.get());
         return cidadao.get();
     }
@@ -302,29 +295,20 @@ public class CidadaoServiceImpl implements CidadaoService {
         String id = jwtService.getCidadaoDoToken(headerToken);
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
         if (cidadaoOpt.isEmpty()){
-
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cidadao não existe");
         }
         if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
             if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
                 throw new IllegalArgumentException("Novo Email invalido");
             }
         }
-        if (Objects.nonNull(cidadaoUpdateDTO.getCartaoSus())) {
-            if (ErroCidadao.erroCartaoSUSInvalido(cidadaoUpdateDTO.getCartaoSus())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com esse numero de cartao do SUS");
+        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())){
+            if (ErroCidadao.senhaInvalida(cidadaoUpdateDTO.getSenha())) {
+                throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
             }
         }
-        if (Objects.nonNull(cidadaoUpdateDTO.getData_nascimento())) {
-            if (ErroCidadao.erroDataInvalida(cidadaoUpdateDTO.getData_nascimento())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa data de nascimento");
-            }
-        }
-        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())) {
-            if (ErroCidadao.erroSenhaInvalida(cidadaoUpdateDTO.getSenha())) {
-                throw new IllegalArgumentException("Não é possivel atualizar um cadastro de um Cidadao com essa senha");
-            }
-        }
+
+
     }
 
     /**
@@ -375,7 +359,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() - 2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "segunda"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 2), emails);
         }
     }
 
@@ -471,8 +456,8 @@ public class CidadaoServiceImpl implements CidadaoService {
     public Situacao getSituacao(String cpf){
         return this.getCidadaoById(cpf).get().getSituacao();
     }
-    /*
-     * Método que habilita cidadaos utilizando a idade como requisito
+
+     /* Método que habilita cidadaos utilizando a idade como requisito
      *
      * @param requisito idade a ser utilizada como requisito
      * @author Caio Silva
@@ -487,12 +472,14 @@ public class CidadaoServiceImpl implements CidadaoService {
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
             if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                 cidadao.avancarSituacaoVacina();
+                cartaoVacinaRepository.save(cidadao.getCartaoVacina());
                 emails += (cidadao.getEmail() + ", ");
             }
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
         }
     }
 
@@ -518,13 +505,15 @@ public class CidadaoServiceImpl implements CidadaoService {
             if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
+                    cartaoVacinaRepository.save(cidadao.getCartaoVacina());
                     emails += (cidadao.getEmail() + ", ");
                 }
             }
         }
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(ASSUNTO_EMAIL_ALERTA_DOSE2, MENSSAGEM_EMAIL_ALERTA_DOSE2, emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
         }
     }
 
@@ -577,7 +566,7 @@ public class CidadaoServiceImpl implements CidadaoService {
         Optional<Cidadao> cidadaoOpt = this.getCidadaoById(id);
 
         if (cidadaoOpt.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Usuario não encontrado");
         }
 
         Cidadao cidadao = cidadaoOpt.get();
@@ -623,12 +612,26 @@ public class CidadaoServiceImpl implements CidadaoService {
             Set<String> profissoesCidadao = cidadao.getProfissoes();
             Set<String> comorbidadesCidadao = cidadao.getComorbidades();
 
-            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(comorbidadesCidadao)) {
+            if (profissoesCidadao.contains(requisitoPodeHabilitar) || comorbidadesCidadao.contains(requisitoPodeHabilitar)) {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado)
                     qtdCidadaosMaisVelhos++;
             }
         }
         return qtdCidadaosMaisVelhos;
+    }
+
+    @Override
+    public List<String> listarCidadaosHabilitados() {
+        List<String> cidadaosHabilitados = new ArrayList<>();
+        List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
+
+        for (Cidadao cidadao : cidadaos){
+            if (cidadao.getSituacao() instanceof Habilitado1Dose || cidadao.getSituacao() instanceof Habilitado2Dose){
+                cidadaosHabilitados.add(cidadao.getCpf());
+            }
+        }
+
+        return cidadaosHabilitados;
     }
 
 }

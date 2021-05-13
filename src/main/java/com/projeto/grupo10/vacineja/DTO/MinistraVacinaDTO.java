@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class MinistraVacinaDTO {
 
-    private String cartaoSus;
+    private String cpf;
     private Date dataVacinacao;
     private long loteVacina;
     private String tipoVacina;
 
-    public String getCartaoSus() {
-        return cartaoSus;
+    public String getCpf() {
+        return this.cpf;
     }
 
     public Date getDataVacinacao() {
