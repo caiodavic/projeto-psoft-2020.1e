@@ -36,7 +36,7 @@ import java.util.*;
 @Service
 public class CidadaoServiceImpl implements CidadaoService {
 
-    private static final String MENSSAGEM_EMAIL_ALERTA = "Ola! \nVocê esta apto para receber a %dª dose da vacina! " +
+    private static final String MENSSAGEM_EMAIL_ALERTA = "Ola! \nVocê esta apto para receber a %s dose da vacina! " +
             "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
     private static final String ASSUNTO_EMAIL_ALERTA = "Vacinação %s dose";
 
@@ -341,23 +341,23 @@ public class CidadaoServiceImpl implements CidadaoService {
 
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
         int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
-        String emails = "";
+
+        StringBuilder emails = new StringBuilder();
+        StringBuilder telefones = new StringBuilder();
 
         for (Cidadao cidadao : cidadaos) {
             if (cidadao.getSituacao() instanceof Tomou1Dose && cidadao.getDataPrevistaSegundaDose().isBefore(LocalDate.now())) {
                 if (qtdCidadaosQuePossoLiberar > 0 && this.loteService.existeLoteDaVacina(cidadao.getTipoVacina())) {
                     cidadao.avancarSituacaoVacina();
                     this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
-                    emails += (cidadao.getEmail() + ", ");
+                    emails.append(cidadao.getEmail()).append(", ");
+                    telefones.append(cidadao.getTelefone()).append(", ");
+
                     qtdCidadaosQuePossoLiberar--;
                 } else break;
             }
         }
-        if (!emails.equals("")) {
-            emails = emails.substring(0, emails.length() - 2);
-            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "segunda"),
-                    String.format(MENSSAGEM_EMAIL_ALERTA, 2), emails);
-        }
+        this.enviaAlertaVacinacao(emails.toString(), telefones.toString(), "segunda");
     }
 
     /**
@@ -460,21 +460,19 @@ public class CidadaoServiceImpl implements CidadaoService {
         Integer idadeRequisito = requisito.getIdade();
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
-        String emails = "";
+        StringBuilder emails = new StringBuilder();
+        StringBuilder telefones = new StringBuilder();
 
         for(Cidadao cidadao: cidadaos){
             Integer idadeCidadao = CalculaIdade.idade(cidadao.getData_nascimento());
             if(idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                 cidadao.avancarSituacaoVacina();
                 cartaoVacinaRepository.save(cidadao.getCartaoVacina());
-                emails += (cidadao.getEmail() + ", ");
+                emails.append(cidadao.getEmail()).append(", ");
+                telefones.append(cidadao.getTelefone()).append(", ");
             }
         }
-        if (!emails.equals("")) {
-            emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
-                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
-        }
+        this.enviaAlertaVacinacao(emails.toString().toString(), telefones.toString(), "primeira");
     }
 
     /**
@@ -487,7 +485,8 @@ public class CidadaoServiceImpl implements CidadaoService {
         String requisitoPodeHabilitar = requisito.getRequisito();
         Integer idadeRequisito = requisito.getIdade();
 
-        String emails = "";
+        StringBuilder emails = new StringBuilder();
+        StringBuilder telefones = new StringBuilder();
 
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
 
@@ -500,15 +499,47 @@ public class CidadaoServiceImpl implements CidadaoService {
                 if (idadeCidadao >= idadeRequisito && cidadao.getSituacao() instanceof NaoHabilitado) {
                     cidadao.avancarSituacaoVacina();
                     cartaoVacinaRepository.save(cidadao.getCartaoVacina());
-                    emails += (cidadao.getEmail() + ", ");
+                    emails.append(cidadao.getEmail()).append(", ");
+                    telefones.append(cidadao.getTelefone()).append(", ");
                 }
             }
         }
+        this.enviaAlertaVacinacao(emails.toString(), telefones.toString(), "primeira");
+    }
+
+    /**
+     * Metodo para enviar os alertas para os cidadãos que foram habilitados
+     * @param emails - uma string contendo todos os endereços de email
+     * @param telefones - uma string contendo todos os numeros de telefone
+     * @param dose - uma string indicando a dose
+     * @author Caetano Albuquerque
+     */
+    private void enviaAlertaVacinacao(String emails, String telefones, String dose){
+        this.enviarEmails(emails, dose);
+        this.enviarSms(telefones);
+    }
+
+    /**
+     * Metodo que envia o email para os cidadaos
+     * @param emails - uma string contendo todos os endereços de email
+     * @param dose - uma string indicando a dose
+     * @author Caetano Albuquerque
+     */
+    private void enviarEmails(String emails, String dose){
         if (!emails.equals("")) {
-            emails = emails.substring(0, emails.length() -2);
-            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, "primeira"),
-                    String.format(MENSSAGEM_EMAIL_ALERTA, 1), emails);
+            emails = emails.substring(0, emails.length() - 2);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, dose),
+                    String.format(MENSSAGEM_EMAIL_ALERTA, dose), emails);
         }
+    }
+
+    /**
+     * Metodo que deve enviar os sms para os cidadãos, porem não foi implementado por falta de soluções gratuitas
+     * @param telefones - uma string contendo todos os numeros de telefone
+     * @author Caetano Albuquerque
+     */
+    private void enviarSms(String telefones){
+        //Enviar sms
     }
 
     /**
