@@ -251,7 +251,7 @@ public class LoteServiceImpl implements LoteService {
         List<Lote> lotes = listaLotes();
         Collections.sort(lotes, new OrdenarPorData());
 
-        return lotes.get(lotes.size()).getDataDeValidade() ;
+        return lotes.get(lotes.size()-1).getDataDeValidade() ;
     }
 
     /**

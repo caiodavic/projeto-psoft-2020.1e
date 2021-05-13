@@ -5,10 +5,8 @@ import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.repository.AgendaRepository;
 import com.projeto.grupo10.vacineja.state.Habilitado1Dose;
 import com.projeto.grupo10.vacineja.state.Habilitado2Dose;
-import com.projeto.grupo10.vacineja.state.NaoHabilitado;
 import com.projeto.grupo10.vacineja.state.Situacao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.health.HealthEndpointAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -34,7 +32,7 @@ public class AgendaServiceImpl implements AgendaService{
      * @author Holliver Costa
      */
     @Override
-    public void agendaVacinação(String headerToken, AgendaDTO agendaDTO) throws ServletException {
+    public Agenda agendaVacinação(String headerToken, AgendaDTO agendaDTO) throws ServletException {
         String id = jwtService.getCidadaoDoToken(headerToken);
         String cpf_cidadao = jwtService.getCidadaoDoToken(headerToken);
 
@@ -53,7 +51,7 @@ public class AgendaServiceImpl implements AgendaService{
         }else{
             throw new IllegalArgumentException("Cidadao nao habilitado");
         }
-
+        return agendaRepository.findByCpf(cpf_cidadao);
     }
 
 

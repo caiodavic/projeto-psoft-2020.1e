@@ -36,6 +36,7 @@ public class Cidadao {
 
     private String endereco;
 
+    @Column(unique=true)
     private String cartaoSus;
 
     private LocalDate data_nascimento;
