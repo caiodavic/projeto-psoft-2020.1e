@@ -203,6 +203,7 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
      * @param cidadaoDTO
      * @author Holliver Costa
+     * @throws IllegalArgumentException
      * @return
      */
 
@@ -300,8 +301,6 @@ public class CidadaoServiceImpl implements CidadaoService {
                 throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
             }
         }
-
-
     }
 
     /**
