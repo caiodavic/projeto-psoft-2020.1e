@@ -6,6 +6,7 @@ import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.lote.Lote;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.vacina.Vacina;
+import com.projeto.grupo10.vacineja.util.PadronizaString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +86,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
      */
     @Override
     public void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException {
+        ministraVacinaDTO.setTipoVacina(PadronizaString.padronizaString(ministraVacinaDTO.getTipoVacina()));
         this.cidadaoService.verificaTokenFuncionario(headerToken);
 
         String cpfCidadao = ministraVacinaDTO.getCpf();
