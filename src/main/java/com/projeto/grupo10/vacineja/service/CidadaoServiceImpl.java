@@ -205,9 +205,11 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo que cadastra um cidadao a partir de um cidadao DTO, verifica se o cidadao ja esta cadastrado e se o email colocoado é valido
      * @param cidadaoDTO
      * @author Holliver Costa
+     * @return
      */
-    public void cadastraCidadao(CidadaoDTO cidadaoDTO) {
+    public Optional<Cidadao> cadastraCidadao(CidadaoDTO cidadaoDTO) {
         analisaEntradasDoCadastraCidadao(cidadaoDTO);
+
         CartaoVacina cartaoVacina = new CartaoVacina(cidadaoDTO.getCartaoSus());
         this.cartaoVacinaRepository.save(cartaoVacina);
       
@@ -215,6 +217,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     			cidadaoDTO.getCartaoSus(),cidadaoDTO.getEmail() ,cidadaoDTO.getData_nascimento(),cidadaoDTO.getTelefone(),
     			padronizaSetsDeString(cidadaoDTO.getProfissoes()),padronizaSetsDeString(cidadaoDTO.getComorbidades()), cidadaoDTO.getSenha(), cartaoVacina);
     	this.salvarCidadao(cidadao);
+    	return getCidadaoById(cidadaoDTO.getCpf());
     }
 
     /**

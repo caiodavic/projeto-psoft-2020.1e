@@ -22,6 +22,8 @@ public class AgendaServiceImpl implements AgendaService{
     @Autowired
     private CidadaoService cidadaoService;
     @Autowired
+    private LoteService loteService;
+    @Autowired
     private JWTService jwtService;
 
     /**
@@ -40,6 +42,8 @@ public class AgendaServiceImpl implements AgendaService{
             throw new IllegalArgumentException("Cidadao nao cadastrado");
         if(agendaDTO.getData().isBefore(LocalDate.now()))
             throw new IllegalArgumentException("Data invalida");
+        if(agendaDTO.getData().isAfter(loteService.getMaiorValidadeLotes()))
+            throw new IllegalArgumentException("Data maior que a validade dos lotes");
 
         Situacao situacaoCidadao = cidadaoService.getSituacao(cpf_cidadao);
 
