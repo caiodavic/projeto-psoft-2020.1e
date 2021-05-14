@@ -13,8 +13,6 @@ import com.projeto.grupo10.vacineja.repository.CidadaoRepository;
 import com.projeto.grupo10.vacineja.repository.FuncionarioGovernoRepository;
 import com.projeto.grupo10.vacineja.state.*;
 import com.projeto.grupo10.vacineja.util.CalculaIdade;
-import com.projeto.grupo10.vacineja.util.ErroCidadao;
-import com.projeto.grupo10.vacineja.util.ErroEmail;
 import com.projeto.grupo10.vacineja.util.email.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -181,45 +179,15 @@ public class CidadaoServiceImpl implements CidadaoService {
 
     public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
         Cidadao cidadao = new Cidadao();
-        analisaEntradasDoCadastraCidadao(cidadaoDTO);
-        copyDTOCidadaoToEntity(cidadaoDTO, cidadao);
-        this.salvarCidadao(cidadao);
-    	return this.cidadaoRepository.findById(cidadaoDTO.getCpf()).get();
-    }
-
-
-    /**
-     * Metodo privado responsavel por verificar se os atributos de email, cartao do sus, data de nascimento e senha
-     * são valores validos. Tambem verifica se ja existe um cpf igual ao que deseja cadastrar.
-     *
-     * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @throws IllegalArgumentException
-     */
-    private void analisaEntradasDoCadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
-
         Optional<Cidadao> cidadaoOptional = this.cidadaoRepository.findById(cidadaoDTO.getCpf());
         if (cidadaoOptional.isPresent()) {
             throw new IllegalArgumentException("Cidadao cadastrado");
         }
-
-        if (!ErroEmail.validarEmail(cidadaoDTO.getEmail())) {
-            throw new IllegalArgumentException("Email invalido");
-        }
-
-        if (ErroCidadao.CPFInvalido(cidadaoDTO.getCpf())) {
-            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse cpf");
-        }
-        if (ErroCidadao.cartaoSUSInvalido(cidadaoDTO.getCartaoSus())) {
-            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS");
-        }
-        if (ErroCidadao.senhaInvalida(cidadaoDTO.getSenha())) {
-            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
-        }
-        if (ErroCidadao.dataInvalida(cidadaoDTO.getData_nascimento())) {
-            throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa data de nascimento");
-        }
-
+        copyDTOCidadaoToEntity(cidadaoDTO, cidadao);
+        this.salvarCidadao(cidadao);
+        return this.cidadaoRepository.findById(cidadaoDTO.getCpf()).get();
     }
+
 
     /**
      * Metodo privado responsavel por passar os valores do cidadaoDTO para um cidadao.
@@ -258,33 +226,11 @@ public class CidadaoServiceImpl implements CidadaoService {
     public Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO)  throws ServletException, IllegalArgumentException{
 
         var cidadao = getCidadaoById(jwtService.getCidadaoDoToken(headerToken));
-        analisaEntradasDoUpdateCidadao(headerToken, cidadaoUpdateDTO);
         copyDTOCidadaoUpdateToEntity(cidadaoUpdateDTO, cidadao);
         this.salvarCidadao(cidadao);
         return cidadao;
     }
 
-    /**
-     * Metodo privado responsavel por verificar se os novos atributos de email, cartao do sus, data de nascimento e senha
-     * são valores validos.
-     * @param headerToken - token do Cidadao que tera seus dados alterardos
-     * @param cidadaoUpdateDTO - DTO contendo as novas informacoes desejadas para o usuario
-     * @throws ServletException
-     */
-    private void analisaEntradasDoUpdateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException {
-        String id = jwtService.getCidadaoDoToken(headerToken);
-        getCidadaoById(id);
-        if (Objects.nonNull(cidadaoUpdateDTO.getEmail())) {
-            if(!ErroEmail.validarEmail(cidadaoUpdateDTO.getEmail())){
-                throw new IllegalArgumentException("Novo Email invalido");
-            }
-        }
-        if (Objects.nonNull(cidadaoUpdateDTO.getSenha())){
-            if (ErroCidadao.senhaInvalida(cidadaoUpdateDTO.getSenha())) {
-                throw new IllegalArgumentException("Não é possivel cadastrar um Cidadao com essa senha");
-            }
-        }
-    }
 
     /**
      * Metodo privado responsavel por verificar os atributos do DTO e trocar com os de Cidadao, se nescessário.
