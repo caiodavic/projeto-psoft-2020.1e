@@ -320,15 +320,15 @@ public class CidadaoServiceImpl implements CidadaoService {
      * Metodo que deve ser chamado por um funcionario para habilitar os cidadãos que podem ser habilitados
      * para segunda dose
      *
-     * @param headerToken - toke do funcionario do governo
      * @author Caetano Albuquerque
      */
     @Override
-    public void habilitarSegundaDose(String headerToken) throws ServletException {
-        this.verificaTokenFuncionario(headerToken);
+    public int habilitarSegundaDose()  {
+        int result = 0;
 
         List<Cidadao> cidadaos = this.cidadaoRepository.findAll();
         int qtdCidadaosQuePossoLiberar = this.getQtdDosesSemDependencia();
+        result = qtdCidadaosQuePossoLiberar;
 
         StringBuilder emails = new StringBuilder();
         StringBuilder telefones = new StringBuilder();
@@ -340,12 +340,13 @@ public class CidadaoServiceImpl implements CidadaoService {
                     this.cartaoVacinaRepository.save(cidadao.getCartaoVacina());
                     emails.append(cidadao.getEmail()).append(", ");
                     telefones.append(cidadao.getTelefone()).append(", ");
-
                     qtdCidadaosQuePossoLiberar--;
-                } else break;
+                } else if (qtdCidadaosQuePossoLiberar <= 0) break;
             }
         }
         this.enviaAlertaVacinacao(emails.toString(), telefones.toString(), "segunda");
+
+        return result - qtdCidadaosQuePossoLiberar;
     }
 
     /**
@@ -365,8 +366,6 @@ public class CidadaoServiceImpl implements CidadaoService {
                 result++;
             }
         }
-
-
         return result;
     }
 

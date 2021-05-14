@@ -34,7 +34,7 @@ public class VerificadorDataSegundaDose implements InitializingBean {
      */
     @Scheduled(cron = "0 0 0 * * ?")
     public void run() {
-        cidadaoService.verificaDataSegundaDose();
+        cidadaoService.habilitarSegundaDose();
     }
 
 

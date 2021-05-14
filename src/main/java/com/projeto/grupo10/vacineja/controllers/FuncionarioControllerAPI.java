@@ -64,13 +64,14 @@ public class FuncionarioControllerAPI {
     @RequestMapping(value = "/funcionario/habilitar-segunda-dose", method = RequestMethod.POST)
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<?> habilitarSegundaDose(@RequestHeader("Authorization") String headerToken){
+        int qtdHabilitados = 0;
         try{
-            this.cidadaoService.habilitarSegundaDose(headerToken);
+            qtdHabilitados = this.funcionarioService.habilitarSegundaDose(headerToken);
         } catch (ServletException e) {
             return ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<String>("Segunda Dose habilitada para alguns pacientes",
+        return new ResponseEntity<String>(String.format("Segunda Dose habilitada para %d pacientes", qtdHabilitados),
                 HttpStatus.OK);
     }
 

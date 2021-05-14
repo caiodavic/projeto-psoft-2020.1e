@@ -21,4 +21,5 @@ public interface FuncionarioService {
     Lote criarLote(String headerToken, String nomeFabricante, LoteDTO loteDTO) throws ServletException;
     List<Lote> listaLotesPorFabricante(String nomeFabricante, String headerToken) throws ServletException;
     List<String> listarCidadaosHabilitados(String headerToken) throws ServletException;
+    int habilitarSegundaDose(String headerToken) throws ServletException;
 }
