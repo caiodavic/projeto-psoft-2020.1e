@@ -25,7 +25,7 @@ public interface CidadaoService {
     Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException;
     Cidadao updateCidadao(String headerToken, CidadaoUpdateDTO cidadaoUpdateDTO) throws ServletException, IllegalArgumentException;
     void verificaTokenFuncionario(String authHeader) throws ServletException;
-    void habilitarSegundaDose(String headerToken) throws ServletException;
+    int habilitarSegundaDose();
     void recebeVacina(String cpfCidadao, Vacina vacina, LocalDate dataVacina);
     boolean podeAlterarIdade(int idade);
     boolean podeHabilitarRequisito(RequisitoDTO requisito);

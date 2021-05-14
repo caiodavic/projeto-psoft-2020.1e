@@ -222,4 +222,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return this.cidadaoService.listarCidadaosHabilitados();
     }
 
+    @Override
+    public int habilitarSegundaDose(String headerToken) throws ServletException {
+        this.cidadaoService.verificaTokenFuncionario(headerToken);
+        return this.cidadaoService.habilitarSegundaDose();
+    }
+
 }
