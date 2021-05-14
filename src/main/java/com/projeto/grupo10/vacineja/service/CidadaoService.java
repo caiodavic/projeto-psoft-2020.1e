@@ -37,5 +37,6 @@ public interface CidadaoService {
     int contaCidadaosAtendeRequisito(RequisitoDTO requisito);
     List<String> listarCidadaosHabilitados();
     void verificaDataSegundaDose();
+    void verificaDataMarcadaVacinacao();
     Agenda getAgendamentobyCpf(String headerToken) throws ServletException;
 }

@@ -80,7 +80,7 @@ public class CidadaoControllerAPI {
          */
         @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
         @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
-        public ResponseEntity<?> cadastrarFuncionario(@Valid @RequestHeader("Authorization") String headerToken,
+        public ResponseEntity<?> cadastrarFuncionario( @RequestHeader("Authorization") String headerToken,
                 @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
 
             try {
@@ -106,16 +106,15 @@ public class CidadaoControllerAPI {
 
         @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
         @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
-        public ResponseEntity<?> updateCidadao (@Valid @RequestHeader("Authorization") String headerToken,
-                @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO){
+        public ResponseEntity<?> updateCidadao ( @RequestHeader("Authorization") String headerToken,
+                                                 @Valid @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO){
 
             Cidadao cidadao = new Cidadao();
 
             try {
                 cidadao = cidadaoService.updateCidadao(headerToken, cidadaoUpdateDTO);
-                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                        .buildAndExpand(cidadao.getCpf()).toUri();
-                return ResponseEntity.created(uri).body(cidadaoUpdateDTO);
+                return new ResponseEntity<String>(String.format("O cidadao com o cpf %s foi atualizado",
+                        cidadao.getCpf()), HttpStatus.ACCEPTED);
             } catch (IllegalArgumentException iae) {
                 return ErroCidadao.erroUsuarioNaoEncontrado();
             } catch (ServletException e) {
