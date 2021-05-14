@@ -36,7 +36,7 @@ public class Verificador implements InitializingBean {
      */
     @Scheduled(cron = "0 0 0 * * ?")
     public void verificadorDataSegundaDose() {
-        cidadaoService.verificaDataSegundaDose();
+        cidadaoService.habilitarSegundaDose();
     }
 
     /**

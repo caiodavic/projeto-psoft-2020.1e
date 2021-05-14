@@ -70,16 +70,4 @@ public class AgendaServiceImpl implements AgendaService{
         }
         return agendaRepository.findById(cpf).get();
     }
-
-//    /**
-//     * Metodo que verifica se existe algum agendamento
-//     * @return retorna true caso não exista, e false caso exista.
-//     */
-//    @Override
-//    public boolean agendamentoVazio() {
-//        if (Objects.nonNull(agendaRepository)){
-//            return true;
-//        }
-//        return false;
-//    }
 }

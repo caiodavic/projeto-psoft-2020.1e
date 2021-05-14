@@ -14,9 +14,9 @@ INSERT INTO vacina VALUES ('string',0,2);
 
 -- Criando Lotes
 
-INSERT INTO lote (data_de_validade, qtd_doses_disponiveis, vacina_nome_fabricante) VALUES (date'2021-12-31',10,'moderna');
-
-INSERT INTO lote (data_de_validade, qtd_doses_disponiveis, vacina_nome_fabricante) VALUES (date'2021-12-30',10,'sputnik v');
+-- INSERT INTO lote (data_de_validade, qtd_doses_disponiveis, vacina_nome_fabricante) VALUES (date'2021-12-31',10,'moderna');
+--
+-- INSERT INTO lote (data_de_validade, qtd_doses_disponiveis, vacina_nome_fabricante) VALUES (date'2021-12-30',10,'sputnik v');
 
 
 
