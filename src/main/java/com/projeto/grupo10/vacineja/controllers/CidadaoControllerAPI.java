@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.ServletException;
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class CidadaoControllerAPI {
      * @return retorna o cidadaoDTO
      */
     @RequestMapping(value = "/cidadao/cadastra-cidadao", method = RequestMethod.POST)
-    public ResponseEntity<?> cadastraCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+    public ResponseEntity<?> cadastraCidadao(@Valid @RequestBody CidadaoDTO cidadaoDTO) {
 
         Cidadao cidadao = new Cidadao();
 
@@ -65,24 +66,7 @@ public class CidadaoControllerAPI {
         try {
             cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().toString() == "Email invalido") {
-                return ErroCidadao.erroEmailInvalido();
-            }
-            if (e.getMessage().toString() == "Cidadao cadastrado") {
                 return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
-            }
-            if (e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse cpf") {
-                return ErroCidadao.erroCPFInvalido();
-            }
-            if (e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com esse numero de cartao do SUS") {
-                return ErroCidadao.erroCartaoSUSInvalido();
-            }
-            if (e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa senha") {
-                return ErroCidadao.erroSenhaInvalida();
-            }
-            if (e.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa data de nascimento") {
-                return ErroCidadao.erroDataInvalida();
-            }
         }
         return new ResponseEntity<String>(String.format("O cidadao com o cpf %s foi cadastrado", cidadao.getCpf()), HttpStatus.CREATED);
     }
@@ -96,7 +80,7 @@ public class CidadaoControllerAPI {
          */
         @RequestMapping(value = "/cidadao/cadastrar-funcionario", method = RequestMethod.POST)
         @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
-        public ResponseEntity<?> cadastrarFuncionario(@RequestHeader("Authorization") String headerToken,
+        public ResponseEntity<?> cadastrarFuncionario(@Valid @RequestHeader("Authorization") String headerToken,
                 @RequestBody FuncionarioCadastroDTO cadastroFuncionario){
 
             try {
@@ -122,7 +106,7 @@ public class CidadaoControllerAPI {
 
         @RequestMapping(value = "/cidadao/{id}", method = RequestMethod.PUT)
         @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
-        public ResponseEntity<?> updateCidadao (@RequestHeader("Authorization") String headerToken,
+        public ResponseEntity<?> updateCidadao (@Valid @RequestHeader("Authorization") String headerToken,
                 @RequestBody CidadaoUpdateDTO cidadaoUpdateDTO){
 
             Cidadao cidadao = new Cidadao();
@@ -133,12 +117,6 @@ public class CidadaoControllerAPI {
                         .buildAndExpand(cidadao.getCpf()).toUri();
                 return ResponseEntity.created(uri).body(cidadaoUpdateDTO);
             } catch (IllegalArgumentException iae) {
-                if (iae.getMessage().equals("Novo Email invalido")) {
-                    return ErroCidadao.erroEmailInvalido();
-                }
-                if (iae.getMessage().toString() == "Não é possivel cadastrar um Cidadao com essa senha") {
-                    return ErroCidadao.erroSenhaInvalida();
-                }
                 return ErroCidadao.erroUsuarioNaoEncontrado();
             } catch (ServletException e) {
                 return ErroLogin.erroTokenInvalido();
