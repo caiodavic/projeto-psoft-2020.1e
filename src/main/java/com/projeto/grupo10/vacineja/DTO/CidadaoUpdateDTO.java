@@ -1,31 +1,30 @@
 package com.projeto.grupo10.vacineja.DTO;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 public class CidadaoUpdateDTO {
 
-    @NotEmpty
-    @Email
+    @NotBlank(message = "email não pode ser vazio")
+    @Email(message = "Esse endereço de email não é valido")
     private String email;
 
-    @NotEmpty
+    @NotBlank(message = "nome não pode ser vazio")
     private String nome;
 
-    @NotEmpty
+    @NotBlank(message = "endereco não pode ser vazio")
     private String endereco;
 
-    @NotEmpty
+    @NotBlank(message = "telefone não pode ser vazio")
     private String telefone;
 
-    @NotEmpty
-    private Set<String> profissoes;
+
+    private Set<@NotBlank(message = "profissoes não pode ser vazio") String> profissoes;
 
     @NotEmpty
-    private Set<String> comorbidades;
+    private Set<@NotBlank(message = "comorbidades não pode ser vazio") String> comorbidades;
 
-    @NotEmpty
+    @NotBlank(message = "Senha não pode ser vazia")
     private String senha;
 
 

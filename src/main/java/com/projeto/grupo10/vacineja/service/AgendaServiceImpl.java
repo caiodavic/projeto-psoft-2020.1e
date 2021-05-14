@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AgendaServiceImpl implements AgendaService{
@@ -69,4 +70,16 @@ public class AgendaServiceImpl implements AgendaService{
         }
         return agendaRepository.findById(cpf).get();
     }
+
+//    /**
+//     * Metodo que verifica se existe algum agendamento
+//     * @return retorna true caso não exista, e false caso exista.
+//     */
+//    @Override
+//    public boolean agendamentoVazio() {
+//        if (Objects.nonNull(agendaRepository)){
+//            return true;
+//        }
+//        return false;
+//    }
 }

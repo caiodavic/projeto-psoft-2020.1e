@@ -1,7 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
-import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
+import com.projeto.grupo10.vacineja.job.Verificador;
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
@@ -27,9 +27,12 @@ import static com.projeto.grupo10.vacineja.util.PadronizaString.padronizaSetsDeS
 @Service
 public class CidadaoServiceImpl implements CidadaoService {
 
-    private static final String MENSSAGEM_EMAIL_ALERTA = "Ola! \nVocê esta apto para receber a %s dose da vacina! " +
+    private static final String MENSSAGEM_EMAIL_ALERTA_HABILITADO_PARA_VACINA = "Ola! \nVocê esta apto para receber a %s dose da vacina! " +
             "\nPor favor acesse o sistema Vacine Já para agendar sua vacinação";
-    private static final String ASSUNTO_EMAIL_ALERTA = "Vacinação %s dose";
+    private static final String ASSUNTO_EMAIL_ALERTA_HABILITADO_PARA_VACINA = "Vacinação %s dose";
+    private static final String MENSSAGEM_EMAIL_ALERTA_DIA_MARCADO_VACINA = "Ola! \nA data que você marcou para ser vacinado é hpje!" +
+            "\nPor favor compareça ao local %s no horario %s";
+    private static final String ASSUNTO_EMAIL_ALERTA_DIA_MARCADO_VACINA = "Vacinação marcada para %s";
 
     @Autowired
     private CidadaoRepository cidadaoRepository;
@@ -47,7 +50,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     private LoteService loteService;
 
     @Autowired
-    private VerificadorDataSegundaDose verificador;
+    private Verificador verificador;
 
     @Autowired
     private AgendaService agendaService;
@@ -239,13 +242,22 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @throws ServletException
      */
     private void copyDTOCidadaoUpdateToEntity(CidadaoUpdateDTO cidadaoUpdateDTO, Cidadao cidadao) throws IllegalArgumentException {
-        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
-        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
-        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
-        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
-        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
-        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
-        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
+
+        cidadao.setComorbidades(cidadaoUpdateDTO.getComorbidades());
+        cidadao.setEmail(cidadaoUpdateDTO.getEmail());
+        cidadao.setEndereco(cidadaoUpdateDTO.getEndereco());
+        cidadao.setSenha(cidadaoUpdateDTO.getSenha());
+        cidadao.setNome(cidadaoUpdateDTO.getNome());
+        cidadao.setTelefone(cidadaoUpdateDTO.getTelefone());
+        cidadao.setProfissoes(cidadaoUpdateDTO.getProfissoes());
+
+//        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
+//        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
+//        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
+//        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
+//        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
+//        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
+//        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
     }
 
     /**
@@ -433,21 +445,21 @@ public class CidadaoServiceImpl implements CidadaoService {
      * @author Caetano Albuquerque
      */
     private void enviaAlertaVacinacao(String emails, String telefones, String dose){
-        this.enviarEmails(emails, dose);
+        this.enviarEmailsAptoParaVacina(emails, dose);
         this.enviarSms(telefones);
     }
 
     /**
-     * Metodo que envia o email para os cidadaos
+     * Metodo que envia o email para os cidadaos quando eles se tornam aptos a tomarem vacina
      * @param emails - uma string contendo todos os endereços de email
      * @param dose - uma string indicando a dose
      * @author Caetano Albuquerque
      */
-    private void enviarEmails(String emails, String dose){
+    private void enviarEmailsAptoParaVacina(String emails, String dose){
         if (!emails.equals("")) {
             emails = emails.substring(0, emails.length() - 2);
-            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA, dose),
-                    String.format(MENSSAGEM_EMAIL_ALERTA, dose), emails);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA_HABILITADO_PARA_VACINA, dose),
+                    String.format(MENSSAGEM_EMAIL_ALERTA_HABILITADO_PARA_VACINA, dose), emails);
         }
     }
 
@@ -556,6 +568,63 @@ public class CidadaoServiceImpl implements CidadaoService {
                 }
             }
         }
+    }
+
+    /**
+     * Método que verifica se a Data marcada para vacinação chegou, e chama o metodo que avisa para aqueles que chegaram
+     */
+    public void verificaDataMarcadaVacinacao() {
+
+        List<Cidadao> listaCidadaos = cidadaoRepository.findAll();
+        System.out.println("chegou 1");
+        if(listaCidadaos.isEmpty()) return ;
+
+        for (Cidadao cid : listaCidadaos) {
+
+            if (agendaService != null) {
+                System.out.println("chegou 2");
+                if (agendaService.getAgendamentobyCpf(cid.getCpf()).getData().compareTo(LocalDate.now()) == 0) {
+                    enviaAlertaVacinacaoMarcadaParaHoje(cid.getEmail(), cid.getTelefone(), cid.getCpf());
+
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Metodo para enviar o alerta para o cidadão para alerta-lo que hoje é o dia marcado para a vacinação
+     * @param email - uma string contendo o endereço de email de um cidadão
+     * @param telefone - uma string contendo o telefone de um cidadão
+     * @param cpf - uma string contendo o cpf de um cidadão
+     */
+    private void enviaAlertaVacinacaoMarcadaParaHoje(String email, String telefone, String cpf){
+        this.enviarEmailsVacinaMarcadaParaHoje(email, cpf);
+        this.enviarSmsVacinacaoMarcadaParaHoje(telefone, cpf);
+    }
+
+    /**
+     * Metodo que envia o email para um cidadão para alerta-lo que hoje é o dia marcado para a vacinação
+     * @param email - uma string contendo o endereço de email de um cidadão
+     * @param cpf - uma string contendo o cpf de um cidadão
+     */
+    private void enviarEmailsVacinaMarcadaParaHoje(String email, String cpf){
+        if (!email.equals("")) {
+            Agenda agendamento = agendaService.getAgendamentobyCpf(cpf);
+            email = email.substring(0, email.length() - 2);
+            Email.enviarAlertaVacinacao(String.format(ASSUNTO_EMAIL_ALERTA_DIA_MARCADO_VACINA, LocalDate.now().getDayOfYear()),
+                    String.format(MENSSAGEM_EMAIL_ALERTA_DIA_MARCADO_VACINA, agendamento.getLocal(), agendamento.getHorario()), email);
+        }
+    }
+
+    /**
+     * Metodo que deve enviar os sms para os cidadãos para alerta-los que hoje é o dia marcado para a vacinação,
+     * porem não foi implementado por falta de soluções gratuitas
+     * @param telefone - uma string contendo o telefone de um cidadão
+     * @param cpf - uma string contendo o cpf de um cidadão
+     */
+    private void enviarSmsVacinacaoMarcadaParaHoje(String telefone, String cpf){
+        //Enviar sms
     }
 
     @Override
