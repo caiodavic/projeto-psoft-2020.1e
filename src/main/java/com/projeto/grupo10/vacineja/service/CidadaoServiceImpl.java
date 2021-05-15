@@ -183,14 +183,28 @@ public class CidadaoServiceImpl implements CidadaoService {
     public Cidadao cadastraCidadao(CidadaoDTO cidadaoDTO) throws IllegalArgumentException {
         Cidadao cidadao = new Cidadao();
         Optional<Cidadao> cidadaoOptional = this.cidadaoRepository.findById(cidadaoDTO.getCpf());
-        if (cidadaoOptional.isPresent()) {
-            throw new IllegalArgumentException("Cidadao cadastrado");
-        }
+        verificacaoCadastraCidadao(cidadaoDTO, cidadaoOptional);
         copyDTOCidadaoToEntity(cidadaoDTO, cidadao);
         this.salvarCidadao(cidadao);
         return this.cidadaoRepository.findById(cidadaoDTO.getCpf()).get();
     }
 
+    /**
+     * Metodo privado responsavel por fazer verificações mais especificas nos dados do DTO para ser possivel fazer o cadastro.
+     * @param cidadaoDTO - DTO contendo as novas informacoes desejadas para o usuario.
+     * @param cidadaoOptional - possivel cidadao para ver se o novo cidadao que deseja-se cadastrar realmente é único.
+     * @throws IllegalArgumentException
+     */
+    private void verificacaoCadastraCidadao (CidadaoDTO cidadaoDTO, Optional<Cidadao> cidadaoOptional) {
+        if (cidadaoOptional.isPresent()) {
+            throw new IllegalArgumentException("Cidadao cadastrado");
+        }
+        for (Cidadao cid : cidadaoRepository.findAll()) {
+            if (cid.getCartaoSus().equals(cidadaoDTO.getCartaoSus())) {
+                throw new IllegalArgumentException("Cartão do SUS já cadastrado");
+            }
+        }
+    }
 
     /**
      * Metodo privado responsavel por passar os valores do cidadaoDTO para um cidadao.
@@ -250,14 +264,6 @@ public class CidadaoServiceImpl implements CidadaoService {
         cidadao.setNome(cidadaoUpdateDTO.getNome());
         cidadao.setTelefone(cidadaoUpdateDTO.getTelefone());
         cidadao.setProfissoes(cidadaoUpdateDTO.getProfissoes());
-
-//        cidadao.setComorbidades(Objects.nonNull(cidadaoUpdateDTO.getComorbidades()) ? padronizaSetsDeString(cidadaoUpdateDTO.getComorbidades()) : cidadao.getComorbidades());
-//        cidadao.setEmail(Objects.nonNull(cidadaoUpdateDTO.getEmail()) ? cidadaoUpdateDTO.getEmail() : cidadao.getEmail());
-//        cidadao.setEndereco(Objects.nonNull(cidadaoUpdateDTO.getEndereco()) ? cidadaoUpdateDTO.getEndereco() : cidadao.getEndereco());
-//        cidadao.setSenha(Objects.nonNull(cidadaoUpdateDTO.getSenha()) ? cidadaoUpdateDTO.getSenha() : cidadao.getSenha());
-//        cidadao.setNome(Objects.nonNull(cidadaoUpdateDTO.getNome()) ? cidadaoUpdateDTO.getNome() : cidadao.getNome());
-//        cidadao.setTelefone(Objects.nonNull(cidadaoUpdateDTO.getTelefone()) ? cidadaoUpdateDTO.getTelefone() : cidadao.getTelefone());
-//        cidadao.setProfissoes(Objects.nonNull(cidadaoUpdateDTO.getProfissoes()) ? padronizaSetsDeString(cidadaoUpdateDTO.getProfissoes()) : cidadao.getProfissoes());
     }
 
     /**

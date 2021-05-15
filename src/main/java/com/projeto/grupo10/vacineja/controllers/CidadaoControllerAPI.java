@@ -62,11 +62,14 @@ public class CidadaoControllerAPI {
 
         Cidadao cidadao = new Cidadao();
 
-
         try {
             cidadao = cidadaoService.cadastraCidadao(cidadaoDTO);
         } catch (IllegalArgumentException e) {
+            if (e.getMessage().equals("Cartão do SUS já cadastrado")) {
+                return ErroCidadao.erroCartaoSUSCadastrado(cidadaoDTO.getCartaoSus());
+            } else {
                 return ErroCidadao.erroCidadaoCadastrado(cidadaoDTO.getCpf());
+            }
         }
         return new ResponseEntity<String>(String.format("O cidadao com o cpf %s foi cadastrado", cidadao.getCpf()), HttpStatus.CREATED);
     }
