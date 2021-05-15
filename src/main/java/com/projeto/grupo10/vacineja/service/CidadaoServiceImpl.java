@@ -1,7 +1,7 @@
 package com.projeto.grupo10.vacineja.service;
 
 import com.projeto.grupo10.vacineja.DTO.*;
-import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
+import com.projeto.grupo10.vacineja.job.Verificador;
 import com.projeto.grupo10.vacineja.model.agenda.Agenda;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.Requisito;
 import com.projeto.grupo10.vacineja.model.usuario.CartaoVacina;
@@ -50,7 +50,7 @@ public class CidadaoServiceImpl implements CidadaoService {
     private LoteService loteService;
 
     @Autowired
-    private VerificadorDataSegundaDose verificador;
+    private Verificador verificador;
 
     @Autowired
     private AgendaService agendaService;
@@ -576,17 +576,21 @@ public class CidadaoServiceImpl implements CidadaoService {
      */
     public void verificaDataMarcadaVacinacao() {
 
-
         List<Cidadao> listaCidadaos = cidadaoRepository.findAll();
+        System.out.println("chegou 1");
         if(listaCidadaos.isEmpty()) return ;
 
         for (Cidadao cid : listaCidadaos) {
 
-            if (agendaService.getAgendamentobyCpf(cid.getCpf()).getData().compareTo(LocalDate.now()) == 0) {
-                enviaAlertaVacinacaoMarcadaParaHoje(cid.getEmail(), cid.getTelefone(), cid.getCpf());
-            }
-        }
+            if (agendaService != null) {
+                System.out.println("chegou 2");
+                if (agendaService.getAgendamentobyCpf(cid.getCpf()).getData().compareTo(LocalDate.now()) == 0) {
+                    enviaAlertaVacinacaoMarcadaParaHoje(cid.getEmail(), cid.getTelefone(), cid.getCpf());
 
+                }
+            }
+
+        }
     }
 
     /**
