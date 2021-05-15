@@ -627,6 +627,12 @@ public class CidadaoServiceImpl implements CidadaoService {
         //Enviar sms
     }
 
+    /**
+     * pega um agendamento pelo cpf
+     * @param headerToken
+     * @return retorna um objeto de agenda
+     * @throws ServletException
+     */
     @Override
     public Agenda getAgendamentobyCpf(String headerToken) throws ServletException {
         String cpf = jwtService.getCidadaoDoToken(headerToken);
