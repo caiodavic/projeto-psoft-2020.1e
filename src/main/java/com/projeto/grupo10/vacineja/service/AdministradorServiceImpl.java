@@ -38,10 +38,20 @@ public class AdministradorServiceImpl implements AdministradorService{
         this.cidadaoService.autorizarCadastroFuncionario(cpfFuncionario);
     }
 
+    /**
+     * Verifica o cpf do administrador ao logar
+     * @param id
+     * @return retorna um boolean se o cpf for igual ao cpf do administrador
+     */
     private boolean isAdmin(String id){
         return id.equals(CPF_ADM);
     }
 
+    /**
+     * verifica se é o administrador que esta fazendo o login
+     * @param tipoLogin
+     * @return retorna um boolean se o tipo de login for administrador
+     */
     private boolean loginAsAdmin(String tipoLogin){ return tipoLogin.equals("administrador");}
 
     /**
