@@ -200,8 +200,10 @@ public class CidadaoServiceImpl implements CidadaoService {
             throw new IllegalArgumentException("Cidadao cadastrado");
         }
         for (Cidadao cid : cidadaoRepository.findAll()) {
-            if (cid.getCartaoSus().equals(cidadaoDTO.getCartaoSus())) {
-                throw new IllegalArgumentException("Cartão do SUS já cadastrado");
+            if (cid.getCartaoSus() != null) {
+                if (cid.getCartaoSus().equals(cidadaoDTO.getCartaoSus())) {
+                    throw new IllegalArgumentException("Cartão do SUS já cadastrado");
+                }
             }
         }
     }
