@@ -1,7 +1,7 @@
 package com.projeto.grupo10.vacineja;
 
 import com.projeto.grupo10.vacineja.filtros.TokenFilter;
-import com.projeto.grupo10.vacineja.job.VerificadorDataSegundaDose;
+import com.projeto.grupo10.vacineja.job.Verificador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
