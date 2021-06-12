@@ -3,6 +3,7 @@ package com.projeto.grupo10.vacineja.service;
 import com.projeto.grupo10.vacineja.DTO.RequisitoDTO;
 import com.projeto.grupo10.vacineja.model.requisitos_vacina.*;
 import com.projeto.grupo10.vacineja.repository.RequisitoRepository;
+import com.projeto.grupo10.vacineja.util.PadronizaString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class RequisitoServiceImpl implements RequisitoService{
 
         requisitoRepository.save(novaComorbidade);
 
-        return getRequisitoById(requisito.getRequisito()).get();
+        return getRequisitoById(PadronizaString.padronizaString(requisito.getRequisito())).get();
     }
 
     @Override
@@ -53,15 +54,16 @@ public class RequisitoServiceImpl implements RequisitoService{
         if(!getRequisitoById(requisito.getRequisito()).isEmpty()){
             throw new IllegalArgumentException(String.format("Requisito %s já cadastrado",requisito.getRequisito()));
         }
-        Requisito novaComorbidade = new Requisito(padronizaString(requisito.getRequisito()),requisito.getIdade(),TipoRequisito.IDADE);
+        Requisito novaComorbidade = new Requisito(padronizaString(requisito.getRequisito()),requisito.getIdade(),TipoRequisito.PROFISSAO);
+
         requisitoRepository.save(novaComorbidade);
 
-        return getRequisitoById(requisito.getRequisito()).get();
+        return getRequisitoById(PadronizaString.padronizaString(requisito.getRequisito())).get();
     }
 
     @Override
     public Optional<Requisito> getRequisitoById(String requisito){
-        Optional<Requisito> requisitoExistente = requisitoRepository.findById(requisito);
+        Optional<Requisito> requisitoExistente = requisitoRepository.findById(PadronizaString.padronizaString(requisito));
         return requisitoExistente;
     }
 

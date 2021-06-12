@@ -56,7 +56,7 @@ public class FuncionarioControllerAPI {
             return ErroLogin.erroTokenInvalido();
         }
 
-        return new ResponseEntity<String>("Cidadão definido como funcionario, aguardando aprovação do administrador.",
+        return new ResponseEntity<String>("Vacina aplicada com sucesso.",
                 HttpStatus.OK);
     }
 

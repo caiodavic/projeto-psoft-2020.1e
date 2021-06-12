@@ -87,7 +87,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public void ministraVacina(String headerToken, MinistraVacinaDTO ministraVacinaDTO) throws ServletException {
         this.cidadaoService.verificaTokenFuncionario(headerToken);
 
-        String cpfCidadao = ministraVacinaDTO.getCartaoSus();
+        String cpfCidadao = ministraVacinaDTO.getCpf();
         Date dataVacina = ministraVacinaDTO.getDataVacinacao();
         String Tipovacina = ministraVacinaDTO.getTipoVacina();
 
